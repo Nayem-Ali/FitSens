@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/screens/homepage/activity_history.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:finessapp/widgets/edit_profile.dart';
@@ -11,8 +12,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as p;
+import '../../utility/color.dart';
 import '../auth/login_screen.dart';
-import 'db_service.dart';
+import '../../services/db_service.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -53,16 +55,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future uploadFile() async {
-    const destination = 'files/';
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
+
 
     try {
+      final destination = 'files/${auth.currentUser!.uid}';
       final ref = firebase_storage.FirebaseStorage.instance
           .ref(destination)
           .child('file/');
       await ref.putFile(image);
       String tempUrl = await ref.getDownloadURL();
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      FirebaseAuth auth = FirebaseAuth.instance;
+
       await firestore
           .collection("user")
           .doc(auth.currentUser!.uid)
@@ -168,8 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           radius: 55,
                           backgroundImage: url != ""
                               ? NetworkImage(url)
-                              : const NetworkImage(
-                                  "https://t3.ftcdn.net/jpg/03/42/99/68/360_F_342996846_tHMepJOsXWwbvMpG7uiYpE68wbfQ9e4s.jpg"),
+                              : const AssetImage('assets/profile.png') as ImageProvider,
                         ),
                         Expanded(
                           child: Text(
@@ -217,9 +220,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 80,
                         width: 100,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                              colors: [Colors.black12, Colors.black12]),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: thirdGradient,
                         ),
                         child: Center(
                           child: Text(
@@ -236,9 +238,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 80,
                         width: 100,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                              colors: [Colors.black12, Colors.black12]),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: thirdGradient,
                         ),
                         child: Center(
                           child: Text(
@@ -255,9 +256,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 80,
                         width: 100,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                              colors: [Colors.black12, Colors.black12]),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: thirdGradient,
                         ),
                         child: Center(
                           child: Text(
@@ -284,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         OutlinedButton.icon(
                           onPressed: () {
-                            Get.off(EditProfile(userDetails: userDetails));
+                            Get.to(EditProfile(userDetails: userDetails));
                           },
                           style: OutlinedButton.styleFrom(
                               alignment: Alignment.centerLeft,
@@ -293,7 +293,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: const Icon(Icons.edit),
                         ),
                         OutlinedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(()=>ActivityHistory());
+                          },
                           style: OutlinedButton.styleFrom(
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),

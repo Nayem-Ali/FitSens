@@ -1,16 +1,20 @@
+import 'package:alarm/alarm.dart';
+import 'package:finessapp/page/step/step_counter_backend.dart';
 import 'package:finessapp/screens/auth/login_screen.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/screens/onboarding/get_started_screen.dart';
-import 'package:finessapp/screens/onboarding/onboarding_sceen.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   /// To interact with flutter engine
   await Firebase.initializeApp(
@@ -23,6 +27,8 @@ Future main() async {
       storageBucket: "gs://fitness-app-f0ef1.appspot.com",
     ),
   );
+  await Alarm.init(showDebugLogs: true);
+
   runApp(const MyApp());
 }
 
@@ -36,15 +42,15 @@ class MyApp extends StatelessWidget {
     bool isNew() {
       FirebaseAuth auth = FirebaseAuth.instance;
       bool res = auth.currentUser?.uid != null;
-      print(auth.currentUser?.uid);
-      print(res);
+      // print(auth.currentUser?.uid);
+      // print(res);
       return res;
     }
 
     return GetMaterialApp(
-      title: 'Fitsens',
+      title: 'FitSens',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
+      theme: ThemeData.light(useMaterial3: false).copyWith(
         colorScheme: ColorScheme.fromSeed(seedColor: ColorCode.primaryColor1),
         primaryColor: ColorCode.primaryColor1,
         //fontFamily: "Poppins",
@@ -58,7 +64,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasData && snapshot.data!.emailVerified) {
             return const HomeScreen();
           } else if (isNew()) {
-            print("I have email");
+            // print("I have email");
             return const LoginScreen();
           } else {
             return const GetStartedScreen();

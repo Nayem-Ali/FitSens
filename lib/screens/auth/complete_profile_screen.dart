@@ -1,4 +1,4 @@
-import 'package:finessapp/screens/auth/auth_service.dart';
+import 'package:finessapp/services/auth_service.dart';
 import 'package:finessapp/screens/auth/login_screen.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:flutter/material.dart';

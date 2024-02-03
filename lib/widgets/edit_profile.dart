@@ -1,13 +1,11 @@
-import 'package:finessapp/screens/auth/auth_service.dart';
-import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
-
-import '../screens/homepage/db_service.dart';
+import '../services/db_service.dart';
 import '../screens/homepage/profile_screen.dart';
+
 
 class EditProfile extends StatefulWidget {
   EditProfile({Key? key, required this.userDetails}) : super(key: key);
@@ -79,6 +77,9 @@ class _EditProfileState extends State<EditProfile> {
           "Edit Personal Data",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
         ),
+        leading: IconButton(onPressed: (){
+          Get.off(const ProfileScreen());
+        }, icon: const Icon(Icons.arrow_back),),
       ),
       body: SafeArea(
         child: Container(

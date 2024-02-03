@@ -1,8 +1,10 @@
+import 'package:finessapp/page/diet_planner/diet_plan.dart';
 import 'package:finessapp/page/heart_bpm.dart';
 import 'package:finessapp/page/sleep/sleep_home.dart';
 import 'package:finessapp/page/widgets/button.dart';
 import 'package:finessapp/page/workout/workout.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Option extends StatelessWidget {
   const Option({Key? key}) : super(key: key);
@@ -16,15 +18,17 @@ class Option extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             MyButton(
-                label: 'Workout Tracker',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Workout()),
-                  );
-                },
-                width: 350,
-                height: 60, fontSize: 16,),
+              label: 'Workout Tracker',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Workout()),
+                );
+              },
+              width: 350,
+              height: 60,
+              fontSize: 16,
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -38,24 +42,34 @@ class Option extends StatelessWidget {
                 },
                 width: 350,
                 height: 60,
-                fontSize: 16
-            ),
-
+                fontSize: 16),
             const SizedBox(
               height: 20,
             ),
             MyButton(
-                label: "Heart BPM",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HeartBPM()),
-                  );
-                },
-                width: 350,
-                height: 60,
-                fontSize: 16,
+              label: "Heart BPM",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HeartBPM()),
+                );
+              },
+              width: 350,
+              height: 60,
+              fontSize: 16,
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            MyButton(
+              label: "Diet Planner",
+              onTap: () {
+                Get.to(() => const DietPlanner());
+              },
+              width: 350,
+              height: 60,
+              fontSize: 16,
+            )
           ],
         ),
       ),

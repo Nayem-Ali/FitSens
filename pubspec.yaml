@@ -37,12 +37,18 @@ dependencies:
   path_provider: ^2.1.0
   get: ^4.6.5
   google_fonts: ^5.1.0
-  intl: ^0.18.1
+  intl:
   path: ^1.8.3
   fl_chart: ^0.63.0
-  date_picker_timeline: ^1.2.5
+  date_picker_timeline:
   video_player: ^2.7.0
   curved_navigation_bar: ^1.0.3
+  heart_bpm: ^1.1.1+0
+  pedometer: ^4.0.1
+  permission_handler:
+  shared_preferences: ^2.2.2
+  geolocator: ^10.1.0
+  alarm: ^3.0.7
 
 
 dev_dependencies:
@@ -51,6 +57,13 @@ dev_dependencies:
 
 
   flutter_lints: ^2.0.0
+
+dependency_overrides:
+  camera:
+    git:
+      url: https://github.com/bottlepay/plugins.git
+      path: packages/camera/camera
+      ref: e1a4dba770da9bc3cf9f858bac6837083f8b9059
 
 flutter:
 
