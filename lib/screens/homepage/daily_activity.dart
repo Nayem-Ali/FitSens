@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:alarm/alarm.dart';
 import 'package:finessapp/page/step/step_counter_backend.dart';
+import 'package:finessapp/services/db_service.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DailyActivity extends StatefulWidget {
@@ -15,6 +15,7 @@ class DailyActivity extends StatefulWidget {
 }
 
 class _DailyActivityState extends State<DailyActivity> {
+  DBService dbService = DBService();
   StepCounterBackend stepCounterBackend = StepCounterBackend();
   TextEditingController water = TextEditingController();
   TextEditingController steps = TextEditingController();
@@ -38,7 +39,7 @@ class _DailyActivityState extends State<DailyActivity> {
       dateTime: DateTime(dateTime.year, dateTime.month, dateTime.day, time.hour, time.minute),
       assetAudioPath: 'assets/alarm.mp3',
       loopAudio: true,
-      vibrate: true,
+      vibrate: false,
       volume: 0.8,
       fadeDuration: 3.0,
       notificationTitle: 'FitSens',
@@ -48,6 +49,7 @@ class _DailyActivityState extends State<DailyActivity> {
     alarm.clear();
     alarm.add(alarmSettings);
     await Alarm.set(alarmSettings: alarmSettings);
+    // Alarm.ringStream.stream.listen((_) => yourOnRingCallback());
     print(alarmSettings.id);
     setState(() {});
   }
@@ -62,38 +64,59 @@ class _DailyActivityState extends State<DailyActivity> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Form(
-                key: formKey,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextFormField(
-                      controller: water,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value!.isNotEmpty) {
-                          return "Cant left empty";
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(label: Text("Glass of Water")),
-                    )),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                        child: TextFormField(
-                      controller: steps,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value!.isNotEmpty) {
-                          return "Cant left empty";
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(label: Text("Number of Steps")),
-                    )),
-                  ],
+              TextFormField(
+                controller: water,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isNotEmpty) {
+                    return "Cant left empty";
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text("Glass of Water"),
+                  prefixIcon: Icon(
+                    Icons.water,
+                    color: Colors.blue,
+                  ),
+                  helperText: "1 Glass = 250 ML",
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  helperStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: Get.height * 0.02),
+              TextFormField(
+                controller: steps,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isNotEmpty) {
+                    return "Cant left empty";
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text("Number of Steps"),
+                  prefixIcon: Icon(
+                    Icons.fireplace,
+                    color: Colors.red,
+                  ),
+                  helperText: "Each Step Burn 0.04 kCal",
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  helperStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Container(
@@ -143,17 +166,17 @@ class _DailyActivityState extends State<DailyActivity> {
   getGoal() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     if (sp.containsKey("waterIntake") == false) {
-      sp.setInt("waterIntake", 0);
+      sp.setInt("waterIntake", 8);
     }
     // DateTime now = DateTime.now();
     // String formatDate = DateFormat.yMMMMEEEEd().format(now);
     // print(formatDate);
     if (sp.containsKey("goalSteps")) {
-      goalSteps = sp.getInt("goalSteps") ?? 0;
+      goalSteps = sp.getInt("goalSteps") ?? 10000;
       steps.text = goalSteps.toString();
     }
     if (sp.containsKey("goalWater")) {
-      goalWaterIntake = sp.getInt("goalWater") ?? 0;
+      goalWaterIntake = sp.getInt("goalWater") ?? 8;
       water.text = goalWaterIntake.toString();
     }
     List<String> avgSpeed = sp.getStringList('averageSpeed') ?? [];
@@ -167,12 +190,52 @@ class _DailyActivityState extends State<DailyActivity> {
     }
 
     setState(() {});
-    print(stepCounterBackend.steps);
+  }
+
+  addWater() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    totalIntake = sp.getInt('waterIntake') ?? 0;
+    totalIntake += 1;
+    sp.setInt('waterIntake', totalIntake);
+    DateTime date = DateTime.now();
+    String formattedDate = DateFormat.yMMMd().format(date);
+    Map<String, dynamic> data = {
+      "date": date,
+      "id": formattedDate,
+      "todayIntake": totalIntake,
+      "target": goalWaterIntake,
+      "percentage": totalIntake / goalWaterIntake >= 1
+          ? 100
+          : ((totalIntake / goalWaterIntake) * 100).toInt()
+    };
+    await dbService.addWaterIntakeData(data);
+    setState(() {});
+  }
+
+  reduceWater() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    totalIntake = sp.getInt('waterIntake') ?? 0;
+    if (totalIntake > 0) {
+      totalIntake -= 1;
+    }
+    sp.setInt('waterIntake', totalIntake);
+    DateTime date = DateTime.now();
+    String formattedDate = DateFormat.yMMMd().format(date);
+    Map<String, dynamic> data = {
+      "date": date,
+      "id": formattedDate,
+      "todayIntake": totalIntake,
+      "target": goalWaterIntake,
+      "percentage": totalIntake / goalWaterIntake >= 1
+          ? 100
+          : ((totalIntake / goalWaterIntake) * 100).toInt()
+    };
+    await dbService.addWaterIntakeData(data);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
@@ -185,11 +248,11 @@ class _DailyActivityState extends State<DailyActivity> {
       ),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: screenSize.height,
+          height: Get.height,
           child: Column(
             children: [
               Container(
-                height: screenSize.height * 0.2,
+                height: Get.height * 0.2,
                 margin: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.05,
                   vertical: Get.height * 0.01,
@@ -227,8 +290,8 @@ class _DailyActivityState extends State<DailyActivity> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            height: screenSize.height * 0.08,
-                            width: screenSize.width * 0.4,
+                            height: Get.height * 0.08,
+                            width: Get.width * 0.4,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
@@ -251,8 +314,8 @@ class _DailyActivityState extends State<DailyActivity> {
                             ),
                           ),
                           Container(
-                            height: screenSize.height * 0.08,
-                            width: screenSize.width * 0.4,
+                            height: Get.height * 0.08,
+                            width: Get.width * 0.4,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
@@ -325,7 +388,7 @@ class _DailyActivityState extends State<DailyActivity> {
                         ),
                       ),
                       Text(
-                        "Average Speed: ${(averageSpeed*3.6).toStringAsFixed(2)} km/h",
+                        "Average Speed: ${(averageSpeed * 3.6).toStringAsFixed(2)} km/h",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -392,27 +455,13 @@ class _DailyActivityState extends State<DailyActivity> {
                   Column(
                     children: [
                       OutlinedButton.icon(
-                        onPressed: () async {
-                          SharedPreferences sp = await SharedPreferences.getInstance();
-                          totalIntake = sp.getInt('waterIntake') ?? 0;
-                          totalIntake += 1;
-                          sp.setInt('waterIntake', totalIntake);
-                          setState(() {});
-                        },
+                        onPressed: addWater,
                         style: OutlinedButton.styleFrom(minimumSize: Size(Get.width * 0.45, 40)),
                         icon: const Icon(Icons.add),
                         label: const Text('Add Water'),
                       ),
                       OutlinedButton.icon(
-                        onPressed: () async {
-                          SharedPreferences sp = await SharedPreferences.getInstance();
-                          totalIntake = sp.getInt('waterIntake') ?? 0;
-                          if (totalIntake > 0) {
-                            totalIntake -= 1;
-                          }
-                          sp.setInt('waterIntake', totalIntake);
-                          setState(() {});
-                        },
+                        onPressed: reduceWater,
                         style: OutlinedButton.styleFrom(minimumSize: Size(Get.width * 0.45, 40)),
                         icon: const Icon(Icons.remove),
                         label: const Text('Reduce Water'),

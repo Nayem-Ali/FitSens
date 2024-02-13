@@ -1,66 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/utility/color.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../utility/color_utility.dart';
 
-class LineChar extends StatelessWidget {
-  const LineChar({Key? key}) : super(key: key);
+List<String> weekDays = [];
+
+class LineChar extends StatefulWidget {
+  List<Map<String, dynamic>> weeklyData;
+
+  LineChar({Key? key, required this.weeklyData}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    return Container(
+  State<LineChar> createState() => _LineCharState();
+}
 
-      height: screenSize.height * .3,
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 10,right: 20,),
+class _LineCharState extends State<LineChar> {
+  @override
+  Widget build(BuildContext context) {
+    List<FlSpot> flSpot = [];
+    weekDays = widget.weeklyData
+        .map((data) => DateFormat.E().format((data['date'] as Timestamp).toDate()))
+        .toList();
+    for (int i = 0; i < widget.weeklyData.length; i++) {
+      flSpot.add(FlSpot(i + 1.0, widget.weeklyData[i]['BPM'] * 1.0));
+    }
+    return Container(
+      margin: const EdgeInsets.only(right: 20),
       child: LineChart(
         LineChartData(
-          minX: 1,
-          maxX: 7,
           minY: 60,
-          maxY: 100,
+          maxY: 140,
           borderData: FlBorderData(show: false),
           titlesData: const FlTitlesData(
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             bottomTitles: AxisTitles(
-              axisNameWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(width: 14),
-                  Text("Sat"),
-                  Text("Sun"),
-                  Text("Mon"),
-                  Text("Tue"),
-                  Text("Wed"),
-                  Text("Thu"),
-                  Text("Fri"),
-                  //SizedBox(width: 0),
-                ],
+              sideTitles: SideTitles(
+                getTitlesWidget: getBottomTitles,
+                showTitles: true,
               ),
             ),
           ),
           gridData: const FlGridData(
-              drawHorizontalLine: true, drawVerticalLine: false),
+            drawHorizontalLine: true,
+            drawVerticalLine: false,
+          ),
           lineBarsData: [
             LineChartBarData(
-              spots: const [
-                FlSpot(1, 85),
-                FlSpot(2, 92),
-                FlSpot(3, 75),
-                FlSpot(4, 79.5),
-                FlSpot(5, 84),
-                FlSpot(6, 79),
-                FlSpot(7, 84),
-              ],
-              //isCurved: true,
+              spots: flSpot,
+              isCurved: true,
 
-              // dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: ColorCode.primaryColor2,
+                color: ColorCode.primaryColor2
               ),
             ),
           ],
@@ -68,4 +63,20 @@ class LineChar extends StatelessWidget {
       ),
     );
   }
+}
+
+
+Widget getBottomTitles(double value, TitleMeta meta) {
+  if (value == 0) {
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: const Text(""),
+    );
+  }
+
+  return SideTitleWidget(
+    axisSide: meta.axisSide,
+    space: 10,
+    child: Text(weekDays[value.toInt() - 1]),
+  );
 }

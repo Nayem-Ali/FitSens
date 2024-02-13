@@ -57,18 +57,24 @@ class StepCounterBackend {
     String getLastDate = sp.getString("lastDay") ?? "";
     DateTime lastInitializedData = DateTime.tryParse(getLastDate) ?? DateTime.now();
 
-    if (event.timeStamp.difference(lastInitializedData).inHours >= 24) {
-      int target = sp.getInt("goalSteps") ?? 0;
-      String lastDate = sp.getString('lastDay') ?? "";
+    steps = event.steps - initialSteps;
+    int target = sp.getInt("goalSteps") ?? 0;
+    String lastDate = sp.getString('lastDay') ?? "";
+    // print(lastDate.substring(0, lastDate.indexOf(" ")));
 
-      Map<String, dynamic> stepData = {
-        "steps": event.steps - initialSteps,
-        "date": DateTime.parse(lastDate),
-        "goal": (event.steps - initialSteps) >= target ? "Complete" : "Incomplete",
-        "target": target,
-        "percentage": (event.steps - initialSteps / target) * 100
-      };
-      await dbService.addSteps(stepData);
+    Map<String, dynamic> stepData = {
+      "id": lastDate.substring(0, lastDate.indexOf(" ")),
+      "steps": event.steps - initialSteps,
+      "date": DateTime.parse(lastDate),
+      "goal": (event.steps - initialSteps) >= target ? "Complete" : "Incomplete",
+      "target": target,
+      "percentage": ((event.steps - initialSteps) / target) > 1
+          ? 100
+          : (((event.steps - initialSteps) / target) * 100).toInt(),
+    };
+    await dbService.addSteps(stepData);
+
+    if (event.timeStamp.difference(lastInitializedData).inHours >= 24) {
       sp.setInt("initial", event.steps);
       sp.setInt("waterIntake", 0);
       DateTime toDay = DateTime.now();
@@ -85,14 +91,7 @@ class StepCounterBackend {
         averageSpeed.add(speed.toString());
       }
       sp.setStringList("averageSpeed", averageSpeed);
-
-      // This is your speed
     });
-    // print(event.steps);
-    steps = event.steps - initialSteps;
-
-    // print(steps);
-    // print(initialSteps);
   }
 
   void onPedestrianStatusChanged(PedestrianStatus event) {}

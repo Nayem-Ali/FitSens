@@ -113,7 +113,7 @@ class _HeartBPMState extends State<HeartBPM> {
                             //   }
                             // }
                             setState(() {
-                              if ((value.time.difference(start).inSeconds).abs() == 30) {
+                              if ((value.time.difference(start).inMinutes).abs() == 1) {
                                 saveData();
                                 switchKey = !switchKey;
                                 isInitialized = false;
@@ -161,10 +161,10 @@ class _HeartBPMState extends State<HeartBPM> {
                       color: ColorCode.primaryColor1,
                       borderRadius: BorderRadius.circular(10),
                       minHeight: 40,
-                      value: sec / 30,
+                      value: sec / 60,
                     ),
                     Text(
-                      "${(sec/30 * 100).toStringAsFixed(1)}%",
+                      "${(sec/60 * 100).toStringAsFixed(1)}%",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 30,

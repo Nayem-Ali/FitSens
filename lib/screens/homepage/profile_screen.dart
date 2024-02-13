@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/screens/homepage/activity_history.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
+import 'package:finessapp/screens/homepage/workout_progress.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:finessapp/widgets/edit_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -294,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         OutlinedButton.icon(
                           onPressed: () {
-                            Get.to(()=>ActivityHistory());
+                            Get.to(()=>const ActivityHistory());
                           },
                           style: OutlinedButton.styleFrom(
                               alignment: Alignment.centerLeft,
@@ -303,7 +304,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: const Icon(Icons.stacked_line_chart),
                         ),
                         OutlinedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+
+                          },
                           style: OutlinedButton.styleFrom(
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),

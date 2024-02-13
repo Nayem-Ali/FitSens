@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
 
 class DBService {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -21,19 +20,23 @@ class DBService {
   }
 
   addSteps(Map<String, dynamic> stepsData) async {
-    String id = DateFormat.yMEd().format(stepsData['date']);
     String uid = auth.currentUser!.uid;
-    await fireStore.collection('user').doc(uid).collection('steps').doc(id).set(stepsData);
+    await fireStore
+        .collection('user')
+        .doc(uid)
+        .collection('steps')
+        .doc(stepsData['id'])
+        .set(stepsData);
   }
 
   getSteps() async {
     String uid = auth.currentUser!.uid;
-    List<Map<String,dynamic>>? allData = [];
-    try{
+    List<Map<String, dynamic>>? allData = [];
+    try {
       final querySnapshot = await fireStore.collection('user').doc(uid).collection('steps').get();
       allData = querySnapshot.docs.map((doc) => doc.data()).toList();
       return allData;
-    } catch (e){
+    } catch (e) {
       return [];
     }
   }
@@ -45,12 +48,35 @@ class DBService {
 
   getBPMData() async {
     String uid = auth.currentUser!.uid;
-    List<Map<String,dynamic>>? allData = [];
-    try{
+    List<Map<String, dynamic>>? allData = [];
+    try {
       final querySnapshot = await fireStore.collection('user').doc(uid).collection('BPM').get();
       allData = querySnapshot.docs.map((doc) => doc.data()).toList();
       return allData;
-    } catch (e){
+    } catch (e) {
+      return [];
+    }
+  }
+
+  addWaterIntakeData(Map<String, dynamic> data) async {
+    String uid = auth.currentUser!.uid;
+    await fireStore
+        .collection('user')
+        .doc(uid)
+        .collection('WaterIntake')
+        .doc(data['id'])
+        .set(data);
+  }
+
+  getWaterIntakeData() async {
+    String uid = auth.currentUser!.uid;
+    List<Map<String, dynamic>>? allData = [];
+    try {
+      final querySnapshot =
+          await fireStore.collection('user').doc(uid).collection('WaterIntake').get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+    } catch (e) {
       return [];
     }
   }

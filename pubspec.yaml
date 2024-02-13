@@ -100,6 +100,7 @@ flutter:
     - assets/Layer.png
     - assets/ProgressBar.png
     - assets/Status.png
+    - assets/alarm.mp3
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
