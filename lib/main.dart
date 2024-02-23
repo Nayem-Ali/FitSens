@@ -16,7 +16,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  /// To interact with flutter engine
+
   await Firebase.initializeApp(
     name: "Fitness App",
     options: const FirebaseOptions(

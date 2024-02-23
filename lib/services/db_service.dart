@@ -80,4 +80,22 @@ class DBService {
       return [];
     }
   }
+
+  addDietPlan(Map<String, dynamic> data, String mealType) async {
+    String uid = auth.currentUser!.uid;
+    await fireStore.collection('user').doc(uid).collection('dietPlan').doc(mealType).set(data);
+  }
+
+  getDietPlan() async {
+    List<dynamic> allData = [];
+    String uid = auth.currentUser!.uid;
+    try {
+      QuerySnapshot querySnapshot =
+          await fireStore.collection('user').doc(uid).collection('dietPlan').get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+    } catch (e) {
+      return [];
+    }
+  }
 }

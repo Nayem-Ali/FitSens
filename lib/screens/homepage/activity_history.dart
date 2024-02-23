@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/services/db_service.dart';
 import 'package:finessapp/widgets/barchart.dart';
 import 'package:finessapp/widgets/linechart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../../utility/utils.dart';
 
@@ -25,6 +23,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   List<Map<String, dynamic>> weeklyHeartBPM = [];
   List<Map<String, dynamic>> weeklyWaterIntakeActivity = [];
 
+
   getData() async {
     stepActivity = await dbService.getSteps();
     heartBPM = await dbService.getBPMData();
@@ -37,23 +36,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     }
     if (heartBPM.length > 7) {
       weeklyHeartBPM = heartBPM.sublist(heartBPM.length - 7, heartBPM.length);
-      // for(var data in weeklyHeartBPM){
-      //   DateTime dateTime = (data['date'] as Timestamp).toDate();
-      //   print(DateFormat.yMMMMEEEEd().format(dateTime) + "Weekday ${dateTime.weekday}");
-      // }
     }
     if (waterIntakeActivity.length > 7) {
       weeklyWaterIntakeActivity =
           waterIntakeActivity.sublist(waterIntakeActivity.length - 7, waterIntakeActivity.length);
     }
-    // print("-----------------------------");
-    // for(var data in heartBPM){
-    //   DateTime dateTime = (data['date'] as Timestamp).toDate();
-    //   print(DateFormat.yMMMMEEEEd().format(dateTime) + "Weekday ${dateTime.weekday}");
-    // }
-    print(heartBPM.length);
-    print(stepActivity.length);
-    print(waterIntakeActivity.length);
+
     setState(() {});
   }
 
@@ -100,27 +88,39 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
-      body: Column(children: [
-        const Text("Step Activity"),
-        Expanded(
-          child: MyBarChart(
-            weeklyData: stepActivity.length > 7 ? weeklyStepActivity : stepActivity,
+      body: Column(
+        children: [
+
+          Expanded(
+            child: Column(
+              children: [
+                const Text("Step Activity"),
+                Expanded(
+                  child: MyBarChart(
+                    weeklyData: stepActivity.length > 7 ? weeklyStepActivity : stepActivity,
+                  ),
+                ),
+                const Text("Water Intake Activity"),
+                Expanded(
+                  child: MyBarChart(
+                    weeklyData: waterIntakeActivity.length > 7
+                        ? weeklyWaterIntakeActivity
+                        : waterIntakeActivity,
+                  ),
+                ),
+                const Text("Heart BPM"),
+                Expanded(
+                  child: LineChar(
+                    weeklyData: heartBPM.length > 7 ? weeklyHeartBPM : heartBPM,
+                  ),
+                ),
+                const SizedBox(height: 20)
+              ],
+            ),
           ),
-        ),
-        const Text("Water Intake Activity"),
-        Expanded(
-          child: MyBarChart(
-            weeklyData: waterIntakeActivity.length > 7 ? weeklyWaterIntakeActivity : waterIntakeActivity,
-          ),
-        ),
-        const Text("Heart BPM"),
-        Expanded(
-          child: LineChar(
-            weeklyData: heartBPM.length > 7 ? weeklyHeartBPM : heartBPM,
-          ),
-        ),
-        const SizedBox(height: 20)
-      ]),
+
+        ],
+      ),
     );
   }
 }

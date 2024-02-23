@@ -30,6 +30,7 @@ class StepCounterBackend {
   }
 
   initialStepsSetter(StepCount event) async {
+    /// for the first time when user install app
     SharedPreferences sp = await SharedPreferences.getInstance();
 
     if (sp.containsKey("initial") == false) {
