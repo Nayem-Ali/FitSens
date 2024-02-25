@@ -39,7 +39,6 @@ class _SleepScheduleState extends State<SleepSchedule> {
   void initState() {
     // TODO: imple
     getData();
-
   }
 
   getData() async {
@@ -250,183 +249,188 @@ class _SleepScheduleState extends State<SleepSchedule> {
                             ? 1
                             : snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          difSleep();
-                          final document = snapshot.data!.docs[index];
-                          final documentId = document.id;
-                          return Column(
-                            children: [
-                              Dismissible(
-                                key: Key(UniqueKey().toString()),
-                                onDismissed: (direction) async {
-                                  if (direction ==
-                                      DismissDirection.startToEnd) {
-                                    await sleep
-                                        .doc(user!.uid)
-                                        .collection('schedule')
-                                        .doc(documentId)
-                                        .delete();
+                          // if (snapshot.data!.docs[index]['date'] ==
+                          //     DateFormat('yyyy-MM-dd').format(_selectedDate)) {
+                            difSleep();
+                            final document = snapshot.data!.docs[index];
+                            final documentId = document.id;
+                            return Column(
+                              children: [
+                                Dismissible(
+                                  key: Key(UniqueKey().toString()),
+                                  onDismissed: (direction) async {
+                                    if (direction ==
+                                        DismissDirection.startToEnd) {
+                                      await sleep
+                                          .doc(user!.uid)
+                                          .collection('schedule')
+                                          .doc(documentId)
+                                          .delete();
 
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text("Successfully Deleted"),
-                                      backgroundColor: Colors.red,
-                                    ));
-                                  } else {
-                                    setState(() {});
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text(
-                                          "For delete you have swipe Left to Right"),
-                                      backgroundColor: Colors.green,
-                                    ));
-                                  }
-                                },
-                                background: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(20),
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text("Successfully Deleted"),
+                                        backgroundColor: Colors.red,
+                                      ));
+                                    } else {
+                                      setState(() {});
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            "For delete you have swipe Left to Right"),
+                                        backgroundColor: Colors.green,
+                                      ));
+                                    }
+                                  },
+                                  background: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    height: 20,
                                   ),
-                                  height: 20,
-                                ),
-                                secondaryBackground: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(20),
+                                  secondaryBackground: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    height: 20,
                                   ),
-                                  height: 20,
-                                ),
-                                child: ListTile(
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 80,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16 * fem),
-                                          gradient: thirdGradient,
+                                  child: ListTile(
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16 * fem),
+                                            gradient: thirdGradient,
+                                          ),
+                                          margin: const EdgeInsets.only(
+                                              left: 5, right: 5),
+                                          child: SleepContainer(
+                                              title: 'Bed Time',
+                                              subTitle:
+                                                  'Your bed time at ${snapshot.data!.docs[index]['bed_time']}',
+                                              image: Image.asset(
+                                                  "assets/bed.png")),
                                         ),
-                                        margin: const EdgeInsets.only(
-                                            left: 5, right: 5),
-                                        child: SleepContainer(
-                                            title: 'Bed Time',
-                                            subTitle:
-                                                'Your bed time at ${snapshot.data!.docs[index]['bed_time']}',
-                                            image:
-                                                Image.asset("assets/bed.png")),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
 
-                              const SizedBox(height: 10),
+                                const SizedBox(height: 10),
 
-                              Dismissible(
-                                key: Key(UniqueKey().toString()),
-                                onDismissed: (direction) async {
-                                  if (direction ==
-                                      DismissDirection.startToEnd) {
-                                    await sleep
-                                        .doc(user!.uid)
-                                        .collection('schedule')
-                                        .doc(documentId)
-                                        .delete();
+                                Dismissible(
+                                  key: Key(UniqueKey().toString()),
+                                  onDismissed: (direction) async {
+                                    if (direction ==
+                                        DismissDirection.startToEnd) {
+                                      await sleep
+                                          .doc(user!.uid)
+                                          .collection('schedule')
+                                          .doc(documentId)
+                                          .delete();
 
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text("Successfully Deleted"),
-                                      backgroundColor: Colors.red,
-                                    ));
-                                  } else {
-                                    setState(() {});
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text(
-                                          "For delete you have swipe Left to Right"),
-                                      backgroundColor: Colors.green,
-                                    ));
-                                  }
-                                },
-                                background: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(20),
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text("Successfully Deleted"),
+                                        backgroundColor: Colors.red,
+                                      ));
+                                    } else {
+                                      setState(() {});
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            "For delete you have swipe Left to Right"),
+                                        backgroundColor: Colors.green,
+                                      ));
+                                    }
+                                  },
+                                  background: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    height: 20,
                                   ),
-                                  height: 20,
-                                ),
-                                secondaryBackground: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(20),
+                                  secondaryBackground: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    height: 20,
                                   ),
-                                  height: 20,
-                                ),
-                                child: ListTile(
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      //const SizedBox(height: 10),
-                                      Container(
-                                        height: 80,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16 * fem),
-                                          gradient: thirdGradient,
+                                  child: ListTile(
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        //const SizedBox(height: 10),
+                                        Container(
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16 * fem),
+                                            gradient: thirdGradient,
+                                          ),
+                                          margin: const EdgeInsets.only(
+                                              left: 5, right: 5),
+                                          child: SleepContainer(
+                                              title: 'Alarm',
+                                              subTitle:
+                                                  'Your alarm time at  ${snapshot.data!.docs[index]['alarm_time']}',
+                                              image: Image.asset(
+                                                  "assets/alarm.png")),
                                         ),
-                                        margin: const EdgeInsets.only(
-                                            left: 5, right: 5),
-                                        child: SleepContainer(
-                                            title: 'Alarm',
-                                            subTitle:
-                                                'Your alarm time at  ${snapshot.data!.docs[index]['alarm_time']}',
-                                            image: Image.asset(
-                                                "assets/alarm.png")),
-                                      ),
-                                      const SizedBox(height: 13),
-                                    ],
+                                        const SizedBox(height: 13),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
 
-                              Container(
-                                height: 90,
-                                width: 350,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16 * fem),
-                                  gradient: thirdGradient,
-                                ),
-                                margin: EdgeInsets.fromLTRB(
-                                    25 * fem, 0 * fem, 35 * fem, 34 * fem),
-                                child: Container(
-                                  margin: const EdgeInsets.only(left: 20),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "You will get $hour hours $min mins for tonight",
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 14 * ffem,
-                                          fontWeight: FontWeight.w500,
-                                          height: 1.5 * ffem / fem,
-                                          color: Colors.black,
+                                Container(
+                                  height: 90,
+                                  width: 350,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(16 * fem),
+                                    gradient: thirdGradient,
+                                  ),
+                                  margin: EdgeInsets.fromLTRB(
+                                      25 * fem, 0 * fem, 35 * fem, 34 * fem),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 20),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "You will get $hour hours $min mins for tonight",
+                                          style: SafeGoogleFont(
+                                            'Poppins',
+                                            fontSize: 14 * ffem,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5 * ffem / fem,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              //const SizedBox(height: 15,)
-                            ],
-                          );
+                                //const SizedBox(height: 15,)
+                              ],
+                            );
+                          //}
                         });
                   } else {
                     return Container();
@@ -525,7 +529,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
   difSleep() {
     DateTime tempDate =
         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
-    late String bed="00:00 am", alarm="00:00 am";
+    late String bed = "00:00 am", alarm = "00:00 am";
     for (int i = 0; i < sleepData.length; i++) {
       if ((sleepData[i]['id'] as Timestamp).toDate() == tempDate) {
         bed = sleepData[i]['bed_time'];

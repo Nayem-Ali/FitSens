@@ -106,7 +106,7 @@ class _SleepHomeState extends State<SleepHome> {
                             ),
                           ),
                           Text(
-                            "$difference/",
+                            "${difference~/3600} hour ${(difference%3600).toInt()} min",
                             //sleepData[''],
                             style: SafeGoogleFont(
                               'Poppins',
@@ -180,9 +180,7 @@ class _SleepHomeState extends State<SleepHome> {
                                               left: 5, right: 5),
                                           child: SleepContainer(
                                               title: 'Bed Time',
-                                              subTitle1: snapshot.data!.docs[index]
-                                              ['bed_time'],
-                                              subTitle: 'in 6h 12m',
+                                              subTitle:'Your bed time at  ${snapshot.data!.docs[index]['bed_time']}',
                                               image: Image.asset("assets/bed.png")),
                                         ),
                                       ],
@@ -207,9 +205,7 @@ class _SleepHomeState extends State<SleepHome> {
                                               left: 5, right: 5),
                                           child: SleepContainer(
                                               title: 'Alarm',
-                                              subTitle1: snapshot.data!.docs[index]
-                                              ['alarm_time'],
-                                              subTitle: 'in 14h 30m',
+                                              subTitle: 'Your alarm time at  ${snapshot.data!.docs[index]['alarm_time']}',
                                               image:
                                               Image.asset("assets/alarm.png")),
                                         ),
