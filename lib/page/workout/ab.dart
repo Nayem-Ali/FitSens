@@ -1,4 +1,3 @@
-
 import 'package:finessapp/page/workout/widgets/customContainer.dart';
 import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +68,6 @@ class AB extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             height: 1.5 * ffem / fem,
                             color: Colors.black,
-
                           ),
                         ),
                       ),
@@ -118,7 +116,6 @@ class AB extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 height: 1.5 * ffem / fem,
                                 color: Colors.black,
-
                               ),
                             ),
                           ),
@@ -137,7 +134,6 @@ class AB extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             height: 1.5 * ffem / fem,
                             color: Colors.black,
-
                           ),
                         ),
                       ),
@@ -149,7 +145,25 @@ class AB extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>  const VedioPlayer(assetPath: 'assets/video/video.mp4', title: 'Warm Up',)),
+                                  builder: (context) => const VideoPlayer(
+                                    assetPath: 'assets/video/video.mp4',
+                                    title: 'Warm Up',
+                                    text1:
+                                    'Some Benefits of Warm Up Exercise',
+                                    text2: '⭐ Increased Blood Flow',
+                                    text3: '⭐ Improved Muscle Flexibility',
+                                    text4:
+                                    '⭐ Enhanced Joint Range of Motion',
+                                    text5: '⭐ Activation of Nervous System',
+                                    text6: '⭐ Mental Preparation',
+                                    text7: '⭐ Prevention of Injury',
+                                    text8: '⭐ Improved Performance',
+                                    text9: '⭐ Temperature Regulation',
+                                    text10:
+                                    '⭐ Gradual Elevation of Heart Rate',
+                                    text11:
+                                    '⭐ Reduced Muscle Stiffness and Soreness',
+                                  )),
                             );
                           },
                           image: Image.asset("assets/page-2/warmup.png"),
@@ -163,7 +177,26 @@ class AB extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const VedioPlayer(assetPath: 'assets/video/fullbody/jumping.mp4', title: 'Jumping Jack',)),
+                                  builder: (context) => const VideoPlayer(
+                                    assetPath:
+                                    'assets/video/fullbody/jumping.mp4',
+                                    title: 'Jumping Jack',
+                                    text1:
+                                    'Some Benefits of Warm Up Exercise',
+                                    text2: '⭐ Increased Blood Flow',
+                                    text3: '⭐ Improved Muscle Flexibility',
+                                    text4:
+                                    '⭐ Enhanced Joint Range of Motion',
+                                    text5: '⭐ Activation of Nervous System',
+                                    text6: '⭐ Mental Preparation',
+                                    text7: '⭐ Prevention of Injury',
+                                    text8: '⭐ Improved Performance',
+                                    text9: '⭐ Temperature Regulation',
+                                    text10:
+                                    '⭐ Gradual Elevation of Heart Rate',
+                                    text11:
+                                    '⭐ Reduced Muscle Stiffness and Soreness',
+                                  )),
                             );
                           },
                           image: Image.asset("assets/page-2/jumping.png"),
@@ -177,7 +210,26 @@ class AB extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const VedioPlayer(assetPath: 'assets/video/fullbody/skipping.mp4', title: 'Skipping',)),
+                                  builder: (context) => const VideoPlayer(
+                                    assetPath:
+                                    'assets/video/fullbody/skipping.mp4',
+                                    title: 'Skipping',
+                                    text1:
+                                    'Some Benefits of Warm Up Exercise',
+                                    text2: '⭐ Increased Blood Flow',
+                                    text3: '⭐ Improved Muscle Flexibility',
+                                    text4:
+                                    '⭐ Enhanced Joint Range of Motion',
+                                    text5: '⭐ Activation of Nervous System',
+                                    text6: '⭐ Mental Preparation',
+                                    text7: '⭐ Prevention of Injury',
+                                    text8: '⭐ Improved Performance',
+                                    text9: '⭐ Temperature Regulation',
+                                    text10:
+                                    '⭐ Gradual Elevation of Heart Rate',
+                                    text11:
+                                    '⭐ Reduced Muscle Stiffness and Soreness',
+                                  )),
                             );
                           },
                           image: Image.asset("assets/page-2/skipping.png"),
@@ -187,8 +239,7 @@ class AB extends StatelessWidget {
                         height: 13,
                       ),
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/squats.png"),
                           title: "Squats",
                           subTitle: "20x"),
@@ -196,8 +247,7 @@ class AB extends StatelessWidget {
                         height: 13,
                       ),
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/arm.png"),
                           title: "Arm Raises",
                           subTitle: "1.00"),
@@ -205,8 +255,7 @@ class AB extends StatelessWidget {
                         height: 13,
                       ),
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/rest.png"),
                           title: "Rest and Drinks",
                           subTitle: "3.00"),
@@ -223,7 +272,6 @@ class AB extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             height: 1.5 * ffem / fem,
                             color: Colors.black,
-
                           ),
                         ),
                       ),
@@ -231,8 +279,7 @@ class AB extends StatelessWidget {
                         height: 13,
                       ),
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/incline.png"),
                           title: "Incline Push-Ups",
                           subTitle: "12x"),
@@ -240,8 +287,7 @@ class AB extends StatelessWidget {
                         height: 13,
                       ),
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/pushups.png"),
                           title: "Push-Ups",
                           subTitle: "15x"),
@@ -249,19 +295,15 @@ class AB extends StatelessWidget {
                         height: 13,
                       ),
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/skipping.png"),
                           title: "Skipping",
                           subTitle: "15x"),
-
                       const SizedBox(
                         height: 13,
                       ),
-
                       MyContainer(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           image: Image.asset("assets/page-2/cobra.png"),
                           title: "Cobra Stretch",
                           subTitle: "15x"),
@@ -270,10 +312,15 @@ class AB extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10,left: 10),
-                child: IconButton(onPressed: (){
-                  Navigator.pop(context);
-                }, icon: const Icon(Icons.arrow_back_ios,color: Colors.white,)),
+                margin: const EdgeInsets.only(top: 10, left: 10),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    )),
               ),
             ],
           ),

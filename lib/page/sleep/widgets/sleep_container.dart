@@ -43,16 +43,7 @@ class SleepContainer extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10,),
-                Text(
-                  subTitle1!,
-                  style: SafeGoogleFont(
-                    'Poppins',
-                    fontSize: 12 * ffem,
-                    fontWeight: FontWeight.w500,
-                    height: 1.5 * ffem / fem,
-                    color: Colors.grey,
-                  ),
-                ),
+
               ],
             ),
 

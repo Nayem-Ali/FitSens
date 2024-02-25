@@ -1,4 +1,5 @@
 import 'package:finessapp/page/workout/widgets/customContainer.dart';
+import 'package:finessapp/page/workout/widgets/full_exercise.dart';
 import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import '../../utility/color.dart';
@@ -61,13 +62,13 @@ class Fullbody extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 30),
                         child: Text(
-                          "Fullbody Workout",
+                          "Full-body Workout",
                           style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 17 * ffem,
-                              fontWeight: FontWeight.bold,
-                              height: 1.5 * ffem / fem,
-                              color: Colors.black,
+                            'Poppins',
+                            fontSize: 17 * ffem,
+                            fontWeight: FontWeight.bold,
+                            height: 1.5 * ffem / fem,
+                            color: Colors.black,
 
                           ),
                         ),
@@ -99,11 +100,11 @@ class Fullbody extends StatelessWidget {
                             child: Text(
                               "Exercises",
                               style: SafeGoogleFont(
-                                  'Poppins',
-                                  fontSize: 17 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.5 * ffem / fem,
-                                  color: Colors.black,
+                                'Poppins',
+                                fontSize: 17 * ffem,
+                                fontWeight: FontWeight.bold,
+                                height: 1.5 * ffem / fem,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -112,11 +113,11 @@ class Fullbody extends StatelessWidget {
                             child: Text(
                               "2 Sets",
                               style: SafeGoogleFont(
-                                  'Poppins',
-                                  fontSize: 14 * ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.5 * ffem / fem,
-                                  color: Colors.black,
+                                'Poppins',
+                                fontSize: 14 * ffem,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5 * ffem / fem,
+                                color: Colors.black,
 
                               ),
                             ),
@@ -126,144 +127,7 @@ class Fullbody extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Text(
-                          "Set 1",
-                          style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 14 * ffem,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5 * ffem / fem,
-                              color: Colors.black,
-
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 14,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>  const VedioPlayer(assetPath: 'assets/video/fullbody/warmup.mp4', title: 'Warm Up',)),
-                            );
-                          },
-                          image: Image.asset("assets/page-2/warmup.png"),
-                          title: "Warm Up",
-                          subTitle: "5.00"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const VedioPlayer(assetPath: 'assets/video/fullbody/jumping.mp4', title: 'Jumping Jack',)),
-                            );
-                          },
-                          image: Image.asset("assets/page-2/jumping.png"),
-                          title: "Jumping Jack",
-                          subTitle: "12x"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const VedioPlayer(assetPath: 'assets/video/fullbody/skipping.mp4', title: 'Skipping',)),
-                            );
-                          },
-                          image: Image.asset("assets/page-2/skipping.png"),
-                          title: "Skipping",
-                          subTitle: "15x"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/squats.png"),
-                          title: "Squats",
-                          subTitle: "20x"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/arm.png"),
-                          title: "Arm Raises",
-                          subTitle: "1.00"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/rest.png"),
-                          title: "Rest and Drinks",
-                          subTitle: "3.00"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Text(
-                          "Set 2",
-                          style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 14 * ffem,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5 * ffem / fem,
-                              color: Colors.black,
-
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/incline.png"),
-                          title: "Incline Push-Ups",
-                          subTitle: "12x"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/pushups.png"),
-                          title: "Push-Ups",
-                          subTitle: "15x"),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/skipping.png"),
-                          title: "Skipping",
-                          subTitle: "15x"),
-
-                      const SizedBox(
-                        height: 13,
-                      ),
-
-                      MyContainer(
-                          onTap: () {
-                          },
-                          image: Image.asset("assets/page-2/cobra.png"),
-                          title: "Cobra Stretch",
-                          subTitle: "15x"),
+                      const FullExerciseList(),
                     ],
                   ),
                 ),

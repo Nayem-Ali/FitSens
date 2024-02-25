@@ -18,7 +18,7 @@ class DailyContainer extends StatelessWidget {
     return Container(
 
       margin: EdgeInsets.fromLTRB(
-          25 * fem, 23 * fem, 30 * fem, 25 * fem),
+          25 * fem, 20 * fem, 30 * fem, 15 * fem),
       padding: EdgeInsets.fromLTRB(
           20 * fem, 15 * fem, 20 * fem, 14 * fem),
 

@@ -1,8 +1,10 @@
+import 'package:finessapp/page/diet_planner/controller.dart';
 import 'package:finessapp/page/diet_planner/make_plan.dart';
 import 'package:finessapp/utility/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 import '../../services/db_service.dart';
 import '../../utility/utils.dart';
@@ -17,9 +19,11 @@ class DietPlanner extends StatefulWidget {
 class _DietPlannerState extends State<DietPlanner> {
   DBService dbService = DBService();
   FirebaseAuth auth = FirebaseAuth.instance;
+  PostController postController = PostController();
   Map<String, dynamic> userDetails = {};
   List<dynamic> dietData = [];
   late int age;
+  bool isLoading  = true;
   double calorieNeeds = 1;
   double carbsNeeds = 1;
   double proteinNeeds = 1;
@@ -34,8 +38,19 @@ class _DietPlannerState extends State<DietPlanner> {
     DateTime date = DateTime.parse(userDetails['dob']);
     age = DateTime.now().difference(date).inDays ~/ 365;
     dietData = await dbService.getDietPlan();
+    http.Response response1 = await http.get(Uri.parse(dietData[0]['image']));
+    http.Response response2 = await http.get(Uri.parse(dietData[1]['image']));
+    http.Response response3 = await http.get(Uri.parse(dietData[2]['image']));
+    http.Response response4 = await http.get(Uri.parse(dietData[3]['image']));
+    print(response1.statusCode);
+    print(response2.statusCode);
+    print(response3.statusCode);
+    print(response4.statusCode);
+
     dietPlan();
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   dietPlan() {
@@ -119,7 +134,7 @@ class _DietPlannerState extends State<DietPlanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
-      body: Column(
+      body: isLoading ? const  Center(child: CircularProgressIndicator(),) : Column(
         children: [
           const Text(
             "Based on your height, weight, gender and age estimating macronutrients per day:",

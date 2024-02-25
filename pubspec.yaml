@@ -50,6 +50,10 @@ dependencies:
   geolocator: ^10.1.0
   alarm: ^3.0.7
   http: ^1.2.0
+  flutter_local_notifications: ^15.1.1
+  flutter_timezone: ^1.0.7
+  rxdart: ^0.27.7
+
 
 
 dev_dependencies:

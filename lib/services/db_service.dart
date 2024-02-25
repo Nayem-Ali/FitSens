@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class DBService {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  DateTime now = DateTime.now();
 
   Future<Map<String, dynamic>> getUserInfo() async {
     String uid = auth.currentUser!.uid;
@@ -11,6 +12,7 @@ class DBService {
     DocumentSnapshot ds = await fireStore.collection("user").doc(uid).get();
     userDetails = ds.data() as Map<String, dynamic>;
     return userDetails;
+
     // = ds.data() as Map<String, dynamic>?;
   }
 
@@ -98,4 +100,92 @@ class DBService {
       return [];
     }
   }
+
+  addWorkoutData(Map<String, dynamic> data) async {
+    String uid = auth.currentUser!.uid;
+    await fireStore
+        .collection('user')
+        .doc(uid)
+        .collection('Workout')
+        .doc(data['id'])
+        .set(data);
+  }
+
+  addSleepData(Map<String, dynamic> data) async {
+    String uid = auth.currentUser!.uid;
+    await fireStore
+        .collection('user')
+        .doc(uid)
+        .collection('Sleep')
+        .doc(data['id'])
+        .set(data);
+  }
+
+  getWorkoutData() async {
+    String uid = auth.currentUser!.uid;
+    List<Map<String, dynamic>>? allData = [];
+    try {
+      final querySnapshot =
+      await fireStore.collection('user').doc(uid).collection('Workout').get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  getSleepDataForChart()async{
+    String uid = auth.currentUser!.uid;
+    List<Map<String, dynamic>>? allData = [];
+    try {
+      final querySnapshot =
+          await fireStore.collection('user').doc(uid).collection('Sleep').get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  getSleepData()async{
+    String uid = auth.currentUser!.uid;
+    List<Map<String, dynamic>>? allData = [];
+    try {
+      final querySnapshot =
+      await fireStore.collection('sleep').doc(uid).collection('schedule').get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  addDrinkSchedule(Map<String, dynamic> drinksData) async {
+    String uid = auth.currentUser!.uid;
+    fireStore
+        .collection('user')
+        .doc(uid)
+        .collection('DrinkSchedule')
+        .doc(now.toString())
+        .set(drinksData);
+  }
+
+  getDrinkSchedule() async {
+    String uid = auth.currentUser!.uid;
+    List<Map<String, dynamic>>? allData = [];
+
+    try {
+      final querySnapshot = await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('DrinkSchedule')
+          .get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+
+    } catch (e) {
+      return [];
+    }
+  }
+
 }

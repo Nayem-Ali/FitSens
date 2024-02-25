@@ -15,56 +15,57 @@ class MyBarChart extends StatefulWidget {
 }
 
 class _MyBarChartState extends State<MyBarChart> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: SizedBox(
-            height: 140,
-            width: Get.width,
-            child: BarChart(
-              BarChartData(
-                maxY: 100,
-                minY: 0,
-                gridData: const FlGridData(
-                  // show: false,
-                  drawHorizontalLine: true,
-                  drawVerticalLine: false,
-                ),
-                borderData: FlBorderData(show: false),
-                titlesData: const FlTitlesData(
-                  show: true,
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: getBottomTitles,
-                    ),
+        body: SizedBox(
+          height: 150,
+          width: Get.width,
+          child: BarChart(
+            BarChartData(
+              maxY: 100,
+              minY: 0,
+              gridData: const FlGridData(
+                // show: false,
+                drawHorizontalLine: true,
+                drawVerticalLine: false,
+              ),
+              borderData: FlBorderData(show: false),
+              titlesData: const FlTitlesData(
+                show: true,
+                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: getBottomTitles,
                   ),
                 ),
-                barGroups: widget.weeklyData
-                    .map(
-                      (weekDay) => BarChartGroupData(
-                        x: (weekDay['date'] as Timestamp).toDate().weekday,
-                        barRods: [
-                          BarChartRodData(
-                            toY: weekDay['percentage'] * 1.0,
-                            width: 20,
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: primaryGradient,
-                            backDrawRodData: BackgroundBarChartRodData(
-                              show: true,
-                              toY: 100,
-                                color: ColorCode.secondaryColor2
-                            )
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
               ),
+              barGroups: widget.weeklyData
+                  .map(
+                    (weekDay) => BarChartGroupData(
+                      x: (weekDay['date'] as Timestamp).toDate().weekday,
+                      barRods: [
+                        BarChartRodData(
+                          toY: weekDay['percentage'] * 1.0,
+                          width: 20,
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: primaryGradient,
+                          backDrawRodData: BackgroundBarChartRodData(
+                            show: true,
+                            toY: 100,
+                              color: ColorCode.secondaryColor2
+                          )
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ),

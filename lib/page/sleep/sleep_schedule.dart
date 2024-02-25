@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../screens/homepage/profile_screen.dart';
+import '../../services/db_service.dart';
 import '../../utility/color.dart';
 import '../../utility/utils.dart';
 import 'widgets/sleep_container.dart';
@@ -29,8 +30,26 @@ class _SleepScheduleState extends State<SleepSchedule> {
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   DateTime _selectedDate = DateTime.now();
+  DBService dbService = DBService();
+  List<Map<String, dynamic>> sleepData = [];
+  late double durationSleepNotify;
+  var hour, min;
 
-  ProfileScreen p = ProfileScreen();
+  @override
+  void initState() {
+    // TODO: imple
+    getData();
+
+  }
+
+  getData() async {
+    //allSchedule.clear();
+    sleepData = await dbService.getSleepData();
+    sleepData.sort((a, b) => a['id'].compareTo(b['id']));
+    difSleep();
+    //print(sleepData);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +62,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
       appBar: _appBar(context),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
-          margin: const EdgeInsets.only(left: 20, right: 25, top: 20),
+          margin: const EdgeInsets.only(left: 20, right: 25, top: 10),
           height: 110 * fem,
           width: 375 * fem,
           decoration: BoxDecoration(
@@ -84,7 +103,8 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                 itemBuilder: (context, index) {
                                   DateTime date1 = DateTime.parse(
                                       snapshot.data!.docs[index]["dob"]);
-                                  late int age = DateTime.now().year - date1.year;
+                                  late int age =
+                                      DateTime.now().year - date1.year;
 
                                   if (age >= 1 && age <= 2) {
                                     return ListTile(
@@ -174,13 +194,14 @@ class _SleepScheduleState extends State<SleepSchedule> {
                         }),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 25),
+                    margin: const EdgeInsets.only(left: 25),
                     child: MyButton(
                         label: 'View more',
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const IdealSleep()),
+                            MaterialPageRoute(
+                                builder: (context) => const IdealSleep()),
                           );
                         },
                         width: 90,
@@ -196,7 +217,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
           ),
         ),
         Container(
-          margin: EdgeInsets.fromLTRB(25 * fem, 23 * fem, 35 * fem, 34 * fem),
+          margin: EdgeInsets.fromLTRB(25 * fem, 18 * fem, 35 * fem, 15 * fem),
           child: Text(
             "Your Schedule",
             style: SafeGoogleFont(
@@ -209,10 +230,10 @@ class _SleepScheduleState extends State<SleepSchedule> {
           ),
         ),
         _addDateBar(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         SingleChildScrollView(
           child: SizedBox(
-            height: 220,
+            height: 250,
             width: 400,
             child: StreamBuilder(
                 stream: sleep
@@ -229,6 +250,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
                             ? 1
                             : snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
+                          difSleep();
                           final document = snapshot.data!.docs[index];
                           final documentId = document.id;
                           return Column(
@@ -289,9 +311,8 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                             left: 5, right: 5),
                                         child: SleepContainer(
                                             title: 'Bed Time',
-                                            subTitle1: snapshot
-                                                .data!.docs[index]['bed_time'],
-                                            subTitle: 'in 6h 22m',
+                                            subTitle:
+                                                'Your bed time at ${snapshot.data!.docs[index]['bed_time']}',
                                             image:
                                                 Image.asset("assets/bed.png")),
                                       ),
@@ -300,7 +321,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                 ),
                               ),
 
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 10),
 
                               Dismissible(
                                 key: Key(UniqueKey().toString()),
@@ -359,13 +380,12 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                             left: 5, right: 5),
                                         child: SleepContainer(
                                             title: 'Alarm',
-                                            subTitle1: snapshot.data!
-                                                .docs[index]['alarm_time'],
-                                            subTitle: 'in ${snapshot.data!
-                                                .docs[index]['alarm_time']}h 30m',
+                                            subTitle:
+                                                'Your alarm time at  ${snapshot.data!.docs[index]['alarm_time']}',
                                             image: Image.asset(
                                                 "assets/alarm.png")),
                                       ),
+                                      const SizedBox(height: 13),
                                     ],
                                   ),
                                 ),
@@ -378,15 +398,17 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                   borderRadius: BorderRadius.circular(16 * fem),
                                   gradient: thirdGradient,
                                 ),
-                                margin: EdgeInsets.fromLTRB(25 * fem, 0 * fem, 35 * fem, 34 * fem),
+                                margin: EdgeInsets.fromLTRB(
+                                    25 * fem, 0 * fem, 35 * fem, 34 * fem),
                                 child: Container(
-                                  margin: EdgeInsets.only(left: 20),
+                                  margin: const EdgeInsets.only(left: 20),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "You will get 8 hours 10 mins for tonight",
+                                        "You will get $hour hours $min mins for tonight",
                                         style: SafeGoogleFont(
                                           'Poppins',
                                           fontSize: 14 * ffem,
@@ -398,7 +420,6 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      Image.asset("assets/ProgressBar.png")
                                     ],
                                   ),
                                 ),
@@ -413,38 +434,6 @@ class _SleepScheduleState extends State<SleepSchedule> {
                 }),
           ),
         ),
-        /*Container(
-          height: 90,
-          width: 350,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16 * fem),
-            gradient: thirdGradient,
-          ),
-          margin: EdgeInsets.fromLTRB(25 * fem, 0 * fem, 35 * fem, 34 * fem),
-          child: Container(
-            margin: EdgeInsets.only(left: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "You will get 8 hours 10 mins for tonight",
-                  style: SafeGoogleFont(
-                    'Poppins',
-                    fontSize: 14 * ffem,
-                    fontWeight: FontWeight.w500,
-                    height: 1.5 * ffem / fem,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Image.asset("assets/ProgressBar.png")
-              ],
-            ),
-          ),
-        ),*/
       ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: primaryClr,
@@ -496,7 +485,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
       margin: const EdgeInsets.only(top: 0, left: 20),
       child: DatePicker(
         DateTime.now(),
-        height: 100,
+        height: 90,
         width: 80,
         initialSelectedDate: DateTime.now(),
         selectionColor: primaryClr,
@@ -531,5 +520,41 @@ class _SleepScheduleState extends State<SleepSchedule> {
         },
       ),
     );
+  }
+
+  difSleep() {
+    DateTime tempDate =
+        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    late String bed="00:00 am", alarm="00:00 am";
+    for (int i = 0; i < sleepData.length; i++) {
+      if ((sleepData[i]['id'] as Timestamp).toDate() == tempDate) {
+        bed = sleepData[i]['bed_time'];
+        alarm = sleepData[i]['alarm_time'];
+      }
+    }
+    print(bed);
+    print(sleepData.length);
+    print(tempDate);
+
+    List<String> l = bed.split(" ");
+    List<String> l1 = alarm.split(" ");
+
+    double m1 = double.parse(bed.split(":")[1].split(" ")[0]) / 60;
+    double m2 = double.parse(alarm.split(":")[1].split(" ")[0]) / 60;
+
+    double h1 = double.parse(bed.split(":")[0]) + m1;
+    double h2 = double.parse(alarm.split(":")[0]) + m2;
+
+    if (l[1] == l1[1]) {
+      hour = ((h1 - h2).abs()).toInt();
+      durationSleepNotify = ((h1 - h2).abs()) * 3600;
+      min = durationSleepNotify % 3600 ~/ 60;
+      print(hour);
+      print(min);
+    } else {
+      hour = (24 - (h1 + 12 - h2).abs()).toInt();
+      durationSleepNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
+      min = durationSleepNotify % 3600 ~/ 60;
+    }
   }
 }

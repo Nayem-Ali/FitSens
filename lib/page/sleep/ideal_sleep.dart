@@ -69,11 +69,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 17,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.primaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -83,11 +83,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 16,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.secondaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -97,11 +97,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 14,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.primaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -111,11 +111,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 13,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.secondaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -125,11 +125,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 12,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.primaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -139,11 +139,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 10,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.secondaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -153,11 +153,11 @@ class _IdealSleepState extends State<IdealSleep> {
                       barRods: [
                         BarChartRodData(
                           toY: 7,
-                          width: 25,
+                          width: 20,
                           color: ColorCode.primaryColor2,
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                         ),
                       ],
@@ -194,7 +194,7 @@ class _IdealSleepState extends State<IdealSleep> {
                         (states) => ColorCode.primaryColor2,
                         // Set the background color for the title row
                       ),
-                      border: TableBorder.all(),
+                      //border: TableBorder.all(),
                       columns: const <DataColumn>[
                         DataColumn(
                           label: Expanded(
