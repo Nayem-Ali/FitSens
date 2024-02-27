@@ -22,7 +22,7 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
   FirebaseAuth auth = FirebaseAuth.instance;
   List<dynamic> dietData = [];
   List<Hit> hits = [];
-  PostController postController = PostController();
+  FoodController postController = FoodController();
   double calorieNeeds = Get.arguments[0];
   double carbsNeeds = Get.arguments[1];
   double proteinNeeds = Get.arguments[2];
@@ -34,6 +34,7 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
   double totalProtein = 0;
   bool isLoading = true;
   String mealType = "breakfast";
+  String selectedMealLabel = "";
   Map<String, dynamic> data = {};
   Map<String, dynamic> breakfast = {};
   Map<String, dynamic> lunch = {};
@@ -76,7 +77,7 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
     setState(() {
       isLoading = true;
     });
-    FoodModel foodModel = (await postController.getFoods(q))!;
+    FoodModel foodModel = (await postController.getFoods(q: q, from: 0, to: 100))!;
     hits = foodModel.hits;
     setState(() {
       isLoading = false;
@@ -196,6 +197,7 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
             ElevatedButton(
               onPressed: () {
                 addMeal(recipe);
+                Get.back();
               },
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -249,6 +251,7 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
       lunch = dietData[2];
       snack = dietData[3];
       dinner = dietData[1];
+      selectedMealLabel = breakfast['label'];
       calculateTotals();
     }
   }
@@ -364,6 +367,9 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
                     onPressed: () async {
                       cal = calorieNeeds * 0.15;
                       mealType = "breakfast";
+                      if (breakfast.isNotEmpty) {
+                        selectedMealLabel = breakfast['label'];
+                      }
                       await getData('breakfast');
                     },
                     style: OutlinedButton.styleFrom(
@@ -377,6 +383,9 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
                     onPressed: () async {
                       cal = calorieNeeds * 0.35;
                       mealType = "lunch";
+                      if (lunch.isNotEmpty) {
+                        selectedMealLabel = lunch['label'];
+                      }
                       await getData('lunch');
                     },
                     style: OutlinedButton.styleFrom(
@@ -389,6 +398,9 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
                     onPressed: () async {
                       cal = calorieNeeds * 0.15;
                       mealType = 'snack';
+                      if (snack.isNotEmpty) {
+                        selectedMealLabel = snack['label'];
+                      }
                       await getData('snack');
                     },
                     style: OutlinedButton.styleFrom(
@@ -401,6 +413,9 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
                     onPressed: () async {
                       cal = calorieNeeds * 0.35;
                       mealType = "dinner";
+                      if (dinner.isNotEmpty) {
+                        selectedMealLabel = dinner['label'];
+                      }
                       await getData('dinner');
                     },
                     style: OutlinedButton.styleFrom(
@@ -423,25 +438,18 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
                       child: ListView.builder(
                         itemCount: hits.length,
                         itemBuilder: (context, index) {
-                          double? fat = hits[index].recipe.totalNutrients['FAT']!.quantity;
-                          double? carbs = hits[index].recipe.totalNutrients['CHOCDF']!.quantity;
-                          double? protein = hits[index].recipe.totalNutrients['PROCNT']!.quantity;
                           double? calorie = hits[index].recipe.calories;
                           bool condition = (calorie < cal);
                           return condition
                               ? Card(
+                                  color: selectedMealLabel == hits[index].recipe.label
+                                      ? ColorCode.primaryColor2
+                                      : Colors.white,
                                   child: ListTile(
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(hits[index].recipe.image),
                                     ),
                                     title: Text(hits[index].recipe.label),
-
-                                    // trailing: InkWell(
-                                    //   onTap: () {
-                                    //     addMeal(index);
-                                    //   },
-                                    //   child: const Icon(Icons.add),
-                                    // ),
                                     onTap: () {
                                       showItem(hits[index].recipe);
                                     },
@@ -457,7 +465,6 @@ class _MakeDietPlanState extends State<MakeDietPlan> {
                   await dbService.addDietPlan(lunch, 'lunch');
                   await dbService.addDietPlan(snack, 'snack');
                   await dbService.addDietPlan(dinner, 'dinner');
-
                   Get.snackbar(
                     "FitSens",
                     "Diet Plan Added Successfully",
