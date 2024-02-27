@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:finessapp/page/step/step_counter_backend.dart';
@@ -26,7 +25,7 @@ class DailyActivity extends StatefulWidget {
 
 class _DailyActivityState extends State<DailyActivity> {
   CollectionReference userCollection =
-  FirebaseFirestore.instance.collection('user');
+      FirebaseFirestore.instance.collection('user');
   User? user = FirebaseAuth.instance.currentUser;
 
   DBService dbService = DBService();
@@ -41,6 +40,7 @@ class _DailyActivityState extends State<DailyActivity> {
   DateTime dateTime = DateTime.now();
   bool isHistory = false;
   bool isSchedule = true;
+  bool isSwitched=false;
   final formKey = GlobalKey<FormState>();
 
   List<Map<String, dynamic>> allSchedule = [];
@@ -151,7 +151,7 @@ class _DailyActivityState extends State<DailyActivity> {
                 child: ElevatedButton(
                   onPressed: () async {
                     SharedPreferences sp =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     sp.setInt("goalSteps", int.parse(steps.text.trim()));
                     sp.setInt("goalWater", int.parse(water.text.trim()));
                     getGoal();
@@ -186,6 +186,7 @@ class _DailyActivityState extends State<DailyActivity> {
     getData();
     getHistory();
     getGoal();
+    //schedule();
   }
 
   getData() async {
@@ -194,7 +195,7 @@ class _DailyActivityState extends State<DailyActivity> {
     print(allSchedule);
   }
 
-  getHistory()async{
+  getHistory() async {
     allHistory = await dbService.getWaterIntakeData();
   }
 
@@ -342,7 +343,7 @@ class _DailyActivityState extends State<DailyActivity> {
                                     const SizedBox(width: 12),
                                     Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         const Text("Water Intake"),
                                         Text("$goalWaterIntake Glasses")
@@ -368,7 +369,7 @@ class _DailyActivityState extends State<DailyActivity> {
                                     const SizedBox(width: 12),
                                     Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         const Text("Steps"),
                                         Text("$goalSteps"),
@@ -493,7 +494,7 @@ class _DailyActivityState extends State<DailyActivity> {
                           width: Get.height * 0.1,
                           child: CircularProgressIndicator(
                             value:
-                            totalIntake / (int.tryParse(water.text) ?? 1),
+                                totalIntake / (int.tryParse(water.text) ?? 1),
                             color: ColorCode.primaryColor1,
                             backgroundColor: ColorCode.secondaryColor1,
                             strokeWidth: 10,
@@ -555,6 +556,7 @@ class _DailyActivityState extends State<DailyActivity> {
                       OutlinedButton.icon(
                         onPressed: () async {
                           getData();
+
                           print(allSchedule);
                           setState(() {
                             isHistory = false;
@@ -580,22 +582,31 @@ class _DailyActivityState extends State<DailyActivity> {
                     child: ListView.builder(
                       itemCount: allSchedule.length,
                       itemBuilder: (context, index) {
-                        return Container(
+                        return (formattedDate==allSchedule[index]['date'])?Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
                           child: Card(
                             child: ListTile(
                               title: Text('${allSchedule[index]['time']}'),
                               trailing: Switch(
-                                onChanged: (v) {},
-                                value: false,
+                                value: isSwitched,
+                                onChanged: (value) {
+
+                                  setState(() {
+                                    isSwitched =value;
+                                    print(isSwitched);
+                                  });
+                                },
+
                               ),
                             ),
                           ),
-                        );
+                        ):Container();
                       },
                     ),
                   ),
-                if(isHistory)
+
+                //schedule(),
+                if (isHistory)
                   Expanded(
                     child: ListView.builder(
                       itemCount: allHistory.length,
@@ -605,23 +616,22 @@ class _DailyActivityState extends State<DailyActivity> {
                           child: Card(
                             child: ListTile(
                                 title: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('${allHistory[index]['id']}'),
-                                    Text('Percentage: ${allHistory[index]['percentage']}'),
-                                    Text('Target: ${allHistory[index]['target']}'),
-                                    Text('Today Intake: ${allHistory[index]['todayIntake']}'),
-                                  ],
-                                )
-                            ),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${allHistory[index]['id']}'),
+                                Text(
+                                    'Percentage: ${allHistory[index]['percentage']}'),
+                                Text('Target: ${allHistory[index]['target']}'),
+                                Text(
+                                    'Today Intake: ${allHistory[index]['todayIntake']}'),
+                              ],
+                            )),
                           ),
-
                         );
                       },
                     ),
                   ),
-
               ],
             ),
           ),
@@ -643,7 +653,7 @@ class _DailyActivityState extends State<DailyActivity> {
   late DateTime? pickerDate;
   late double durationForNotify;
 
-  addSchedule()async{
+  addSchedule() async {
     Map<String, dynamic> drinksData = {
       'date': formattedDate,
       'time': _time,
@@ -698,22 +708,21 @@ class _DailyActivityState extends State<DailyActivity> {
                     LocalNotifications.showScheduleNotification(
                         title: "It's Drink Reminder",
                         body: "Now you have to drinks Water",
-                        payload: "This is schedule data", duration: durationForNotify.toInt());
+                        payload: "This is schedule data",
+                        duration: durationForNotify.toInt());
 
                     addSchedule();
 
                     Navigator.pop(context);
-
-                  }, fontSize: 16,),
+                  },
+                  fontSize: 16,
+                ),
               ),
-
             ],
           ),
         );
       },
     );
-
-
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
@@ -727,6 +736,7 @@ class _DailyActivityState extends State<DailyActivity> {
       });
     }
   }
+
   _showTimePicker() async {
     return await showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
@@ -739,52 +749,48 @@ class _DailyActivityState extends State<DailyActivity> {
   }
 
   dif() {
-
     DateTime dateForDif = DateTime.now();
 
     int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
-    int hTemp= h;
-    if(h>12) {
-      h=h-12;
+    int hTemp = h;
+    if (h > 12) {
+      h = h - 12;
     }
 
     String hourAndMinute;
-    if(hTemp>12){
-      hourAndMinute = '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
-    }else{
-      hourAndMinute = '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
+    if (hTemp > 12) {
+      hourAndMinute =
+          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
+    } else {
+      hourAndMinute =
+          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
     }
 
+    List<String> l = _time.split(" ");
+    List<String> l1 = hourAndMinute.split(" ");
 
-    List<String>l=_time.split(" ");
-    List<String>l1=hourAndMinute.split(" ");
+    double m1 = double.parse(_time.split(":")[1].split(" ")[0]) / 60;
+    double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0]) / 60;
 
-    double m1 = double.parse(_time.split(":")[1].split(" ")[0])/60;
-    double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0])/60;
-
-
-    double h1 = double.parse(_time.split(":")[0])+m1;
-    double h2 = double.parse(hourAndMinute.split(":")[0])+m2;
+    double h1 = double.parse(_time.split(":")[0]) + m1;
+    double h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
     print('$h1 $h2');
     print('$l $l1');
 
-    if(l[1]==l1[1]){
-      durationForNotify = ((h1-h2).abs()) * 3600;
+    if (l[1] == l1[1]) {
+      durationForNotify = ((h1 - h2).abs()) * 3600;
       print(durationForNotify);
-    }else{
-      durationForNotify = (24-(h1+12-h2).abs()) * 3600;
+    } else {
+      durationForNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
       print(durationForNotify);
     }
     //print(dtn);
     print(hourAndMinute);
     //durationForNotify = dt.difference(dtn).inSeconds.abs();
     //print(durationForNotify);
-
   }
+
 }
-
-
-
 
 // import 'package:alarm/alarm.dart';
 // import 'package:finessapp/page/step/step_counter_backend.dart';

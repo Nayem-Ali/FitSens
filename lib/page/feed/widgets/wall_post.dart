@@ -57,8 +57,8 @@ class _WallPostState extends State<WallPost> {
 
   void addComment(String commentText) {
     FirebaseFirestore.instance
-        .collection("User Posts")
-        .doc(widget.postId)
+        .collection("feed")
+        .doc(currentUser.uid)
         .collection("Comments")
         .add({
       "CommentText": commentText,
@@ -193,8 +193,8 @@ class _WallPostState extends State<WallPost> {
           ),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("User Posts")
-                .doc(widget.postId)
+                .collection("feed")
+                .doc(currentUser.uid)
                 .collection("Comments")
                 .orderBy("CommentTime", descending: true)
                 .snapshots(),
@@ -212,7 +212,7 @@ class _WallPostState extends State<WallPost> {
                   final commentData = doc.data() as Map<String, dynamic>?;
 
                   if (commentData == null) {
-                    return SizedBox.shrink(); // or return an empty widget if needed
+                    return const SizedBox.shrink(); // or return an empty widget if needed
                   }
 
                   //final String commentText = commentData["CommentText"] as String? ?? "";

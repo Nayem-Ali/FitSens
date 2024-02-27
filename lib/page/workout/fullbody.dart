@@ -1,5 +1,5 @@
 import 'package:finessapp/page/workout/widgets/customContainer.dart';
-import 'package:finessapp/page/workout/widgets/full_exercise.dart';
+import 'package:finessapp/page/workout/widgets/full_exercises_list.dart';
 import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import '../../utility/color.dart';
