@@ -59,7 +59,7 @@ class _WallPostState extends State<WallPost> {
     FirebaseFirestore.instance
         .collection("feed")
         .doc(currentUser.uid)
-        .collection("Comments")
+        .collection("comments")
         .add({
       "CommentText": commentText,
       "CommentBy": currentUser.email,
@@ -195,7 +195,7 @@ class _WallPostState extends State<WallPost> {
             stream: FirebaseFirestore.instance
                 .collection("feed")
                 .doc(currentUser.uid)
-                .collection("Comments")
+                .collection("comments")
                 .orderBy("CommentTime", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -214,9 +214,6 @@ class _WallPostState extends State<WallPost> {
                   if (commentData == null) {
                     return const SizedBox.shrink(); // or return an empty widget if needed
                   }
-
-                  //final String commentText = commentData["CommentText"] as String? ?? "";
-                  //final String commentedBy = commentData["CommentedBy"] as String? ?? "";
 
                   return Comment(
                     text: commentData["CommentText"] as String? ?? "",

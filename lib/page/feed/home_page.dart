@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finessapp/page/feed/widgets/drawer.dart';
 import 'package:finessapp/page/feed/widgets/text_field.dart';
 import 'package:finessapp/page/feed/widgets/wall_post.dart';
 import 'package:finessapp/utility/color.dart';
