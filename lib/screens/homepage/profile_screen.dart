@@ -340,13 +340,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 setState(() {
                                   darkMode = value;
                                   if (darkMode) {
-                                    Get.changeTheme(ThemeData.dark().copyWith(
+                                    Get.changeTheme(ThemeData.dark(useMaterial3: false).copyWith(
                                         colorScheme: ColorScheme.fromSeed(
                                             seedColor:
                                                 ColorCode.gray)));
                                   } else {
                                     Get.changeTheme(
                                       ThemeData.from(
+                                        useMaterial3: false,
                                         colorScheme: ColorScheme.fromSeed(
                                           seedColor: ColorCode.primaryColor1,
                                         ),

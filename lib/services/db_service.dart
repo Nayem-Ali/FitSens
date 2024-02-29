@@ -188,4 +188,56 @@ class DBService {
     }
   }
 
+  addNotifications(Map<String, dynamic> notificationsData)async{
+    String uid = auth.currentUser!.uid;
+    fireStore
+        .collection('user')
+        .doc(uid)
+        .collection('notifications')
+        .doc(now.toString())
+        .set(notificationsData);
+  }
+
+  getNotifications()async{
+    String uid = auth.currentUser!.uid;
+    List<Map<String, dynamic>>? allData = [];
+
+    try {
+      final querySnapshot = await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('notifications')
+          .get();
+      allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      return allData;
+
+    } catch (e) {
+      return [];
+    }
+  }
+
+  updateDrinkSchedule(int index, bool status)async{
+    String uid = auth.currentUser!.uid;
+    List<String>? allData = [];
+
+    try {
+      final querySnapshot = await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('DrinkSchedule')
+          .get();
+      allData = querySnapshot.docs.map((doc) => doc.id).toList();
+      await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('DrinkSchedule')
+      .doc(allData[index]).update({'isOn':status});
+      print(allData[index]);
+    } catch (e) {
+
+    }
+  }
+
+
+
 }

@@ -40,37 +40,12 @@ class _DailyActivityState extends State<DailyActivity> {
   DateTime dateTime = DateTime.now();
   bool isHistory = false;
   bool isSchedule = true;
-  bool isSwitched=false;
+  bool isSwitched = false;
   final formKey = GlobalKey<FormState>();
 
   List<Map<String, dynamic>> allSchedule = [];
   List<Map<String, dynamic>> allHistory = [];
-
-  // addAlarm() async {
-  //   TimeOfDay time = await showTimePicker(
-  //     context: context,
-  //     initialTime: TimeOfDay.now(),
-  //   ) as TimeOfDay;
-  //   final alarmSettings = AlarmSettings(
-  //     id: 1,
-  //     dateTime: DateTime(
-  //         dateTime.year, dateTime.month, dateTime.day, time.hour, time.minute),
-  //     assetAudioPath: 'assets/alarm.mp3',
-  //     loopAudio: true,
-  //     vibrate: false,
-  //     volume: 0.8,
-  //     fadeDuration: 3.0,
-  //     notificationTitle: 'FitSens',
-  //     notificationBody: 'Time for drink water',
-  //     enableNotificationOnKill: true,
-  //   );
-  //   alarm.clear();
-  //   alarm.add(alarmSettings);
-  //   await Alarm.set(alarmSettings: alarmSettings);
-  //   // Alarm.ringStream.stream.listen((_) => yourOnRingCallback());
-  //   print(alarmSettings.id);
-  //   setState(() {});
-  // }
+  List<bool> alarmStatus = [];
 
   showDialog() {
     showModalBottomSheet(
@@ -192,6 +167,9 @@ class _DailyActivityState extends State<DailyActivity> {
   getData() async {
     //allSchedule.clear();
     allSchedule = await dbService.getDrinkSchedule();
+    for (var schedule in allSchedule) {
+      alarmStatus.add(schedule['isOn']);
+    }
     print(allSchedule);
   }
 
@@ -577,30 +555,44 @@ class _DailyActivityState extends State<DailyActivity> {
                 const SizedBox(
                   height: 18,
                 ),
+
                 if (isSchedule)
                   Expanded(
                     child: ListView.builder(
                       itemCount: allSchedule.length,
                       itemBuilder: (context, index) {
-                        return (formattedDate==allSchedule[index]['date'])?Container(
-                          margin: const EdgeInsets.only(left: 20, right: 20),
-                          child: Card(
-                            child: ListTile(
-                              title: Text('${allSchedule[index]['time']}'),
-                              trailing: Switch(
-                                value: isSwitched,
-                                onChanged: (value) {
+                        return (formattedDate == allSchedule[index]['date'])
+                            ? Container(
+                                margin:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: Card(
+                                  child: ListTile(
+                                    title:
+                                        Text('${allSchedule[index]['time']}'),
+                                    trailing: Switch(
+                                      onChanged: (value) async {
+                                        dif(allSchedule[index]['time']);
+                                        if(value){
+                                          LocalNotifications.showScheduleNotification(
+                                              title: "It's Drink Reminder",
+                                              body: "Now you have to drinks Water",
+                                              payload: "This is schedule data",
+                                              duration: durationForNotify.toInt());
+                                        }
 
-                                  setState(() {
-                                    isSwitched =value;
-                                    print(isSwitched);
-                                  });
-                                },
-
-                              ),
-                            ),
-                          ),
-                        ):Container();
+                                        setState(() {
+                                          alarmStatus[index] = value;
+                                          print(alarmStatus[index]);
+                                        });
+                                        DBService()
+                                            .updateDrinkSchedule(index, value);
+                                      },
+                                      value: alarmStatus[index],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container();
                       },
                     ),
                   ),
@@ -636,12 +628,16 @@ class _DailyActivityState extends State<DailyActivity> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: primaryClr,
-          onPressed: () {
-            showDrinksDialog();
-          },
-          child: const Icon(Icons.add_circle),
+        floatingActionButton: Align(
+          alignment: Alignment.bottomCenter,
+          child: FloatingActionButton(
+
+            backgroundColor: primaryClr,
+            onPressed: () {
+              showDrinksDialog();
+            },
+            child: const Icon(Icons.add_circle),
+          ),
         ));
   }
 
@@ -649,7 +645,7 @@ class _DailyActivityState extends State<DailyActivity> {
   String _time = DateFormat("hh:mm a").format(DateTime.now()).toString();
   DateTime dateForDif = DateTime.now();
 
-  late var pickedTime;
+  late TimeOfDay pickedTime;
   late DateTime? pickerDate;
   late double durationForNotify;
 
@@ -657,7 +653,7 @@ class _DailyActivityState extends State<DailyActivity> {
     Map<String, dynamic> drinksData = {
       'date': formattedDate,
       'time': _time,
-      'isOn': true,
+      'isOn': false,
     };
     await DBService().addDrinkSchedule(drinksData);
     setState(() {});
@@ -704,14 +700,9 @@ class _DailyActivityState extends State<DailyActivity> {
                   height: 55,
                   label: "Add Drink Schedule",
                   onTap: () async {
-                    dif();
-                    LocalNotifications.showScheduleNotification(
-                        title: "It's Drink Reminder",
-                        body: "Now you have to drinks Water",
-                        payload: "This is schedule data",
-                        duration: durationForNotify.toInt());
 
                     addSchedule();
+                    addNotification();
 
                     Navigator.pop(context);
                   },
@@ -748,48 +739,66 @@ class _DailyActivityState extends State<DailyActivity> {
     );
   }
 
-  dif() {
-    DateTime dateForDif = DateTime.now();
-
-    int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
-    int hTemp = h;
-    if (h > 12) {
-      h = h - 12;
-    }
-
-    String hourAndMinute;
-    if (hTemp > 12) {
-      hourAndMinute =
-          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
-    } else {
-      hourAndMinute =
-          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
-    }
-
-    List<String> l = _time.split(" ");
-    List<String> l1 = hourAndMinute.split(" ");
-
-    double m1 = double.parse(_time.split(":")[1].split(" ")[0]) / 60;
-    double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0]) / 60;
-
-    double h1 = double.parse(_time.split(":")[0]) + m1;
-    double h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
-    print('$h1 $h2');
-    print('$l $l1');
-
-    if (l[1] == l1[1]) {
-      durationForNotify = ((h1 - h2).abs()) * 3600;
-      print(durationForNotify);
-    } else {
-      durationForNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
-      print(durationForNotify);
-    }
-    //print(dtn);
-    print(hourAndMinute);
-    //durationForNotify = dt.difference(dtn).inSeconds.abs();
-    //print(durationForNotify);
+  addNotification() async {
+    DateTime now = DateTime.now();
+    Map<String, dynamic> notificationsData = {
+      'title': "It's Drink Time",
+      'body': "Now you have to drinks Water",
+      'time': _time,
+      'date': DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute, 0),
+    };
+    await DBService().addNotifications(notificationsData);
+    setState(() {});
   }
 
+  dif(String check) {
+
+      DateTime dateForDif = DateTime.now();
+      int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
+      int hTemp = h;
+      if (h > 12) {
+        h = h - 12;
+      }
+
+      String hourAndMinute;
+      if (hTemp > 12) {
+        hourAndMinute =
+        '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
+      } else {
+        hourAndMinute =
+        '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
+      }
+
+      List<String> l = check.split(" ");
+      List<String> l1 = hourAndMinute.split(" ");
+
+      double m1 = double.parse(check.split(":")[1].split(" ")[0]) / 60;
+      double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0]) / 60;
+
+      double h1 = double.parse(check.split(":")[0]) + m1;
+      double h2 = double.parse(hourAndMinute.split(":")[0]);
+      if (h2.toInt() == 0) {
+        h2 = 12 + m2;
+      } else {
+        h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
+      }
+      print('$h1 $h2');
+      print('$l $l1');
+
+      if (l[1] == l1[1]) {
+        durationForNotify = ((h1 - h2).abs()) * 3600;
+        print(durationForNotify);
+      } else {
+        durationForNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
+        print(durationForNotify);
+      }
+      //print(dtn);
+      print(hourAndMinute);
+      //durationForNotify = dt.difference(dtn).inSeconds.abs();
+      //print(durationForNotify);
+
+  }
 }
 
 // import 'package:alarm/alarm.dart';

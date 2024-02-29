@@ -88,6 +88,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {});
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -119,7 +121,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           IconButton(
                             onPressed: () {
+                              //dif();
                               Get.to(const NotificationScreen());
+
                             },
                             icon: const Icon(
                               Icons.notifications_none,
@@ -276,4 +280,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
     );
   }
+
+
 }

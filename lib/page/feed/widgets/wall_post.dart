@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../services/db_service.dart';
 import '../helper/helper_methods.dart';
 import 'comment.dart';
 import 'comment_button.dart';
@@ -29,11 +30,20 @@ class _WallPostState extends State<WallPost> {
   bool isLiked = false;
 
   final commentTextController = TextEditingController();
+  late Map<String, dynamic> userDetails = {};
+  DBService dbService = DBService();
+  getData() async {
+    userDetails = await dbService.getUserInfo();
+    setState(() {
+
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getData();
     isLiked = widget.likes.contains(currentUser.email);
   }
 
@@ -42,7 +52,7 @@ class _WallPostState extends State<WallPost> {
       isLiked = !isLiked;
     });
     DocumentReference postRef =
-        FirebaseFirestore.instance.collection('feed').doc(currentUser.uid).collection("message").doc(widget.postId);
+        FirebaseFirestore.instance.collection('feed').doc(widget.postId);
 
     if (isLiked) {
       postRef.update({
@@ -58,11 +68,11 @@ class _WallPostState extends State<WallPost> {
   void addComment(String commentText) {
     FirebaseFirestore.instance
         .collection("feed")
-        .doc(currentUser.uid)
+        .doc(widget.postId)
         .collection("comments")
         .add({
       "CommentText": commentText,
-      "CommentBy": currentUser.email,
+      "CommentBy": userDetails["name"],
       "CommentTime": Timestamp.now(),
     });
   }
@@ -194,7 +204,7 @@ class _WallPostState extends State<WallPost> {
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection("feed")
-                .doc(currentUser.uid)
+                .doc(widget.postId)
                 .collection("comments")
                 .orderBy("CommentTime", descending: true)
                 .snapshots(),
@@ -214,7 +224,6 @@ class _WallPostState extends State<WallPost> {
                   if (commentData == null) {
                     return const SizedBox.shrink(); // or return an empty widget if needed
                   }
-
                   return Comment(
                     text: commentData["CommentText"] as String? ?? "",
                     user: commentData["CommentBy"] as String? ?? "",
