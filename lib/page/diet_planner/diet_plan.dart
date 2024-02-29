@@ -4,10 +4,10 @@ import 'package:finessapp/utility/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 import '../../services/db_service.dart';
 import '../../utility/utils.dart';
+import 'data_model.dart';
 
 class DietPlanner extends StatefulWidget {
   const DietPlanner({Key? key}) : super(key: key);
@@ -19,11 +19,12 @@ class DietPlanner extends StatefulWidget {
 class _DietPlannerState extends State<DietPlanner> {
   DBService dbService = DBService();
   FirebaseAuth auth = FirebaseAuth.instance;
-  PostController postController = PostController();
+  FoodController postController = FoodController();
   Map<String, dynamic> userDetails = {};
   List<dynamic> dietData = [];
+  List<String> imageUrl = [];
   late int age;
-  bool isLoading  = true;
+  bool isLoading = true;
   double calorieNeeds = 1;
   double carbsNeeds = 1;
   double proteinNeeds = 1;
@@ -38,14 +39,18 @@ class _DietPlannerState extends State<DietPlanner> {
     DateTime date = DateTime.parse(userDetails['dob']);
     age = DateTime.now().difference(date).inDays ~/ 365;
     dietData = await dbService.getDietPlan();
-    http.Response response1 = await http.get(Uri.parse(dietData[0]['image']));
-    http.Response response2 = await http.get(Uri.parse(dietData[1]['image']));
-    http.Response response3 = await http.get(Uri.parse(dietData[2]['image']));
-    http.Response response4 = await http.get(Uri.parse(dietData[3]['image']));
-    print(response1.statusCode);
-    print(response2.statusCode);
-    print(response3.statusCode);
-    print(response4.statusCode);
+
+    FoodModel breakFast = (await postController.getFoods(q: dietData[0]['label'], from: 0, to: 1))!;
+    imageUrl.add(breakFast.hits[0].recipe.image);
+
+    FoodModel lunch = (await postController.getFoods(q: dietData[2]['label'], from: 0, to: 1))!;
+    imageUrl.add(lunch.hits[0].recipe.image);
+
+    FoodModel snack = (await postController.getFoods(q: dietData[3]['label'], from: 0, to: 1))!;
+    imageUrl.add(snack.hits[0].recipe.image);
+
+    FoodModel dinner = (await postController.getFoods(q: dietData[1]['label'], from: 0, to: 1))!;
+    imageUrl.add(dinner.hits[0].recipe.image);
 
     dietPlan();
     setState(() {
@@ -134,178 +139,178 @@ class _DietPlannerState extends State<DietPlanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
-      body: isLoading ? const  Center(child: CircularProgressIndicator(),) : Column(
-        children: [
-          const Text(
-            "Based on your height, weight, gender and age estimating macronutrients per day:",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          DataTable(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(),
-                gradient: primaryGradient),
-            // border: TableBorder.all(),
-            columnSpacing: Get.width * 0.15,
-            dataTextStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            headingTextStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            dividerThickness: 2,
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                const Text(
+                  "Based on your height, weight, gender and age estimating macronutrients per day:",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                DataTable(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(),
+                      gradient: primaryGradient),
+                  // border: TableBorder.all(),
+                  columnSpacing: Get.width * 0.15,
+                  dataTextStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  headingTextStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  dividerThickness: 2,
 
-            columns: const [
-              DataColumn(label: Text("Nutrition (unit)")),
-              DataColumn(label: Text("Need")),
-              DataColumn(label: Text("Take")),
-            ],
-            rows: [
-              DataRow(
-                cells: [
-                  const DataCell(Text("Calorie (kCal)")),
-                  DataCell(Text(calorieNeeds.toStringAsFixed(2))),
-                  DataCell(Text(calorieTakes.toStringAsFixed(2))),
-                ],
-              ),
-              DataRow(
-                cells: [
-                  const DataCell(Text("Carbohydrate (g)")),
-                  DataCell(Text(carbsNeeds.toStringAsFixed(2))),
-                  DataCell(Text(carbsTakes.toStringAsFixed(2))),
-                ],
-              ),
-              DataRow(
-                cells: [
-                  const DataCell(Text("Protein (g)")),
-                  DataCell(Text(proteinNeeds.toStringAsFixed(2))),
-                  DataCell(Text(proteinTakes.toStringAsFixed(2))),
-                ],
-              ),
-              DataRow(
-                cells: [
-                  const DataCell(Text("Fat (g)")),
-                  DataCell(Text(fatNeeds.toStringAsFixed(2))),
-                  DataCell(Text(fatTakes.toStringAsFixed(2))),
-                ],
-              )
-            ],
-            // children: [
-            //   const TableRow(children: [
-            //     TableCell(
-            //       child: Text(
-            //         "Need",
-            //         textAlign: TextAlign.center,
-            //       ),
-            //     ),
-            //     TableCell(
-            //       child: Text(
-            //         "Take",
-            //         textAlign: TextAlign.center,
-            //       ),
-            //     ),
-            //   ]),
-            //   TableRow(children: [
-            //     TableCell(
-            //       child: Text(
-            //         "Calorie: ${calorieNeeds.toStringAsFixed(2)} kCal",
-            //         textAlign: TextAlign.center,
-            //       ),
-            //     ),
-            //     TableCell(
-            //       child: Text(
-            //         "Carbohydrates: ${carbsNeeds.toStringAsFixed(2)} g",
-            //         textAlign: TextAlign.center,
-            //       ),
-            //     )
-            //   ])
-            // ],
-          ),
-          const SizedBox(height: 10),
-          dietData.isEmpty
-              ? ElevatedButton(
-                  onPressed: () {
-                    Get.to(
-                      () => const MakeDietPlan(),
-                      arguments: [calorieNeeds, carbsNeeds, proteinNeeds, fatNeeds],
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(34),
-                    ),
-                    backgroundColor: primaryClr,
-                    // shadowColor: Colors.transparent,
-                    elevation: 5,
-                    minimumSize: Size(
-                      Get.width * 0.8,
-                      Get.height * 0.06,
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text("Make Your Diet Plan"),
-                )
-              : Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Card(
-                          child: Column(
-                            children: [
-                              const Text("Breakfast"),
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(dietData[0]['image']),
-                                radius: 60,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Card(
-                          child: Column(
-                            children: [
-                              const Text("Lunch"),
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(dietData[2]['image']),
-                                radius: 60,
-                              ),
-                            ],
-                          ),
-                        )
+                  columns: const [
+                    DataColumn(label: Text("Nutrition (unit)")),
+                    DataColumn(label: Text("Need")),
+                    DataColumn(label: Text("Take")),
+                  ],
+                  rows: [
+                    DataRow(
+                      cells: [
+                        const DataCell(Text("Calorie (kCal)")),
+                        DataCell(Text(calorieNeeds.toStringAsFixed(2))),
+                        DataCell(Text(calorieTakes.toStringAsFixed(2))),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Card(
-                          child: Column(
-                            children: [
-                              const Text("Snack"),
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(dietData[3]['image']),
-                                radius: 60,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Card(
-                          child: Column(
-                            children: [
-                              const Text("Dinner"),
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(dietData[1]['image']),
-                                radius: 60,
-                              ),
-                            ],
-                          ),
-                        )
+                    DataRow(
+                      cells: [
+                        const DataCell(Text("Carbohydrate (g)")),
+                        DataCell(Text(carbsNeeds.toStringAsFixed(2))),
+                        DataCell(Text(carbsTakes.toStringAsFixed(2))),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        const DataCell(Text("Protein (g)")),
+                        DataCell(Text(proteinNeeds.toStringAsFixed(2))),
+                        DataCell(Text(proteinTakes.toStringAsFixed(2))),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        const DataCell(Text("Fat (g)")),
+                        DataCell(Text(fatNeeds.toStringAsFixed(2))),
+                        DataCell(Text(fatTakes.toStringAsFixed(2))),
                       ],
                     )
                   ],
                 ),
-        ],
-      ),
+                const SizedBox(height: 10),
+                dietData.isEmpty
+                    ? ElevatedButton(
+                        onPressed: () {
+                          Get.to(
+                            () => const MakeDietPlan(),
+                            arguments: [calorieNeeds, carbsNeeds, proteinNeeds, fatNeeds],
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(34),
+                          ),
+                          backgroundColor: primaryClr,
+                          // shadowColor: Colors.transparent,
+                          elevation: 5,
+                          minimumSize: Size(
+                            Get.width * 0.8,
+                            Get.height * 0.06,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        child: const Text("Make Your Diet Plan"),
+                      )
+                    : Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Card(
+                                child: Column(
+                                  children: [
+                                    const Text("Breakfast"),
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(imageUrl[0]),
+                                      radius: 60,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Card(
+                                child: Column(
+                                  children: [
+                                    const Text("Lunch"),
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(imageUrl[1]),
+                                      radius: 60,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Card(
+                                child: Column(
+                                  children: [
+                                    const Text("Snack"),
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(imageUrl[2]),
+                                      radius: 60,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Card(
+                                child: Column(
+                                  children: [
+                                    const Text("Dinner"),
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(imageUrl[3]),
+                                      radius: 60,
+                                    ),
+                                    // CachedNetworkImage(imageUrl: dietData[1]['image'])
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.to(
+                                () => const MakeDietPlan(),
+                                arguments: [calorieNeeds, carbsNeeds, proteinNeeds, fatNeeds],
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(34),
+                              ),
+                              backgroundColor: primaryClr,
+                              // shadowColor: Colors.transparent,
+                              elevation: 5,
+                              minimumSize: Size(
+                                Get.width * 0.8,
+                                Get.height * 0.06,
+                              ),
+                              textStyle: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            child: const Text("Edit Your Diet Plan"),
+                          )
+                        ],
+                      ),
+              ],
+            ),
     );
   }
 }

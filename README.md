@@ -1,7 +1,14 @@
-# finessapp
-
-A new Flutter project.
-
+# FitSens
+A Fitness App developed in Flutter. 
+# Featurers
+1. Daily step count with Pedometer
+2. Water intake progress tracker with Shared-preferences
+3. BPM Measurement with heart
+4. Workout tracker
+5. Sleep tracker
+6. BMI Calculation
+7. Local notification
+8. Community Feed
 ## Getting Started
 
 This project is a starting point for a Flutter application.
