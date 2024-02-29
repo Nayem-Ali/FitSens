@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as p;
 import '../../utility/color.dart';
+import '../../utility/utils.dart';
 import '../auth/login_screen.dart';
 import '../../services/db_service.dart';
 
@@ -137,22 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Get.off(const HomeScreen());
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text(
-          "Profile",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-        ),
-      ),
+      appBar: _appBar(context),
       body: userDetails.isEmpty
           ? const SizedBox(
               child: Center(
@@ -399,5 +385,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
           ),
     );
+  }
+  _appBar(BuildContext context) {
+    return AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Center(
+          child: Text(
+            "My Profile",
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+    );
+
+
   }
 }

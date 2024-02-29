@@ -258,11 +258,11 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
         title: Center(
           child: Text(
             "Add Sleep Schedule",
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
         ),
@@ -369,8 +369,4 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
     }
   }
 
-  // temp(){
-  //   DateTime t = DateTime.now().add(const Duration(seconds: 120));
-  //   print(t);
-  // }
 }

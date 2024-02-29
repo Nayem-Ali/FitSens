@@ -238,6 +238,50 @@ class DBService {
     }
   }
 
+  deleteDrinkSchedule(int index)async{
+    String uid = auth.currentUser!.uid;
+    List<String>? allData = [];
+
+    try {
+      final querySnapshot = await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('DrinkSchedule')
+          .get();
+      allData = querySnapshot.docs.map((doc) => doc.id).toList();
+      await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('DrinkSchedule')
+          .doc(allData[index]).delete();
+      print(allData[index]);
+    } catch (e) {
+
+    }
+  }
+
+  deleteNotifications(int index)async{
+    String uid = auth.currentUser!.uid;
+    List<String>? allData = [];
+
+    try {
+      final querySnapshot = await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('notifications')
+          .get();
+      allData = querySnapshot.docs.map((doc) => doc.id).toList();
+      await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('notifications')
+          .doc(allData[index]).delete();
+      print(allData[index]);
+    } catch (e) {
+
+    }
+  }
+
 
 
 }

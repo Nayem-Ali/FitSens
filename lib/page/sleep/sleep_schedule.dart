@@ -5,6 +5,7 @@ import 'package:finessapp/page/widgets/button.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -65,15 +66,6 @@ class _SleepScheduleState extends State<SleepSchedule> {
     setState(() {});
   }
 
-
-  // getData() async {
-  //   //allSchedule.clear();
-  //   sleepData = await dbService.getSleepData();
-  //   sleepData.sort((a, b) => a['id'].compareTo(b['id']));
-  //   difSleep();
-  //   //print(sleepData);
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -274,8 +266,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
                             ? 1
                             : snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          // if (snapshot.data!.docs[index]['date'] ==
-                          //     DateFormat('yyyy-MM-dd').format(_selectedDate)) {
+
                             difSleep();
                             final document = snapshot.data!.docs[index];
                             final documentId = document.id;
@@ -292,19 +283,14 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                           .doc(documentId)
                                           .delete();
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text("Successfully Deleted"),
-                                        backgroundColor: Colors.red,
-                                      ));
+                                      Get.snackbar("Drinks Schedule",
+                                          "Successfully Deleted",
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white);
                                     } else {
                                       setState(() {});
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            "For delete you have swipe Left to Right"),
-                                        backgroundColor: Colors.green,
-                                      ));
+                                      Get.snackbar("Drinks Schedule",
+                                          "For delete you have swipe Left to Right");
                                     }
                                   },
                                   background: Container(

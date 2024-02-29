@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/db_service.dart';
+import '../../widgets/barchart.dart';
 import '../../widgets/bmi_widget.dart';
 import '../../widgets/linechart.dart';
 import 'daily_activity.dart';
@@ -21,6 +22,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   StepCounterBackend stepCounterBackend = StepCounterBackend();
   late Map<String, dynamic> userDetails = {};
   List<Map<String, dynamic>> heartBPM = [];
+  List<Map<String, dynamic>> sleepData = [];
+
   late double bmiValue;
   late String status;
   late int steps;
@@ -75,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+
   getData() async {
     DBService dbService = DBService();
     userDetails = await dbService.getUserInfo();
@@ -85,6 +89,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     calculateBMI();
     await stepActivity();
+
+    sleepData = await dbService.getSleepDataForChart();
+    sleepData.sort((a, b) => a['date'].compareTo(b['date']));
+    if (sleepData.length > 7) {
+      sleepData = sleepData.sublist(sleepData.length - 7, sleepData.length);
+    }
     setState(() {});
   }
 
@@ -98,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: SizedBox(
-                height: screenSize.height * 1.5,
+                height: screenSize.height * 1.4,
                 width: screenSize.width,
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -111,6 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(height: 8,),
                               const Text("Welcome Back,",
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
                               Text(
@@ -274,6 +285,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ],
                     ),
+
+                    const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        "Sleep History",
+                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    Flexible(child: MyBarChart(weeklyData: sleepData)),
+
                   ],
                 ),
               ),
