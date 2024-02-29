@@ -158,10 +158,11 @@ class _DailyActivityState extends State<DailyActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getDrinkScheduleDoc();
     getData();
     getHistory();
     getGoal();
-    //schedule();
+
   }
 
   getData() async {
@@ -558,43 +559,207 @@ class _DailyActivityState extends State<DailyActivity> {
 
                 if (isSchedule)
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: allSchedule.length,
-                      itemBuilder: (context, index) {
-                        return (formattedDate == allSchedule[index]['date'])
-                            ? Container(
-                                margin:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: Card(
-                                  child: ListTile(
-                                    title:
-                                        Text('${allSchedule[index]['time']}'),
-                                    trailing: Switch(
-                                      onChanged: (value) async {
-                                        dif(allSchedule[index]['time']);
-                                        if(value){
-                                          LocalNotifications.showScheduleNotification(
+                    child: FutureBuilder<List<String>>(
+                      future: getDrinkScheduleDoc(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Container(); // or a loading indicator
+                        } else if (snapshot.hasError) {
+                          return Text("Error: ${snapshot.error}");
+                        } else {
+                          // Data fetched successfully
+                          allData = snapshot.data ?? [];
+                          return ListView.builder(
+                            itemCount: allData!.length,
+                            itemBuilder: (context, index) {
+                              return Dismissible(
+                                key: Key(allData![index]), // Use the document ID as the key
+                                onDismissed: (direction) async {
+                                  if (direction == DismissDirection.startToEnd) {
+                                    try {
+                                      await userCollection
+                                          .doc(user!.uid)
+                                          .collection('DrinkSchedule')
+                                          .doc(allData![index])
+                                          .delete();
+                                      setState(() {
+                                        allData!.removeAt(index);
+                                      });
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                        content: Text("Successfully Deleted"),
+                                        backgroundColor: Colors.red,
+                                      ));
+                                    } catch (e) {
+                                      print("Error deleting document: $e");
+                                    }
+                                  } else {
+                                    // Handle other directions if needed
+                                  }
+                                },
+                                background: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  height: 20,
+                                ),
+                                secondaryBackground: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  height: 20,
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 20, right: 20),
+                                  child: Card(
+                                    color: index % 2 == 1 ? Colors.black26 : Colors.blueGrey,
+                                    child: ListTile(
+                                      title: Text(
+                                        '${allSchedule[index]['time']}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                      trailing: Switch(
+                                        onChanged: (value) async {
+                                          dif(allSchedule[index]['time']);
+                                          if (value) {
+                                            LocalNotifications.showScheduleNotification(
                                               title: "It's Drink Reminder",
-                                              body: "Now you have to drinks Water",
+                                              body: "Now you have to drink Water",
                                               payload: "This is schedule data",
-                                              duration: durationForNotify.toInt());
-                                        }
+                                              duration: durationForNotify.toInt(),
+                                            );
+                                          }
 
-                                        setState(() {
-                                          alarmStatus[index] = value;
-                                          print(alarmStatus[index]);
-                                        });
-                                        DBService()
-                                            .updateDrinkSchedule(index, value);
-                                      },
-                                      value: alarmStatus[index],
+                                          setState(() {
+                                            alarmStatus[index] = value;
+                                            print(alarmStatus[index]);
+                                          });
+                                          DBService().updateDrinkSchedule(index, value);
+                                        },
+                                        value: alarmStatus[index],
+                                        activeColor: index % 2 == 1 ? Colors.black54 : Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              )
-                            : Container();
+                              );
+                            },
+                          );
+                        }
                       },
                     ),
+                    // child: ListView.builder(
+                    //   itemCount: allSchedule.length,
+                    //   itemBuilder: (context, index) {
+                    //     //final document = snapshot.data!.docs[index];
+                    //     //final documentId = document.id;
+                    //
+                    //     return Column(
+                    //       children: [
+                    //         Dismissible(
+                    //           key: Key(allData![index]),
+                    //           onDismissed: (direction) async {
+                    //
+                    //             if (direction == DismissDirection.startToEnd) {
+                    //               await userCollection
+                    //                   .doc(user!.uid)
+                    //                   .collection('DrinkSchedule')
+                    //                   .doc(allData?[index])
+                    //                   .delete();
+                    //               setState(() {
+                    //                 // Remove the item from the list when deleted
+                    //                 allData?.removeAt(index);
+                    //               });
+                    //
+                    //               ScaffoldMessenger.of(context)
+                    //                   .showSnackBar(const SnackBar(
+                    //                 content: Text("Successfully Deleted"),
+                    //                 backgroundColor: Colors.red,
+                    //               ));
+                    //             } else {
+                    //               setState(() {});
+                    //               ScaffoldMessenger.of(context)
+                    //                   .showSnackBar(const SnackBar(
+                    //                 content: Text(
+                    //                     "For delete you have swipe Left to Right"),
+                    //                 backgroundColor: Colors.green,
+                    //               ));
+                    //             }
+                    //           },
+                    //           background: Container(
+                    //             decoration: BoxDecoration(
+                    //               color: Colors.red,
+                    //               borderRadius: BorderRadius.circular(20),
+                    //             ),
+                    //             height: 20,
+                    //           ),
+                    //           secondaryBackground: Container(
+                    //             decoration: BoxDecoration(
+                    //               color: Colors.green,
+                    //               borderRadius: BorderRadius.circular(20),
+                    //             ),
+                    //             height: 20,
+                    //           ),
+                    //           child: (formattedDate ==
+                    //                   allSchedule[index]['date'])
+                    //               ? Container(
+                    //                   margin: const EdgeInsets.only(
+                    //                       left: 20, right: 20),
+                    //                   child: Card(
+                    //                     color: index % 2 == 1
+                    //                         ? Colors.black26
+                    //                         : Colors.blueGrey,
+                    //                     child: ListTile(
+                    //                       title: Text(
+                    //                         '${allSchedule[index]['time']}',
+                    //                         style: const TextStyle(
+                    //                             color: Colors.white,
+                    //                             fontWeight: FontWeight.bold,
+                    //                             fontSize: 17),
+                    //                       ),
+                    //                       trailing: Switch(
+                    //                         onChanged: (value) async {
+                    //                           dif(allSchedule[index]['time']);
+                    //                           if (value) {
+                    //                             LocalNotifications
+                    //                                 .showScheduleNotification(
+                    //                                     title:
+                    //                                         "It's Drink Reminder",
+                    //                                     body:
+                    //                                         "Now you have to drinks Water",
+                    //                                     payload:
+                    //                                         "This is schedule data",
+                    //                                     duration:
+                    //                                         durationForNotify
+                    //                                             .toInt());
+                    //                           }
+                    //
+                    //                           setState(() {
+                    //                             alarmStatus[index] = value;
+                    //                             print(alarmStatus[index]);
+                    //                           });
+                    //                           DBService().updateDrinkSchedule(
+                    //                               index, value);
+                    //                         },
+                    //                         value: alarmStatus[index],
+                    //                         activeColor: index % 2 == 1
+                    //                             ? Colors.black54
+                    //                             : Colors.white,
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 )
+                    //               : Container(),
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // ),
                   ),
 
                 //schedule(),
@@ -630,13 +795,19 @@ class _DailyActivityState extends State<DailyActivity> {
         ),
         floatingActionButton: Align(
           alignment: Alignment.bottomCenter,
-          child: FloatingActionButton(
-
-            backgroundColor: primaryClr,
-            onPressed: () {
-              showDrinksDialog();
-            },
-            child: const Icon(Icons.add_circle),
+          child: Row(
+            children: [
+              SizedBox(
+                width: Get.width * 0.48,
+              ),
+              FloatingActionButton(
+                backgroundColor: primaryClr,
+                onPressed: () {
+                  showDrinksDialog();
+                },
+                child: const Icon(Icons.add_circle),
+              ),
+            ],
           ),
         ));
   }
@@ -648,6 +819,22 @@ class _DailyActivityState extends State<DailyActivity> {
   late TimeOfDay pickedTime;
   late DateTime? pickerDate;
   late double durationForNotify;
+  List<String>? allData = [];
+
+  Future<List<String>> getDrinkScheduleDoc() async {
+    List<String> data = [];
+    try {
+      final querySnapshot = await userCollection
+          .doc(user!.uid)
+          .collection('DrinkSchedule')
+          .get();
+      // Store document IDs in data list
+      data = querySnapshot.docs.map((doc) => doc.id).toList();
+    } catch (e) {
+      print("Error fetching documents: $e");
+    }
+    return data;
+  }
 
   addSchedule() async {
     Map<String, dynamic> drinksData = {
@@ -700,11 +887,9 @@ class _DailyActivityState extends State<DailyActivity> {
                   height: 55,
                   label: "Add Drink Schedule",
                   onTap: () async {
-
                     addSchedule();
                     addNotification();
-
-                    Navigator.pop(context);
+                    Get.off(const DailyActivity());
                   },
                   fontSize: 16,
                 ),
@@ -718,12 +903,12 @@ class _DailyActivityState extends State<DailyActivity> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime.format(context);
+    String formatedTime = pickedTime.format(context);
     if (pickedTime == null) {
       print("Time cancel");
     } else if (isStartTime == true) {
       setState(() {
-        _time = _formatedTime;
+        _time = formatedTime;
       });
     }
   }
@@ -753,51 +938,49 @@ class _DailyActivityState extends State<DailyActivity> {
   }
 
   dif(String check) {
+    DateTime dateForDif = DateTime.now();
+    int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
+    int hTemp = h;
+    if (h > 12) {
+      h = h - 12;
+    }
 
-      DateTime dateForDif = DateTime.now();
-      int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
-      int hTemp = h;
-      if (h > 12) {
-        h = h - 12;
-      }
+    String hourAndMinute;
+    if (hTemp > 12) {
+      hourAndMinute =
+          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
+    } else {
+      hourAndMinute =
+          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
+    }
 
-      String hourAndMinute;
-      if (hTemp > 12) {
-        hourAndMinute =
-        '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
-      } else {
-        hourAndMinute =
-        '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
-      }
+    List<String> l = check.split(" ");
+    List<String> l1 = hourAndMinute.split(" ");
 
-      List<String> l = check.split(" ");
-      List<String> l1 = hourAndMinute.split(" ");
+    double m1 = double.parse(check.split(":")[1].split(" ")[0]) / 60;
+    double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0]) / 60;
 
-      double m1 = double.parse(check.split(":")[1].split(" ")[0]) / 60;
-      double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0]) / 60;
+    double h1 = double.parse(check.split(":")[0]) + m1;
+    double h2 = double.parse(hourAndMinute.split(":")[0]);
+    if (h2.toInt() == 0) {
+      h2 = 12 + m2;
+    } else {
+      h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
+    }
+    print('$h1 $h2');
+    print('$l $l1');
 
-      double h1 = double.parse(check.split(":")[0]) + m1;
-      double h2 = double.parse(hourAndMinute.split(":")[0]);
-      if (h2.toInt() == 0) {
-        h2 = 12 + m2;
-      } else {
-        h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
-      }
-      print('$h1 $h2');
-      print('$l $l1');
-
-      if (l[1] == l1[1]) {
-        durationForNotify = ((h1 - h2).abs()) * 3600;
-        print(durationForNotify);
-      } else {
-        durationForNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
-        print(durationForNotify);
-      }
-      //print(dtn);
-      print(hourAndMinute);
-      //durationForNotify = dt.difference(dtn).inSeconds.abs();
-      //print(durationForNotify);
-
+    if (l[1] == l1[1]) {
+      durationForNotify = ((h1 - h2).abs()) * 3600;
+      print(durationForNotify);
+    } else {
+      durationForNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
+      print(durationForNotify);
+    }
+    //print(dtn);
+    print(hourAndMinute);
+    //durationForNotify = dt.difference(dtn).inSeconds.abs();
+    //print(durationForNotify);
   }
 }
 
