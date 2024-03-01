@@ -95,10 +95,15 @@ flutter:
     - assets/page-2/cobra.png
     - assets/page-2/icon-calendar.png
     - assets/page-2/icon-difficulty.png
-    - assets/video/video.mp4
     - assets/video/fullbody/warmup.mp4
     - assets/video/fullbody/jumping.mp4
     - assets/video/fullbody/skipping.mp4
+    - assets/video/fullbody/squats.mp4
+    - assets/video/fullbody/arm.mp4
+    - assets/video/fullbody/rest.mp4
+    - assets/video/fullbody/incline_push_up.mp4
+    - assets/video/fullbody/push_up.mp4
+    - assets/video/fullbody/cobra_stretch.mp4
     - assets/Vector1.png
     - assets/bed.png
     - assets/alarm.png

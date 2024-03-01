@@ -76,14 +76,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
           final isFuture = (DateTime.now()
                   .difference(allNotifications[index]['date'].toDate()))
               .isNegative;
+          final ago = (DateTime.now()
+              .difference(allNotifications[index]['date'].toDate()));
           return Column(
             children: [
               Dismissible(
                 key: Key(UniqueKey().toString()),
                 onDismissed: (direction) async {
                   if (direction == DismissDirection.startToEnd) {
-                    DBService().deleteNotifications(index);
-                    getData();
+                    await DBService().deleteNotifications(index);
+                    //getData();
                     Get.snackbar("Notifications", "Successfully Deleted",
                         backgroundColor: Colors.red, colorText: Colors.white);
                   } else {
@@ -134,15 +136,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15),
                                 ),
+
                                 Text(
-                                  '${allNotifications[index]['date'].toDate()}',
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                ),
-                                Text(
-                                  '${allNotifications[index]['time']}',
+                                  '${ago.inHours} h ${ago.inMinutes~/60} min ago',
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

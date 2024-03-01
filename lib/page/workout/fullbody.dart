@@ -1,4 +1,5 @@
 import 'package:finessapp/page/workout/widgets/customContainer.dart';
+import 'package:finessapp/page/workout/widgets/full_exercises_list.dart';
 /// import 'package:finessapp/page/workout/widgets/full_exercise.dart';
 import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,6 @@ class Fullbody extends StatelessWidget {
           color: Colors.white,
           child: Stack(
             children: [
-
               Container(
                 //color: primaryClr,
                 decoration: const BoxDecoration(
@@ -118,7 +118,6 @@ class Fullbody extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 height: 1.5 * ffem / fem,
                                 color: Colors.black,
-
                               ),
                             ),
                           ),
@@ -127,7 +126,7 @@ class Fullbody extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                      /// const FullExerciseList(),
+                      const FullExerciseList(),
                     ],
                   ),
                 ),

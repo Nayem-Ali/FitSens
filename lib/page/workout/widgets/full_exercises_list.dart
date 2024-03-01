@@ -1,5 +1,7 @@
 import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../../utility/utils.dart';
 import 'customContainer.dart';
@@ -272,19 +274,30 @@ class FullExerciseList extends StatelessWidget {
         const SizedBox(
           height: 13,
         ),
+
         MyContainer(
-            onTap: () {},
-            image: Image.asset("assets/page-2/skipping.png"),
-            title: "Skipping",
-            subTitle: "15x"),
-        const SizedBox(
-          height: 13,
-        ),
-        MyContainer(
-            onTap: () {},
+            onTap: () {
+              Get.to(const VideoPlayer(
+                assetPath: 'assets/video/fullbody/cobra_stretch.mp4',
+                title: 'Cobra Stretch',
+                text1: 'Some Benefits of CS Exercise',
+                text2: '⭐ Chest Development',
+                text3: '⭐ Shoulder Engagement:',
+                text4: '⭐ Triceps Activation',
+                text5: '⭐ Scapular Stabilization',
+                text6: '⭐ Engages core muscles for stability',
+                text7: '⭐ Gentler on wrists and shoulders',
+                text8: '⭐ Easily modifiable for different levels',
+                text9: '⭐ Increased Range of Motion',
+                text10: '⭐ Improves functional fitness',
+                text11: '⭐ Can be done using household items',
+
+              ));
+            },
             image: Image.asset("assets/page-2/cobra.png"),
             title: "Cobra Stretch",
             subTitle: "15x"),
+
       ],
     );
   }
