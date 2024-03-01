@@ -1,5 +1,5 @@
 import 'package:finessapp/page/diet_planner/diet_plan.dart';
-import 'package:finessapp/page/feed/home_page.dart';
+import 'package:finessapp/page/feed/feed_page.dart';
 import 'package:finessapp/page/heart_bpm.dart';
 import 'package:finessapp/page/sleep/sleep_home.dart';
 import 'package:finessapp/page/widgets/button.dart';
@@ -77,7 +77,7 @@ class Option extends StatelessWidget {
             MyButton(
               label: "Feed",
               onTap: () {
-                Get.to(() => const HomePage());
+                Get.to(() => const FeedPage());
               },
               width: 350,
               height: 60,

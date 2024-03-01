@@ -3,6 +3,7 @@ import 'package:finessapp/page/step/step_counter_backend.dart';
 import 'package:finessapp/screens/auth/login_screen.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/screens/onboarding/get_started_screen.dart';
+import 'package:finessapp/services/local_notifications.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,7 +29,7 @@ Future main() async {
     ),
   );
   await Alarm.init(showDebugLogs: true);
-
+  LocalNotifications.init();
   runApp(const MyApp());
 }
 

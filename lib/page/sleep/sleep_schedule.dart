@@ -5,6 +5,7 @@ import 'package:finessapp/page/widgets/button.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -38,17 +39,33 @@ class _SleepScheduleState extends State<SleepSchedule> {
   @override
   void initState() {
     // TODO: imple
+    difSleep();
     getData();
   }
-
   getData() async {
-    //allSchedule.clear();
     sleepData = await dbService.getSleepData();
-    sleepData.sort((a, b) => a['id'].compareTo(b['id']));
+    sleepData.sort((a, b) {
+      if (a['id'] != null &&
+          a['id'] is Timestamp &&
+          b['id'] != null &&
+          b['id'] is Timestamp) {
+        Timestamp aTimestamp = a['id'];
+        Timestamp bTimestamp = b['id'];
+        return aTimestamp.compareTo(bTimestamp);
+      } else {
+        // Handle the case where 'id' is null or not a Timestamp
+        // For example, if 'id' is a String or another type, you can handle it here
+        // This example assumes a default behavior of sorting by 'bed_time' if 'id' is not a Timestamp
+        String aBedTime = a['bed_time'] ?? '';
+        String bBedTime = b['bed_time'] ?? '';
+        return aBedTime.compareTo(bBedTime);
+      }
+    });
+
     difSleep();
-    //print(sleepData);
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +249,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
         const SizedBox(height: 10),
         SingleChildScrollView(
           child: SizedBox(
-            height: 250,
+            height: 300,
             width: 400,
             child: StreamBuilder(
                 stream: sleep
@@ -249,8 +266,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
                             ? 1
                             : snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          // if (snapshot.data!.docs[index]['date'] ==
-                          //     DateFormat('yyyy-MM-dd').format(_selectedDate)) {
+
                             difSleep();
                             final document = snapshot.data!.docs[index];
                             final documentId = document.id;
@@ -267,19 +283,14 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                           .doc(documentId)
                                           .delete();
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text("Successfully Deleted"),
-                                        backgroundColor: Colors.red,
-                                      ));
+                                      Get.snackbar("Drinks Schedule",
+                                          "Successfully Deleted",
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white);
                                     } else {
                                       setState(() {});
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            "For delete you have swipe Left to Right"),
-                                        backgroundColor: Colors.green,
-                                      ));
+                                      Get.snackbar("Drinks Schedule",
+                                          "For delete you have swipe Left to Right");
                                     }
                                   },
                                   background: Container(
@@ -528,10 +539,12 @@ class _SleepScheduleState extends State<SleepSchedule> {
 
   difSleep() {
     DateTime tempDate =
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     late String bed = "00:00 am", alarm = "00:00 am";
     for (int i = 0; i < sleepData.length; i++) {
-      if ((sleepData[i]['id'] as Timestamp).toDate() == tempDate) {
+      if (sleepData[i]['id'] != null &&
+          sleepData[i]['id'] is Timestamp &&
+          (sleepData[i]['id'] as Timestamp).toDate() == tempDate) {
         bed = sleepData[i]['bed_time'];
         alarm = sleepData[i]['alarm_time'];
       }
@@ -560,5 +573,43 @@ class _SleepScheduleState extends State<SleepSchedule> {
       durationSleepNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
       min = durationSleepNotify % 3600 ~/ 60;
     }
+
   }
+
+
+// difSleep() {
+  //   DateTime tempDate =
+  //       DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+  //   late String bed = "00:00 am", alarm = "00:00 am";
+  //   for (int i = 0; i < sleepData.length; i++) {
+  //     if ((sleepData[i]['id'] as Timestamp).toDate() == tempDate) {
+  //       bed = sleepData[i]['bed_time'];
+  //       alarm = sleepData[i]['alarm_time'];
+  //     }
+  //   }
+  //   print(bed);
+  //   print(sleepData.length);
+  //   print(tempDate);
+  //
+  //   List<String> l = bed.split(" ");
+  //   List<String> l1 = alarm.split(" ");
+  //
+  //   double m1 = double.parse(bed.split(":")[1].split(" ")[0]) / 60;
+  //   double m2 = double.parse(alarm.split(":")[1].split(" ")[0]) / 60;
+  //
+  //   double h1 = double.parse(bed.split(":")[0]) + m1;
+  //   double h2 = double.parse(alarm.split(":")[0]) + m2;
+  //
+  //   if (l[1] == l1[1]) {
+  //     hour = ((h1 - h2).abs()).toInt();
+  //     durationSleepNotify = ((h1 - h2).abs()) * 3600;
+  //     min = durationSleepNotify % 3600 ~/ 60;
+  //     print(hour);
+  //     print(min);
+  //   } else {
+  //     hour = (24 - (h1 + 12 - h2).abs()).toInt();
+  //     durationSleepNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
+  //     min = durationSleepNotify % 3600 ~/ 60;
+  //   }
+  // }
 }

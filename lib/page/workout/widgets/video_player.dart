@@ -111,23 +111,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     int count = 2;
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Tutorial",
-              style: SafeGoogleFont(
-                'Poppins',
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-            const Text("               "),
-          ],
-        ),
-      ),
+      appBar: _appBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -209,7 +193,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
               height: 406,
               width: 400,
               decoration: const BoxDecoration(
-                color: Colors.teal,
+
                 borderRadius: BorderRadius.only(topRight: Radius.circular(60)),
                 gradient: primaryGradient,
               ),
@@ -357,5 +341,36 @@ class _VideoPlayerState extends State<VideoPlayer> {
         ),
       ),
     ));
+  }
+  _appBar() {
+    return AppBar(
+        elevation: 0,
+        backgroundColor: primaryClr,
+        title: Center(
+          child: Text(
+            "Tutorial",
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new_outlined,
+            size: 20,
+            color: Colors.white,
+          ),
+        ),
+        actions: const [
+          SizedBox(
+            width: 60,
+          ),
+        ]);
   }
 }

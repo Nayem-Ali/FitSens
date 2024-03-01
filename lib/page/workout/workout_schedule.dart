@@ -226,6 +226,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../utility/color.dart';
@@ -295,19 +297,16 @@ class _WorkoutScheduleState extends State<WorkoutSchedule> {
                                           .doc(documentId)
                                           .delete();
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text("Successfully Deleted"),
-                                        backgroundColor: Colors.red,
-                                      ));
+                                      Get.snackbar("Drinks Schedule",
+                                          "Successfully Deleted",
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white);
+
+
                                     } else {
                                       setState(() {});
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            "For delete you have swipe Left to Right"),
-                                        backgroundColor: Colors.green,
-                                      ));
+                                      Get.snackbar("Drinks Schedule",
+                                          "For delete you have swipe Left to Right");
                                     }
                                   },
                                   background: Container(
@@ -325,7 +324,7 @@ class _WorkoutScheduleState extends State<WorkoutSchedule> {
                                     height: 20,
                                   ),
                                   child: Card(
-                                    color: index%2 == 1 ? primaryClr : Colors.blueGrey,
+                                    color: index%2 == 1 ? primaryClr : ColorCode.secondaryColor1,
                                     margin: const EdgeInsets.only(
                                         left: 20, right: 20),
                                     child: ListTile(

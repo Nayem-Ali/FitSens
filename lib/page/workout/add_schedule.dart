@@ -1,3 +1,4 @@
+import 'package:finessapp/services/db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/local_notifications.dart';
 import '../../utility/color.dart';
+import '../../utility/utils.dart';
 import '../widgets/button.dart';
 import '../widgets/input_field.dart';
 
@@ -18,6 +20,8 @@ class AddSchedule extends StatefulWidget {
 class _AddScheduleState extends State<AddSchedule> {
   CollectionReference workout =
   FirebaseFirestore.instance.collection('workout');
+  CollectionReference userCollection =
+  FirebaseFirestore.instance.collection('user');
   User? user = FirebaseAuth.instance.currentUser;
 
   DateTime _selectedDate = DateTime.now();
@@ -26,7 +30,7 @@ class _AddScheduleState extends State<AddSchedule> {
   DateTime dateForDif = DateTime.now();
 
 
-  late var pickedTime;
+  late TimeOfDay pickedTime;
   late DateTime? pickerDate;
   late double durationForNotify;
 
@@ -53,6 +57,20 @@ class _AddScheduleState extends State<AddSchedule> {
     "Lowerbody workout",
     "AB workout",
   ];
+
+
+  addNotification() async {
+    Map<String, dynamic> notificationsData = {
+      'title': "Workout Reminder",
+      'body': "Now you have to do $_chooseWorkout",
+      'time': _time,
+      'isCheck': false,
+      'date': DateTime(_selectedDate.year,_selectedDate.month,_selectedDate.day,pickedTime.hour,pickedTime.minute,0),
+
+    };
+    await DBService().addNotifications(notificationsData);
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -201,6 +219,7 @@ class _AddScheduleState extends State<AddSchedule> {
                   height: 55,
                   label: "Add Schedule",
                   onTap: () async {
+
                     dif();
                     LocalNotifications.showScheduleNotification(
                         title: "Workout Reminder",
@@ -218,6 +237,8 @@ class _AddScheduleState extends State<AddSchedule> {
                         backgroundColor: Colors.green,
                       ));
                     });
+
+                    addNotification();
 
                     Navigator.pop(context);
 
@@ -238,11 +259,11 @@ class _AddScheduleState extends State<AddSchedule> {
         title: Center(
           child: Text(
             "Add Schedule",
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
         ),
@@ -342,9 +363,15 @@ class _AddScheduleState extends State<AddSchedule> {
     double m1 = double.parse(_time.split(":")[1].split(" ")[0])/60;
     double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0])/60;
 
-
     double h1 = double.parse(_time.split(":")[0])+m1;
-    double h2 = double.parse(hourAndMinute.split(":")[0])+m2;
+    double h2 = double.parse(hourAndMinute.split(":")[0]);
+    if(h2.toInt()==0){
+      h2=12+m2;
+    }else{
+      h2 = double.parse(hourAndMinute.split(":")[0])+m2;
+    }
+    print(m2);
+    print(hourAndMinute);
     print('$h1 $h2');
     print('$l $l1');
 

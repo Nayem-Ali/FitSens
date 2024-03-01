@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/page/sleep/sleep_schedule.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +33,8 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
 
   DateTime? _pickerDate;
 
+  late TimeOfDay pickedTime;
+
   String _selectedRepeat = "None";
   List<String> repeatList = [
     "None",
@@ -39,6 +43,17 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
     "Monthly",
   ];
   DBService dbService = DBService();
+
+  addNotification() async {
+    Map<String, dynamic> notificationsData = {
+      'title': "Sleep Reminder",
+      'body': "Now you have to do $_alarmTime",
+      'time': _alarmTime,
+      'date': DateTime(_selectedDate.year,_selectedDate.month,_selectedDate.day,pickedTime.hour,pickedTime.minute,0)
+    };
+    await DBService().addNotifications(notificationsData);
+    setState(() {});
+  }
 
   setData() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -202,6 +217,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                           body: "Your alarm time is $_alarmTime",
                           payload: "This is schedule data",
                           duration: durationSleepNotify.toInt());
+
                       await setData();
                       await sleep
                           .doc(user!.uid)
@@ -223,7 +239,9 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                         ));
                       });
 
-                      Navigator.pop(context);
+                      addNotification();
+
+                      Get.off(const SleepSchedule());
                     }),
               ),
             ],
@@ -240,11 +258,11 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
         title: Center(
           child: Text(
             "Add Sleep Schedule",
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
         ),
@@ -284,7 +302,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
-    var pickedTime = await _showTimePicker();
+    pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime.format(context);
     if (pickedTime == null) {
       print("Time cancel");
@@ -331,29 +349,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
   }
 
   difSleep() {
-    // DateTime bt = DateTime(
-    //     _pickerDate!.year,
-    //     _pickerDate!.month,
-    //     _pickerDate!.day,
-    //     int.parse(_time.split(":")[0]),
-    //     int.parse(_time.split(":")[1].split(" ")[0])
-    // );
 
-    // DateTime at = DateTime(
-    //     _pickerDate!.year,
-    //     _pickerDate!.month,
-    //     _pickerDate!.day,
-    //     int.parse(_alarmTime.split(":")[0]),
-    //     int.parse(_alarmTime.split(":")[1].split(" ")[0]));
-
-    /*durationSleepNotify = bt.difference(at).inSeconds.abs();
-    DateTime n = DateTime.now().add(Duration(seconds: durationSleepNotify));
-    if((durationSleepNotify/3600)>=12){
-      print(24-(durationSleepNotify/3600));
-    }else{
-      print(durationSleepNotify/3600);
-    }
-    print(int.parse(_alarmTime.split(":")[1].split(" ")[1]));*/
 
     List<String> l = _time.split(" ");
     List<String> l1 = _alarmTime.split(" ");
@@ -373,8 +369,4 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
     }
   }
 
-  // temp(){
-  //   DateTime t = DateTime.now().add(const Duration(seconds: 120));
-  //   print(t);
-  // }
 }

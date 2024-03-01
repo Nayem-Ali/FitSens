@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../services/db_service.dart';
 import '../helper/helper_methods.dart';
 import 'comment.dart';
 import 'comment_button.dart';
@@ -29,11 +30,20 @@ class _WallPostState extends State<WallPost> {
   bool isLiked = false;
 
   final commentTextController = TextEditingController();
+  late Map<String, dynamic> userDetails = {};
+  DBService dbService = DBService();
+  getData() async {
+    userDetails = await dbService.getUserInfo();
+    setState(() {
+
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getData();
     isLiked = widget.likes.contains(currentUser.email);
   }
 
@@ -42,7 +52,7 @@ class _WallPostState extends State<WallPost> {
       isLiked = !isLiked;
     });
     DocumentReference postRef =
-        FirebaseFirestore.instance.collection('feed').doc(currentUser.uid).collection("message").doc(widget.postId);
+        FirebaseFirestore.instance.collection('feed').doc(widget.postId);
 
     if (isLiked) {
       postRef.update({
@@ -57,12 +67,12 @@ class _WallPostState extends State<WallPost> {
 
   void addComment(String commentText) {
     FirebaseFirestore.instance
-        .collection("User Posts")
+        .collection("feed")
         .doc(widget.postId)
-        .collection("Comments")
+        .collection("comments")
         .add({
       "CommentText": commentText,
-      "CommentBy": currentUser.email,
+      "CommentBy": userDetails["name"],
       "CommentTime": Timestamp.now(),
     });
   }
@@ -193,9 +203,9 @@ class _WallPostState extends State<WallPost> {
           ),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("User Posts")
+                .collection("feed")
                 .doc(widget.postId)
-                .collection("Comments")
+                .collection("comments")
                 .orderBy("CommentTime", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -212,12 +222,8 @@ class _WallPostState extends State<WallPost> {
                   final commentData = doc.data() as Map<String, dynamic>?;
 
                   if (commentData == null) {
-                    return SizedBox.shrink(); // or return an empty widget if needed
+                    return const SizedBox.shrink(); // or return an empty widget if needed
                   }
-
-                  //final String commentText = commentData["CommentText"] as String? ?? "";
-                  //final String commentedBy = commentData["CommentedBy"] as String? ?? "";
-
                   return Comment(
                     text: commentData["CommentText"] as String? ?? "",
                     user: commentData["CommentBy"] as String? ?? "",

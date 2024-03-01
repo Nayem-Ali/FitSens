@@ -85,7 +85,7 @@ class _SleepHomeState extends State<SleepHome> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 25, right: 30),
-                    height: 100 * fem,
+                    height: 120 * fem,
                     width: 375 * fem,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30.0),

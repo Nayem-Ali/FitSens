@@ -1,13 +1,10 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:finessapp/page/step/step_counter_backend.dart';
 import 'package:finessapp/services/db_service.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +23,7 @@ class DailyActivity extends StatefulWidget {
 
 class _DailyActivityState extends State<DailyActivity> {
   CollectionReference userCollection =
-  FirebaseFirestore.instance.collection('user');
+      FirebaseFirestore.instance.collection('user');
   User? user = FirebaseAuth.instance.currentUser;
 
   DBService dbService = DBService();
@@ -41,36 +38,12 @@ class _DailyActivityState extends State<DailyActivity> {
   DateTime dateTime = DateTime.now();
   bool isHistory = false;
   bool isSchedule = true;
+  bool isSwitched = false;
   final formKey = GlobalKey<FormState>();
 
   List<Map<String, dynamic>> allSchedule = [];
   List<Map<String, dynamic>> allHistory = [];
-
-  // addAlarm() async {
-  //   TimeOfDay time = await showTimePicker(
-  //     context: context,
-  //     initialTime: TimeOfDay.now(),
-  //   ) as TimeOfDay;
-  //   final alarmSettings = AlarmSettings(
-  //     id: 1,
-  //     dateTime: DateTime(
-  //         dateTime.year, dateTime.month, dateTime.day, time.hour, time.minute),
-  //     assetAudioPath: 'assets/alarm.mp3',
-  //     loopAudio: true,
-  //     vibrate: false,
-  //     volume: 0.8,
-  //     fadeDuration: 3.0,
-  //     notificationTitle: 'FitSens',
-  //     notificationBody: 'Time for drink water',
-  //     enableNotificationOnKill: true,
-  //   );
-  //   alarm.clear();
-  //   alarm.add(alarmSettings);
-  //   await Alarm.set(alarmSettings: alarmSettings);
-  //   // Alarm.ringStream.stream.listen((_) => yourOnRingCallback());
-  //   print(alarmSettings.id);
-  //   setState(() {});
-  // }
+  List<bool> alarmStatus = [];
 
   showDialog() {
     showModalBottomSheet(
@@ -151,7 +124,7 @@ class _DailyActivityState extends State<DailyActivity> {
                 child: ElevatedButton(
                   onPressed: () async {
                     SharedPreferences sp =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     sp.setInt("goalSteps", int.parse(steps.text.trim()));
                     sp.setInt("goalWater", int.parse(water.text.trim()));
                     getGoal();
@@ -183,6 +156,7 @@ class _DailyActivityState extends State<DailyActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getData();
     getHistory();
     getGoal();
@@ -191,10 +165,13 @@ class _DailyActivityState extends State<DailyActivity> {
   getData() async {
     //allSchedule.clear();
     allSchedule = await dbService.getDrinkSchedule();
+    for (var schedule in allSchedule) {
+      alarmStatus.add(schedule['isOn']);
+    }
     print(allSchedule);
   }
 
-  getHistory()async{
+  getHistory() async {
     allHistory = await dbService.getWaterIntakeData();
   }
 
@@ -270,22 +247,14 @@ class _DailyActivityState extends State<DailyActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          title: const Text(
-            "Daily Activity",
-          ),
-          centerTitle: true,
-        ),
+        appBar: _appBar(context),
         body: SingleChildScrollView(
           child: SizedBox(
             height: Get.height,
             child: Column(
               children: [
                 Container(
-                  height: Get.height * 0.2,
+                  height: Get.height * 0.14,
                   margin: EdgeInsets.symmetric(
                     horizontal: Get.width * 0.05,
                     vertical: Get.height * 0.01,
@@ -302,7 +271,7 @@ class _DailyActivityState extends State<DailyActivity> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(9.0),
+                        padding: const EdgeInsets.only(left: 9.0,right: 9.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -327,7 +296,7 @@ class _DailyActivityState extends State<DailyActivity> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              height: Get.height * 0.08,
+                              height: Get.height * 0.06,
                               width: Get.width * 0.4,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -342,7 +311,7 @@ class _DailyActivityState extends State<DailyActivity> {
                                     const SizedBox(width: 12),
                                     Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         const Text("Water Intake"),
                                         Text("$goalWaterIntake Glasses")
@@ -353,7 +322,7 @@ class _DailyActivityState extends State<DailyActivity> {
                               ),
                             ),
                             Container(
-                              height: Get.height * 0.08,
+                              height: Get.height * 0.06,
                               width: Get.width * 0.4,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -368,7 +337,7 @@ class _DailyActivityState extends State<DailyActivity> {
                                     const SizedBox(width: 12),
                                     Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         const Text("Steps"),
                                         Text("$goalSteps"),
@@ -384,13 +353,13 @@ class _DailyActivityState extends State<DailyActivity> {
                     ],
                   ),
                 ),
-                const Divider(),
+                //const Divider(),
                 const Text(
                   "Steps Activity",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const Divider(),
-                // SizedBox(height: Get.height * 0.01),
+                //const Divider(),
+                SizedBox(height: Get.height * 0.01),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -468,20 +437,15 @@ class _DailyActivityState extends State<DailyActivity> {
                     )
                   ],
                 ),
-                // SizedBox(height: Get.height * 0.01),
-                // const Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 10),
-                //   child: BarChar(),
-                // ),
-                const Divider(),
+
+                //const Divider(),
+                SizedBox(height: Get.height * 0.01),
                 const Text(
                   "Water Intake Activity",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const Divider(),
-                const SizedBox(
-                  height: 5,
-                ),
+                //const Divider(),
+                SizedBox(height: Get.height * 0.01),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -493,7 +457,7 @@ class _DailyActivityState extends State<DailyActivity> {
                           width: Get.height * 0.1,
                           child: CircularProgressIndicator(
                             value:
-                            totalIntake / (int.tryParse(water.text) ?? 1),
+                                totalIntake / (int.tryParse(water.text) ?? 1),
                             color: ColorCode.primaryColor1,
                             backgroundColor: ColorCode.secondaryColor1,
                             strokeWidth: 10,
@@ -530,7 +494,7 @@ class _DailyActivityState extends State<DailyActivity> {
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: Get.height * 0.01),
 
                 Container(
                   margin: const EdgeInsets.only(left: 25, right: 25),
@@ -560,7 +524,6 @@ class _DailyActivityState extends State<DailyActivity> {
                             isHistory = false;
                             isSchedule = true;
                           });
-                          //addAlarm();
                         },
                         style: OutlinedButton.styleFrom(
                           minimumSize: Size(Get.height * 0.19, 50),
@@ -572,66 +535,176 @@ class _DailyActivityState extends State<DailyActivity> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
+                SizedBox(height: Get.height * 0.015),
                 if (isSchedule)
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: allSchedule.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.only(left: 20, right: 20),
-                          child: Card(
-                            child: ListTile(
-                              title: Text('${allSchedule[index]['time']}'),
-                              trailing: Switch(
-                                onChanged: (v) {},
-                                value: false,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    child: allSchedule.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: allSchedule.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Dismissible(
+                                    key: Key(UniqueKey().toString()),
+                                    onDismissed: (direction) async {
+                                      if (direction ==
+                                          DismissDirection.startToEnd) {
+                                        DBService().deleteDrinkSchedule(index);
+                                        getData();
+
+                                        Get.snackbar("Drinks Schedule",
+                                            "Successfully Deleted",
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white);
+                                      } else {
+                                        setState(() {});
+                                        Get.snackbar("Drinks Schedule",
+                                            "For delete you have swipe Left to Right");
+                                      }
+                                    },
+                                    background: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+
+                                    ),
+                                    secondaryBackground: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+
+                                    ),
+                                    child: (formattedDate ==
+                                            allSchedule[index]['date'])
+                                        ? Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: Card(
+                                              color: index % 2 == 1
+                                                  ? ColorCode.primaryColor1
+                                                  : ColorCode.secondaryColor1,
+                                              child: ListTile(
+                                                title: Text(
+                                                  '${allSchedule[index]['time']}',
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 17),
+                                                ),
+                                                trailing: Switch(
+                                                  onChanged: (value) async {
+                                                    dif(allSchedule[index]
+                                                        ['time']);
+                                                    if (value) {
+                                                      LocalNotifications.showScheduleNotification(
+                                                          title:
+                                                              "It's Drink Reminder",
+                                                          body:
+                                                              "Now you have to drinks Water",
+                                                          payload:
+                                                              "This is schedule data",
+                                                          duration:
+                                                              durationForNotify
+                                                                  .toInt());
+                                                    }
+
+                                                    setState(() {
+                                                      alarmStatus[index] =
+                                                          value;
+                                                      print(alarmStatus[index]);
+                                                    });
+                                                    DBService()
+                                                        .updateDrinkSchedule(
+                                                            index, value);
+                                                  },
+                                                  value: alarmStatus[index],
+                                                  activeColor: index % 2 == 1
+                                                      ? Colors.black54
+                                                      : Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        : const SizedBox(),
                   ),
-                if(isHistory)
+
+                //schedule(),
+                if (isHistory)
                   Expanded(
                     child: ListView.builder(
                       itemCount: allHistory.length,
                       itemBuilder: (context, index) {
                         return Container(
+                          height: 100,
                           margin: const EdgeInsets.only(left: 20, right: 20),
                           child: Card(
+                            color: index % 2 == 1
+                                ? ColorCode.primaryColor1
+                                : ColorCode.secondaryColor1,
                             child: ListTile(
                                 title: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('${allHistory[index]['id']}'),
-                                    Text('Percentage: ${allHistory[index]['percentage']}'),
-                                    Text('Target: ${allHistory[index]['target']}'),
-                                    Text('Today Intake: ${allHistory[index]['todayIntake']}'),
-                                  ],
-                                )
-                            ),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 5,),
+                                Text('${allHistory[index]['id']}',style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                    FontWeight.bold,
+                                    fontSize: 15),),
+                                Text(
+                                    'Percentage: ${allHistory[index]['percentage']}',style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                    FontWeight.bold,
+                                    fontSize: 15),),
+                                Text('Target: ${allHistory[index]['target']}',style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                    FontWeight.bold,
+                                    fontSize: 15),),
+                                Text(
+                                    'Today Intake: ${allHistory[index]['todayIntake']}',style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                    FontWeight.bold,
+                                    fontSize: 15),),
+                              ],
+                            )),
                           ),
-
                         );
                       },
                     ),
                   ),
-
               ],
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: primaryClr,
-          onPressed: () {
-            showDrinksDialog();
-          },
-          child: const Icon(Icons.add_circle),
+        floatingActionButton: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            children: [
+              SizedBox(
+                width: Get.width * 0.48,
+              ),
+              FloatingActionButton(
+                backgroundColor: primaryClr,
+                onPressed: () {
+                  showDrinksDialog();
+                },
+                child: const Icon(Icons.add_circle),
+              ),
+            ],
+          ),
         ));
   }
 
@@ -639,15 +712,16 @@ class _DailyActivityState extends State<DailyActivity> {
   String _time = DateFormat("hh:mm a").format(DateTime.now()).toString();
   DateTime dateForDif = DateTime.now();
 
-  late var pickedTime;
+  late TimeOfDay pickedTime;
   late DateTime? pickerDate;
   late double durationForNotify;
+  List<String>? allData = [];
 
-  addSchedule()async{
+  addSchedule() async {
     Map<String, dynamic> drinksData = {
       'date': formattedDate,
       'time': _time,
-      'isOn': true,
+      'isOn': false,
     };
     await DBService().addDrinkSchedule(drinksData);
     setState(() {});
@@ -694,39 +768,34 @@ class _DailyActivityState extends State<DailyActivity> {
                   height: 55,
                   label: "Add Drink Schedule",
                   onTap: () async {
-                    dif();
-                    LocalNotifications.showScheduleNotification(
-                        title: "It's Drink Reminder",
-                        body: "Now you have to drinks Water",
-                        payload: "This is schedule data", duration: durationForNotify.toInt());
-
                     addSchedule();
+                    addNotification();
+                    getData();
+                    Get.back();
 
-                    Navigator.pop(context);
-
-                  }, fontSize: 16,),
+                  },
+                  fontSize: 16,
+                ),
               ),
-
             ],
           ),
         );
       },
     );
-
-
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
     pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime.format(context);
+    String formatedTime = pickedTime.format(context);
     if (pickedTime == null) {
       print("Time cancel");
     } else if (isStartTime == true) {
       setState(() {
-        _time = _formatedTime;
+        _time = formatedTime;
       });
     }
   }
+
   _showTimePicker() async {
     return await showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
@@ -738,53 +807,99 @@ class _DailyActivityState extends State<DailyActivity> {
     );
   }
 
-  dif() {
+  addNotification() async {
+    DateTime now = DateTime.now();
+    Map<String, dynamic> notificationsData = {
+      'title': "It's Drink Time",
+      'body': "Now you have to drinks Water",
+      'time': _time,
+      'date': DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute, 0),
+    };
+    await DBService().addNotifications(notificationsData);
+    setState(() {});
+  }
 
+  dif(String check) {
     DateTime dateForDif = DateTime.now();
-
     int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
-    int hTemp= h;
-    if(h>12) {
-      h=h-12;
+    int hTemp = h;
+    if (h > 12) {
+      h = h - 12;
     }
 
     String hourAndMinute;
-    if(hTemp>12){
-      hourAndMinute = '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
-    }else{
-      hourAndMinute = '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
+    if (hTemp > 12) {
+      hourAndMinute =
+          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
+    } else {
+      hourAndMinute =
+          '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
     }
 
+    List<String> l = check.split(" ");
+    List<String> l1 = hourAndMinute.split(" ");
 
-    List<String>l=_time.split(" ");
-    List<String>l1=hourAndMinute.split(" ");
+    double m1 = double.parse(check.split(":")[1].split(" ")[0]) / 60;
+    double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0]) / 60;
 
-    double m1 = double.parse(_time.split(":")[1].split(" ")[0])/60;
-    double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0])/60;
-
-
-    double h1 = double.parse(_time.split(":")[0])+m1;
-    double h2 = double.parse(hourAndMinute.split(":")[0])+m2;
+    double h1 = double.parse(check.split(":")[0]) + m1;
+    double h2 = double.parse(hourAndMinute.split(":")[0]);
+    if (h2.toInt() == 0) {
+      h2 = 12 + m2;
+    } else {
+      h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
+    }
     print('$h1 $h2');
     print('$l $l1');
 
-    if(l[1]==l1[1]){
-      durationForNotify = ((h1-h2).abs()) * 3600;
-      print(durationForNotify);
-    }else{
-      durationForNotify = (24-(h1+12-h2).abs()) * 3600;
+    if (l[1] == l1[1]) {
+      durationForNotify = ((h1 - h2)) * 3600;
+      //print(durationForNotify);
+    } else {
+      durationForNotify = (24 - (h1 + 12 - h2)) * 3600;
+      //print(durationForNotify);
+    }
+    if(durationForNotify.isNegative){
+      durationForNotify+=86400.0;
       print(durationForNotify);
     }
-    //print(dtn);
-    print(hourAndMinute);
-    //durationForNotify = dt.difference(dtn).inSeconds.abs();
-    //print(durationForNotify);
+
 
   }
+
+  _appBar(BuildContext context) {
+    return AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Center(
+          child: Text(
+            "Daily Activity",
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
+        actions: const [
+          SizedBox(
+            width: 45,
+          ),
+        ]);
+  }
 }
-
-
-
 
 // import 'package:alarm/alarm.dart';
 // import 'package:finessapp/page/step/step_counter_backend.dart';
