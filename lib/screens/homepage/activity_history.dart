@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:finessapp/services/db_service.dart';
-import 'package:finessapp/utility/color.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:finessapp/widgets/barchart.dart';
 import 'package:finessapp/widgets/linechart.dart';
@@ -126,14 +125,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
               ? Expanded(
                   child: Column(
                     children: [
-
                       const SizedBox(height: 10),
                       Expanded(
                         child: LineChar(
                           weeklyData: heartBPM.length > 7 ? weeklyHeartBPM : heartBPM,
                         ),
                       ),
-
                       const Text(
                         "Heart BPM",
                         style: TextStyle(
@@ -178,7 +175,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                   ),
                 )
               : Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -186,7 +183,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                         DateTime(
                             DateTime.now().year, DateTime.now().month - 1, DateTime.now().day),
                         initialSelectedDate: DateTime.now(),
-                        daysCount: 32,
+                        daysCount: 30,
                         selectionColor: ColorCode.primaryColor2,
                         selectedTextColor: Colors.white,
                         onDateChange: (date) {
@@ -194,16 +191,24 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                             myDate = date;
                             id = DateFormat.yMMMd().format(date);
                             id2 = DateTime(myDate.year, myDate.month, myDate.day, 0, 0)
-                                .toString()
-                                .substring(0, 10);
+                                .toString().substring(0, 10);
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      const Divider(thickness: 2),
+                      const Text(
+                        "Heart BPM",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          // color: ColorCode.primaryColor1,
+                        ),
+                      ),
+                      const Divider(thickness: 2),
                       for (var bpm in heartBPM)
                         if (bpm['id'] == id)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Stack(
                                 alignment: Alignment.center,
@@ -222,42 +227,45 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                   ),
                                 ],
                               ),
-                              // SizedBox(width: Get.width * 0.02),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Beats Per Minute",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Measured at ${DateFormat.jm().format((bpm['date'] as Timestamp).toDate())}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                ],
+                              const Text(
+                                "Beats Per Minute",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
+                              ),
+                              Text(
+                                "Measured at ${DateFormat.jm().format((bpm['date'] as Timestamp).toDate())}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
                               ),
                             ],
                           ),
-                      SizedBox(height: Get.height * 0.02),
+                      const Divider(thickness: 2),
+                      const Text(
+                        "Step Activity",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          // color: ColorCode.primaryColor1,
+                        ),
+                      ),
+                      const Divider(thickness: 2),
                       for (var step in stepActivity)
                         if (step['id'] == id2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   SizedBox(
-                                    height: Get.height * 0.1,
-                                    width: Get.height * 0.1,
+                                    height: Get.height * 0.09,
+                                    width: Get.height * 0.09,
                                     child: CircularProgressIndicator(
                                       value: step['percentage'] / 100,
                                       color: ColorCode.primaryColor1,
@@ -275,62 +283,66 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                   )
                                 ],
                               ),
-                              SizedBox(
-                                width: Get.width * 0.02,
+                              const SizedBox(
+                                height: 5,
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Walked: ${((step['steps'] * 0.762) / 1000).toStringAsFixed(2)} "
-                                    "kM",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "Burned: ${(step['steps'] * 0.04).toStringAsFixed(2)} kCal",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "Steps: ${step['steps']} / ${step['target']}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                ],
+                              Text(
+                                "Walked: ${((step['steps'] * 0.762) / 1000).toStringAsFixed(2)} "
+                                "kM",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "Burned: ${(step['steps'] * 0.04).toStringAsFixed(2)} kCal",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "Steps: ${step['steps']} / ${step['target']}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
                               ),
                             ],
                           ),
-                      SizedBox(height: Get.height * 0.02),
+                      const Divider(thickness: 2),
+                      const Text(
+                        "Water Intake",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          // color: ColorCode.primaryColor1,
+                        ),
+                      ),
+                      const Divider(thickness: 2),
                       for (var waterIntake in waterIntakeActivity)
                         if (waterIntake['id'] == id)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   SizedBox(
-                                    height: Get.height * 0.1,
-                                    width: Get.height * 0.1,
+                                    height: Get.height * 0.09,
+                                    width: Get.height * 0.09,
                                     child: CircularProgressIndicator(
                                       value: waterIntake['percentage'] / 100,
                                       color: ColorCode.primaryColor1,
@@ -349,34 +361,29 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                 ],
                               ),
                               SizedBox(
-                                width: Get.width * 0.01,
+                                height: Get.height * 0.01,
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Drinks ${waterIntake['todayIntake']} Glasses",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "Target ${waterIntake['target']} Glasses",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      // color: ColorCode.primaryColor1,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                ],
+                              Text(
+                                "Drinks ${waterIntake['todayIntake']} Glasses",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "Target ${waterIntake['target']} Glasses",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  // color: ColorCode.primaryColor1,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
                               ),
                             ],
                           ),

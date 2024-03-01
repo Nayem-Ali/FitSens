@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finessapp/utility/color.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -52,11 +51,7 @@ class _LineCharState extends State<LineChar> {
             LineChartBarData(
               spots: flSpot,
               isCurved: true,
-
-              belowBarData: BarAreaData(
-                show: true,
-                color: ColorCode.primaryColor2
-              ),
+              belowBarData: BarAreaData(show: true, color: ColorCode.primaryColor2),
             ),
           ],
         ),
@@ -65,15 +60,15 @@ class _LineCharState extends State<LineChar> {
   }
 }
 
-
 Widget getBottomTitles(double value, TitleMeta meta) {
-  if (value == 0) {
+  String temp = (value - value.toInt()).toStringAsFixed(1);
+  double k = double.parse(temp);
+  if (value == 0 || k > 0) {
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: const Text(""),
     );
   }
-
   return SideTitleWidget(
     axisSide: meta.axisSide,
     space: 10,

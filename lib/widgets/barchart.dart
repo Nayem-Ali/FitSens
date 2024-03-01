@@ -7,16 +7,12 @@ import 'package:get/get.dart';
 
 class MyBarChart extends StatefulWidget {
   List<Map<String, dynamic>> weeklyData;
-
   MyBarChart({Key? key, required this.weeklyData}) : super(key: key);
-
   @override
   State<MyBarChart> createState() => _MyBarChartState();
 }
 
 class _MyBarChartState extends State<MyBarChart> {
-
-
 
   @override
   Widget build(BuildContext context) {

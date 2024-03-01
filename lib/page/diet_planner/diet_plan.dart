@@ -41,20 +41,21 @@ class _DietPlannerState extends State<DietPlanner> {
     DateTime date = DateTime.parse(userDetails['dob']);
     age = DateTime.now().difference(date).inDays ~/ 365;
     dietData = await dbService.getDietPlan();
+    if(dietData.isNotEmpty){
+      FoodModel breakFast =
+      (await postController.getFoods(q: dietData[0]['label'], from: 0, to: 1))!;
+      imageUrl.add(breakFast.hits[0].recipe.image);
 
-    FoodModel breakFast =
-        (await postController.getFoods(q: dietData[0]['label'], from: 0, to: 1))!;
-    imageUrl.add(breakFast.hits[0].recipe.image);
+      FoodModel lunch = (await postController.getFoods(q: dietData[2]['label'], from: 0, to: 1))!;
+      imageUrl.add(lunch.hits[0].recipe.image);
 
-    FoodModel lunch = (await postController.getFoods(q: dietData[2]['label'], from: 0, to: 1))!;
-    imageUrl.add(lunch.hits[0].recipe.image);
+      FoodModel snack = (await postController.getFoods(q: dietData[3]['label'], from: 0, to: 1))!;
+      imageUrl.add(snack.hits[0].recipe.image);
 
-    FoodModel snack = (await postController.getFoods(q: dietData[3]['label'], from: 0, to: 1))!;
-    imageUrl.add(snack.hits[0].recipe.image);
+      FoodModel dinner = (await postController.getFoods(q: dietData[1]['label'], from: 0, to: 1))!;
+      imageUrl.add(dinner.hits[0].recipe.image);
 
-    FoodModel dinner = (await postController.getFoods(q: dietData[1]['label'], from: 0, to: 1))!;
-    imageUrl.add(dinner.hits[0].recipe.image);
-
+    }
     dietPlan();
     setState(() {
       isLoading = false;
@@ -205,7 +206,7 @@ class _DietPlannerState extends State<DietPlanner> {
                     )
                   ],
                 ),
-
+                SizedBox(height: Get.height * 0.01),
                 dietData.isEmpty
                     ? ElevatedButton(
                         onPressed: () {
@@ -400,6 +401,7 @@ class _DietPlannerState extends State<DietPlanner> {
                               )
                             ],
                           ),
+
                           ElevatedButton(
                             onPressed: () {
                               Get.to(
