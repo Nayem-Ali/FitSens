@@ -7,13 +7,13 @@ import 'package:get/get.dart';
 
 class MyBarChart extends StatefulWidget {
   List<Map<String, dynamic>> weeklyData;
+
   MyBarChart({Key? key, required this.weeklyData}) : super(key: key);
+
   @override
   State<MyBarChart> createState() => _MyBarChartState();
 }
-
 class _MyBarChartState extends State<MyBarChart> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -43,25 +43,18 @@ class _MyBarChartState extends State<MyBarChart> {
                 ),
               ),
               barGroups: widget.weeklyData
-                  .map(
-                    (weekDay) => BarChartGroupData(
-                      x: (weekDay['date'] as Timestamp).toDate().weekday,
-                      barRods: [
-                        BarChartRodData(
-                          toY: weekDay['percentage'] * 1.0,
-                          width: 20,
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: primaryGradient,
-                          backDrawRodData: BackgroundBarChartRodData(
-                            show: true,
-                            toY: 100,
-                              color: ColorCode.secondaryColor2
-                          )
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+                  .map((weekDay) => BarChartGroupData(
+                        x: (weekDay['date'] as Timestamp).toDate().weekday,
+                        barRods: [
+                          BarChartRodData(
+                              toY: weekDay['percentage'] * 1.0,
+                              width: 20,
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: primaryGradient,
+                              backDrawRodData: BackgroundBarChartRodData(
+                                  show: true, toY: 100, color: ColorCode.secondaryColor2)),
+                        ],
+                      )).toList(),
             ),
           ),
         ),

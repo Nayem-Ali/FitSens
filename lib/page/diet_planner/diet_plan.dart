@@ -235,7 +235,7 @@ class _DietPlannerState extends State<DietPlanner> {
                       )
                     : Column(
                         children: [
-                          const Divider(color: primaryClr),
+
                           const Text(
                             "Meals",
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
