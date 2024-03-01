@@ -51,7 +51,10 @@ class _LineCharState extends State<LineChar> {
             LineChartBarData(
               spots: flSpot,
               isCurved: true,
-              belowBarData: BarAreaData(show: true, color: ColorCode.primaryColor2),
+              belowBarData: BarAreaData(
+                show: true,
+                color: ColorCode.primaryColor2,
+              ),
             ),
           ],
         ),
