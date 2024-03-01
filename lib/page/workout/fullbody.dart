@@ -1,7 +1,6 @@
-import 'package:finessapp/page/workout/widgets/customContainer.dart';
-/// import 'package:finessapp/page/workout/widgets/full_exercise.dart';
-import 'package:finessapp/page/workout/widgets/video_player.dart';
+import 'package:finessapp/page/workout/widgets/full_exercise.dart';
 import 'package:flutter/material.dart';
+
 import '../../utility/color.dart';
 import '../../utility/utils.dart';
 
@@ -22,7 +21,6 @@ class Fullbody extends StatelessWidget {
           color: Colors.white,
           child: Stack(
             children: [
-
               Container(
                 //color: primaryClr,
                 decoration: const BoxDecoration(
@@ -51,8 +49,7 @@ class Fullbody extends StatelessWidget {
                         child: Container(
                           height: 5 * fem,
                           width: 50 * fem,
-                          margin: EdgeInsets.fromLTRB(
-                              133 * fem, 5 * fem, 134 * fem, 2 * fem),
+                          margin: EdgeInsets.fromLTRB(133 * fem, 5 * fem, 134 * fem, 2 * fem),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50 * fem),
                             color: Colors.grey,
@@ -69,7 +66,6 @@ class Fullbody extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             height: 1.5 * ffem / fem,
                             color: Colors.black,
-
                           ),
                         ),
                       ),
@@ -118,7 +114,6 @@ class Fullbody extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 height: 1.5 * ffem / fem,
                                 color: Colors.black,
-
                               ),
                             ),
                           ),
@@ -127,17 +122,21 @@ class Fullbody extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                      /// const FullExerciseList(),
+                      const FullExerciseList(),
                     ],
                   ),
                 ),
               ),
-
               Container(
-                margin: const EdgeInsets.only(top: 10,left: 10),
-                child: IconButton(onPressed: (){
-                  Navigator.pop(context);
-                }, icon: const Icon(Icons.arrow_back_ios,color: Colors.white,)),
+                margin: const EdgeInsets.only(top: 10, left: 10),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    )),
               ),
             ],
           ),
@@ -146,4 +145,3 @@ class Fullbody extends StatelessWidget {
     );
   }
 }
-

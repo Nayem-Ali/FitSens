@@ -2,24 +2,24 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/screens/homepage/activity_history.dart';
-import 'package:finessapp/screens/homepage/home_screen.dart';
-import 'package:finessapp/screens/homepage/workout_progress.dart';
+import 'package:finessapp/screens/homepage/workout_history.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:finessapp/widgets/edit_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path/path.dart' as p;
+
+import '../../services/db_service.dart';
 import '../../utility/color.dart';
 import '../auth/login_screen.dart';
-import '../../services/db_service.dart';
 
 class ProfileScreen extends StatefulWidget {
-
-  const ProfileScreen({Key? key,}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -36,8 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String url = "";
 
   Future selectPhoto(ImageSource source) async {
-    final pickedFile =
-        await _picker.pickImage(source: source, imageQuality: 50);
+    final pickedFile = await _picker.pickImage(source: source, imageQuality: 50);
 
     if (pickedFile == null) {
       return;
@@ -59,21 +58,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     FirebaseAuth auth = FirebaseAuth.instance;
 
-
     try {
       final destination = 'files/${auth.currentUser!.uid}';
-      final ref = firebase_storage.FirebaseStorage.instance
-          .ref(destination)
-          .child('file/');
+      final ref = firebase_storage.FirebaseStorage.instance.ref(destination).child('file/');
       await ref.putFile(image);
       String tempUrl = await ref.getDownloadURL();
 
-      await firestore
-          .collection("user")
-          .doc(auth.currentUser!.uid)
-          .update({"img": tempUrl});
-      Get.snackbar("Dear ${userDetails["name"]}",
-          "Your profile picture is uploaded successfully.",
+      await firestore.collection("user").doc(auth.currentUser!.uid).update({"img": tempUrl});
+      Get.snackbar("Dear ${userDetails["name"]}", "Your profile picture is uploaded successfully.",
           backgroundColor: Colors.grey);
       url = tempUrl;
       setState(() {});
@@ -138,12 +130,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Get.off(const HomeScreen());
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         foregroundColor: Colors.black,
@@ -160,8 +146,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )
           : SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
@@ -182,8 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Container(
@@ -191,10 +176,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 90,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(45),
-                            gradient: LinearGradient(colors: [
-                              ColorCode.primaryColor1,
-                              ColorCode.primaryColor1
-                            ]),
+                            gradient: LinearGradient(
+                                colors: [ColorCode.primaryColor1, ColorCode.primaryColor1]),
                           ),
                           child: ElevatedButton(
                             onPressed: profilePicture,
@@ -205,8 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             child: const Text(
                               "Edit",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ),
                         )
@@ -274,14 +256,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const Text(
                           "Account",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         OutlinedButton.icon(
                           onPressed: () {
@@ -295,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         OutlinedButton.icon(
                           onPressed: () {
-                            Get.to(()=>const ActivityHistory());
+                            Get.to(() => const ActivityHistory());
                           },
                           style: OutlinedButton.styleFrom(
                               alignment: Alignment.centerLeft,
@@ -305,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         OutlinedButton.icon(
                           onPressed: () {
-
+                            Get.to(() => const WorkoutHistory());
                           },
                           style: OutlinedButton.styleFrom(
                               alignment: Alignment.centerLeft,
@@ -323,16 +304,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Text(
                           "Others",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               "Enable Dark-Mode",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 17),
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
                             ),
                             Switch(
                               value: darkMode,
@@ -341,9 +320,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   darkMode = value;
                                   if (darkMode) {
                                     Get.changeTheme(ThemeData.dark().copyWith(
-                                        colorScheme: ColorScheme.fromSeed(
-                                            seedColor:
-                                                ColorCode.gray)));
+                                        colorScheme:
+                                            ColorScheme.fromSeed(seedColor: ColorCode.gray)));
                                   } else {
                                     Get.changeTheme(
                                       ThemeData.from(
@@ -375,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: const Text("Yes"),
                                     ),
                                     TextButton(
-                                      onPressed: ()  {
+                                      onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                       child: const Text("No"),
@@ -396,7 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-          ),
+            ),
     );
   }
 }

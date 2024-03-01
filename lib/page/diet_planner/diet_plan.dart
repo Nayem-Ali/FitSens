@@ -1,6 +1,8 @@
 import 'package:finessapp/page/diet_planner/controller.dart';
 import 'package:finessapp/page/diet_planner/make_plan.dart';
+import 'package:finessapp/page/diet_planner/view_receipe.dart';
 import 'package:finessapp/utility/color.dart';
+import 'package:finessapp/utility/color_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,7 +42,8 @@ class _DietPlannerState extends State<DietPlanner> {
     age = DateTime.now().difference(date).inDays ~/ 365;
     dietData = await dbService.getDietPlan();
 
-    FoodModel breakFast = (await postController.getFoods(q: dietData[0]['label'], from: 0, to: 1))!;
+    FoodModel breakFast =
+        (await postController.getFoods(q: dietData[0]['label'], from: 0, to: 1))!;
     imageUrl.add(breakFast.hits[0].recipe.image);
 
     FoodModel lunch = (await postController.getFoods(q: dietData[2]['label'], from: 0, to: 1))!;
@@ -150,20 +153,24 @@ class _DietPlannerState extends State<DietPlanner> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: Get.height * 0.010),
                 DataTable(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(),
-                      gradient: primaryGradient),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(),
+                    gradient: primaryGradient,
+                  ),
                   // border: TableBorder.all(),
                   columnSpacing: Get.width * 0.15,
-                  dataTextStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  dataTextStyle: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                   headingTextStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   dividerThickness: 2,
 
                   columns: const [
-                    DataColumn(label: Text("Nutrition (unit)")),
+                    DataColumn(label: Text("Nutrients (unit)")),
                     DataColumn(label: Text("Need")),
                     DataColumn(label: Text("Take")),
                   ],
@@ -198,7 +205,7 @@ class _DietPlannerState extends State<DietPlanner> {
                     )
                   ],
                 ),
-                const SizedBox(height: 10),
+
                 dietData.isEmpty
                     ? ElevatedButton(
                         onPressed: () {
@@ -227,29 +234,87 @@ class _DietPlannerState extends State<DietPlanner> {
                       )
                     : Column(
                         children: [
+                          const Divider(color: primaryClr),
+                          const Text(
+                            "Meals",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          const Divider(color: primaryClr),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Card(
-                                child: Column(
-                                  children: [
-                                    const Text("Breakfast"),
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(imageUrl[0]),
-                                      radius: 60,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(
+                                    () => const ViewReceipe(),
+                                    arguments: [dietData[0],imageUrl[0]],
+                                  );
+                                },
+                                child: Card(
+                                  color: ColorCode.primaryColor2,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(5),
+                                    height: Get.height * 0.15,
+                                    width: Get.width * 0.4,
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          "Breakfast",
+                                          style:
+                                              TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        ),
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(imageUrl[0]),
+                                          radius: 40,
+                                        ),
+                                        Text(
+                                          dietData[0]['label'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                              Card(
-                                child: Column(
-                                  children: [
-                                    const Text("Lunch"),
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(imageUrl[1]),
-                                      radius: 60,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(
+                                        () => const ViewReceipe(),
+                                    arguments: [dietData[2],imageUrl[1]],
+                                  );
+                                },
+                                child: Card(
+                                  color: ColorCode.primaryColor2,
+                                  child: Container(
+                                    height: Get.height * 0.15,
+                                    width: Get.width * 0.4,
+                                    margin: const EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          "Lunch",
+                                          style:
+                                              TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        ),
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(imageUrl[1]),
+                                          radius: 40,
+                                        ),
+                                        Text(
+                                          dietData[2]['label'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               )
                             ],
@@ -257,27 +322,80 @@ class _DietPlannerState extends State<DietPlanner> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Card(
-                                child: Column(
-                                  children: [
-                                    const Text("Snack"),
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(imageUrl[2]),
-                                      radius: 60,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(
+                                        () => const ViewReceipe(),
+                                    arguments: [dietData[3],imageUrl[2]],
+                                  );
+                                },
+                                child: Card(
+                                  color: ColorCode.primaryColor2,
+                                  child: Container(
+                                    height: Get.height * 0.15,
+                                    width: Get.width * 0.4,
+                                    margin: const EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          "Snack",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(imageUrl[2]),
+                                          radius: 40,
+                                        ),
+                                        Text(
+                                          dietData[3]['label'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                              Card(
-                                child: Column(
-                                  children: [
-                                    const Text("Dinner"),
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(imageUrl[3]),
-                                      radius: 60,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(
+                                        () => const ViewReceipe(),
+                                    arguments: [dietData[1],imageUrl[3]],
+                                  );
+                                },
+                                child: Card(
+                                  color: ColorCode.primaryColor2,
+                                  child: Container(
+                                    height: Get.height * 0.15,
+                                    width: Get.width * 0.4,
+                                    margin: const EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          "Dinner",
+                                          style:
+                                              TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        ),
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(imageUrl[3]),
+                                          radius: 40,
+                                        ),
+                                        Text(
+                                          dietData[1]['label'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    // CachedNetworkImage(imageUrl: dietData[1]['image'])
-                                  ],
+                                  ),
                                 ),
                               )
                             ],
