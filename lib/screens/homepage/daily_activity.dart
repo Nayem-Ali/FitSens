@@ -247,6 +247,7 @@ class _DailyActivityState extends State<DailyActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: _appBar(context),
         body: SingleChildScrollView(
           child: SizedBox(

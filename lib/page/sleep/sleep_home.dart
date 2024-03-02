@@ -38,11 +38,11 @@ class _SleepHomeState extends State<SleepHome> {
     }
     DateTime dateTime = DateTime.now();
     String id = DateFormat.yMMMd().format(dateTime);
-    for(var hira in sleepData){
-      print(hira);
+    for(var diff in sleepData){
+
       print(id);
-      if(hira['id'] == id){
-        difference = hira['difference'] * 1.0;
+      if(diff['id'] == id){
+        difference = diff['difference'] * 1.0;
       }
     }
     setState(() {});
@@ -106,7 +106,7 @@ class _SleepHomeState extends State<SleepHome> {
                             ),
                           ),
                           Text(
-                            "${difference~/3600} hour ${(difference%3600).toInt()} min",
+                            "${difference~/3600} hour ${(difference%3600 ~/ 60).toInt()} min",
                             //sleepData[''],
                             style: SafeGoogleFont(
                               'Poppins',

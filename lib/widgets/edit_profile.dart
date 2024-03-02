@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../screens/homepage/profile_screen.dart';
+import '../utility/utils.dart';
 
 
 class EditProfile extends StatefulWidget {
@@ -68,20 +69,10 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        title: const Text(
-          "Edit Personal Data",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-        ),
-        leading: IconButton(onPressed: (){
-          Get.off(const ProfileScreen());
-        }, icon: const Icon(Icons.arrow_back),),
-      ),
+      backgroundColor: Colors.white,
+      appBar: _appBar(context),
       body: SafeArea(
+
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
@@ -205,5 +196,36 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
+  }
+  _appBar(BuildContext context) {
+    return AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Center(
+          child: Text(
+            "Edit Personal Data",
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        leading: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new_outlined,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
+        actions: const [
+          SizedBox(
+            width: 45,
+          ),
+        ]);
   }
 }

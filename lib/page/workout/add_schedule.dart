@@ -1,6 +1,8 @@
 import 'package:finessapp/services/db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -150,65 +152,6 @@ class _AddScheduleState extends State<AddSchedule> {
                 ),
               ),
 
-              /*MyInputField(
-                title: "Remind",
-                hint: "$_selectedRemind minutes early",
-                widget: DropdownButton(
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.grey,
-                  ),
-                  iconSize: 32,
-                  elevation: 4,
-                  style: subTitleStyle,
-                  underline: Container(
-                    height: 0,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedRemind = int.parse(newValue!);
-                    });
-                  },
-                  items: remindList.map<DropdownMenuItem<String>>((int value) {
-                    return DropdownMenuItem<String>(
-                      value: value.toString(),
-                      child: Text(value.toString()),
-                    );
-                  }).toList(),
-                ),
-              ),*/
-              /*MyInputField(
-                title: "Repeat",
-                hint: _selectedRepeat,
-                widget: DropdownButton(
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.grey,
-                  ),
-                  iconSize: 32,
-                  elevation: 4,
-                  style: subTitleStyle,
-                  underline: Container(
-                    height: 0,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedRepeat = newValue!;
-                    });
-                  },
-                  items:
-                      repeatList.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),*/
-
               SizedBox(
                 height: fem * 300,
               ),
@@ -230,13 +173,9 @@ class _AddScheduleState extends State<AddSchedule> {
                       'date': formattedDate,
                       'time': _time,
                       'choose': _chooseWorkout,
-                    }).then((value) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(const SnackBar(
-                        content: Text("Successfully Added"),
-                        backgroundColor: Colors.green,
-                      ));
                     });
+
+                    Get.snackbar("Workout Reminder", "Successfully Added");
 
                     addNotification();
 

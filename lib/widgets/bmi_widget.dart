@@ -1,3 +1,4 @@
+import 'package:finessapp/utility/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utility/color_utility.dart';
@@ -56,7 +57,7 @@ class _BMIState extends State<BMI> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         gradient: LinearGradient(
-          colors: [ColorCode.primaryColor1, Colors.teal],
+          colors: [ColorCode.primaryColor1, primaryClr],
           end: Alignment.bottomCenter,
           begin: Alignment.topCenter,
         ),

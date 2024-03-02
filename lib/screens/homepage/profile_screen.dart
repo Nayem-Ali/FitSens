@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/screens/homepage/activity_history.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
+import 'package:finessapp/screens/homepage/sleep_history.dart';
 import 'package:finessapp/screens/homepage/workout_history.dart';
 import 'package:finessapp/screens/homepage/workout_progress.dart';
 import 'package:finessapp/utility/color_utility.dart';
@@ -15,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as p;
 import '../../utility/color.dart';
+import '../../utility/utils.dart';
 import '../auth/login_screen.dart';
 import '../../services/db_service.dart';
 
@@ -137,23 +139,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Get.off(const HomeScreen());
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text(
-          "Profile",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-        ),
-      ),
+      appBar: _appBar(context),
       body: userDetails.isEmpty
           ? const SizedBox(
               child: Center(
@@ -314,6 +302,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: const Text("Workout Progress"),
                           icon: const Icon(Icons.bar_chart),
                         ),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            Get.to(()=>const SleepHistory());
+                          },
+                          style: OutlinedButton.styleFrom(
+                              alignment: Alignment.centerLeft,
+                              textStyle: const TextStyle(fontSize: 15)),
+                          label: const Text("Sleep Progress"),
+                          icon: const Icon(Icons.stacked_bar_chart),
+                        ),
                       ],
                     ),
                   ),
@@ -398,6 +396,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
           ),
+    );
+  }
+
+  _appBar(BuildContext context) {
+    return AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Center(
+          child: Text(
+            "My Profile",
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+
     );
   }
 }

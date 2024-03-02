@@ -93,6 +93,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _appBar(context),
       body: Column(
         children: [

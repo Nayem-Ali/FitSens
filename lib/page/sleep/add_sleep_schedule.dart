@@ -73,7 +73,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
       'percentage':
           completed / target >= 1 ? 100 : ((completed / target) * 100).toInt(),
       'difference': durationSleepNotify,
-      "target": target,
+      "target": target.toInt(),
       "complete": completed,
     };
     await dbService.addSleepData(sleepData);
@@ -135,37 +135,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                   },
                 ),
               ),
-              // MyInputField(
-              //   title: "Repeat",
-              //   hint: _selectedRepeat,
-              //   widget: DropdownButton(
-              //     icon: const Icon(
-              //       Icons.keyboard_arrow_down,
-              //       color: Colors.grey,
-              //     ),
-              //     iconSize: 32,
-              //     elevation: 4,
-              //     style: subTitleStyle,
-              //     underline: Container(
-              //       height: 0,
-              //     ),
-              //     onChanged: (String? newValue) {
-              //       setState(() {
-              //         _selectedRepeat = newValue!;
-              //       });
-              //     },
-              //     items:
-              //         repeatList.map<DropdownMenuItem<String>>((String value) {
-              //       return DropdownMenuItem<String>(
-              //         value: value,
-              //         child: Text(
-              //           value,
-              //           style: const TextStyle(color: Colors.grey),
-              //         ),
-              //       );
-              //     }).toList(),
-              //   ),
-              // ),
+
               SizedBox(
                 height: 30,
                 width: 200,
@@ -231,13 +201,9 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                         'id': dateTime,
                         'difference': durationSleepNotify,
                         'ideal_hour': idealHour,
-                      }).then((value) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("Successfully Added"),
-                          backgroundColor: Colors.green,
-                        ));
                       });
+
+                      Get.snackbar("Sleep Reminder", "Successfully Added");
 
                       addNotification();
 

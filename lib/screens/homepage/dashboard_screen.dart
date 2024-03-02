@@ -108,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: SizedBox(
-                height: screenSize.height * 1.4,
+                height: screenSize.height * 1.15,
                 width: screenSize.width,
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -286,15 +286,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ],
                     ),
 
-                    const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        "Sleep History",
-                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    Flexible(child: MyBarChart(weeklyData: sleepData)),
 
                   ],
                 ),

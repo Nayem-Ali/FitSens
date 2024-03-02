@@ -16,9 +16,12 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32" />
     <application
+
         android:label="FitSens"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:largeHeap="true"
+        >
         <service android:name="com.gdelataillade.alarm.services.NotificationOnKillService" />
         <activity
             android:name=".MainActivity"

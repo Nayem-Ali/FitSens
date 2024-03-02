@@ -49,6 +49,7 @@ class VideoPlayer extends StatefulWidget {
 class _VideoPlayerState extends State<VideoPlayer> {
   DBService dbService = DBService();
   late VideoPlayerController controller;
+  late Future<void> _initializeVideoPlayerFuture;
 
   Map<String, double> fExercise = {
     'Warm Up': 50,
@@ -89,14 +90,18 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   void initState() {
     super.initState();
-    controller = VideoPlayerController.asset(widget.assetPath)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..setLooping(false)
-      ..initialize().then(
-        (value) => controller.play(),
-      );
+    try{
+      controller = VideoPlayerController.asset(widget.assetPath)
+        ..addListener(() {
+          setState(() {});
+        })
+        ..setLooping(false)
+        ..initialize().then(
+              (value) => controller.play(),
+        );
+    }catch(e){
+      print(e);
+    }
   }
 
   @override
@@ -108,7 +113,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   Widget build(BuildContext context) {
     final isMuted = controller.value.volume == 0;
-    int count = 2;
+
     return SafeArea(
         child: Scaffold(
       appBar: _appBar(),
@@ -146,9 +151,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
                     MyButton(
                         label: "Done",
                         onTap: () async {
-                          if (controller.value.duration.inSeconds -
-                                  controller.value.position.inSeconds <
-                              30) {
+                          if ((controller.value.duration.inSeconds -
+                                  controller.value.position.inSeconds) <
+                              50) {
                             await setData();
                             Get.back();
                           } else {
@@ -157,11 +162,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
                               "You have not finished yet",
                             );
                           }
-
-                          //count++;
                         },
                         width: 80,
-                        height: 43,
+                        height: 42,
                         fontSize: 16),
                     if (controller.value.isInitialized)
                       Container(
@@ -185,15 +188,14 @@ class _VideoPlayerState extends State<VideoPlayer> {
             ),
 
             const SizedBox(
-              height: 20,
+              height: 18,
             ),
 
             //const FullExerciseList(),
             Container(
-              height: 406,
-              width: 400,
+              height: 422,
+              width: 420,
               decoration: const BoxDecoration(
-
                 borderRadius: BorderRadius.only(topRight: Radius.circular(60)),
                 gradient: primaryGradient,
               ),
@@ -342,6 +344,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       ),
     ));
   }
+
   _appBar() {
     return AppBar(
         elevation: 0,

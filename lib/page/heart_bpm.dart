@@ -45,7 +45,7 @@ class _HeartBPMState extends State<HeartBPM> {
             "Heart BPM",
             style: SafeGoogleFont(
               'Poppins',
-              fontSize: 20,
+              fontSize: 21,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -70,6 +70,7 @@ class _HeartBPMState extends State<HeartBPM> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _appBar(context),
       body: SafeArea(
         child: Center(
@@ -77,16 +78,18 @@ class _HeartBPMState extends State<HeartBPM> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Cover both the camera and flash with your finger",
-                style: TextStyle(
+                style: SafeGoogleFont(
+                  'Poppins',
+                  fontSize: 21,
                   fontWeight: FontWeight.bold,
-                  fontSize: 25,
+                  color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
-                height: 22,
+                height: 18,
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -146,7 +149,12 @@ class _HeartBPMState extends State<HeartBPM> {
                               backgroundColor: ColorCode.primaryColor1,
                               shadowColor: Colors.transparent,
                               minimumSize: const Size(120, 40)),
-                          child: const Text("Measure"),
+                          child: Text("Measure",style: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),),
                         ),
                   // BPMChart(data)
                 ],
@@ -160,14 +168,14 @@ class _HeartBPMState extends State<HeartBPM> {
                       backgroundColor: Colors.grey,
                       color: ColorCode.primaryColor1,
                       borderRadius: BorderRadius.circular(10),
-                      minHeight: 40,
+                      minHeight: 30,
                       value: sec / 60,
                     ),
                     Text(
                       "${(sec/60 * 100).toStringAsFixed(1)}%",
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -177,7 +185,12 @@ class _HeartBPMState extends State<HeartBPM> {
               Text("Time: ${sec}s"),
               Text(
                 "Heart Beat Rate: ${bpmValue.toStringAsFixed(0).toString()}",
-                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: SafeGoogleFont(
+                  'Poppins',
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
               if (switchKey)
                 ElevatedButton(

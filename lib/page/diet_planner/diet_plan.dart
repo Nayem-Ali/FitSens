@@ -142,6 +142,7 @@ class _DietPlannerState extends State<DietPlanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _appBar(context),
       body: isLoading
           ? const Center(
@@ -402,6 +403,8 @@ class _DietPlannerState extends State<DietPlanner> {
                             ],
                           ),
 
+                          const SizedBox(height: 10,),
+
                           ElevatedButton(
                             onPressed: () {
                               Get.to(
@@ -421,7 +424,7 @@ class _DietPlannerState extends State<DietPlanner> {
                                 Get.height * 0.06,
                               ),
                               textStyle: const TextStyle(
-                                fontSize: 22,
+                                fontSize: 21,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),

@@ -18,20 +18,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  List<Map<String, String>> dummyNotifications = [
-    {
-      "title": "Don't miss your lower body workout",
-      "subtitle": "About 30 minutes ago"
-    },
-    {
-      "title": "Congratulation. You have finished your today's activity.",
-      "subtitle": "28 May"
-    },
-    {
-      "title": "Oops. You missed your upper body workout.",
-      "subtitle": "3 April"
-    },
-  ];
 
   DateTime now = DateTime.now();
 
@@ -41,6 +27,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   User? user = FirebaseAuth.instance.currentUser;
 
   double h1 = 0.0, h2 = 0.0;
+
+  double difForNotify=0.0;
+  double difference=0.0;
 
   getData() async {
     //allSchedule.clear();
@@ -56,6 +45,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
     allNotifications.sort((a, b) => b['date'].compareTo(a['date']));
     //print(allNotifications);
+
+    DateTime dateTime = DateTime.now();
+    String id = DateFormat.yMMMd().format(dateTime);
+    for(var diff in allNotifications){
+      print(id);
+      if(diff['id'] == id){
+        difference = diff['difference'] * 1.0;
+      }
+      print(difference);
+    }
+
     setState(() {});
   }
 
@@ -64,6 +64,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     // TODO: implement initState
     super.initState();
     getData();
+
   }
 
   @override
@@ -78,6 +79,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
               .isNegative;
           final ago = (DateTime.now()
               .difference(allNotifications[index]['date'].toDate()));
+
+
           return Column(
             children: [
               Dismissible(
@@ -138,7 +141,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 ),
 
                                 Text(
-                                  '${ago.inHours} h ${ago.inMinutes~/60} min ago',
+                                  'about ${ago.inHours} h ${ago.inMinutes~/60} min ago',
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -147,6 +150,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 const SizedBox(
                                   height: 5,
                                 ),
+
                               ],
                             ),
                           ),
@@ -192,4 +196,55 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ],
     );
   }
+
+  // dif() {
+  //
+  //     DateTime dateForDif = DateTime.now();
+  //
+  //     int h = int.parse(dateForDif.hour.toString().padLeft(2, '0'));
+  //     int hTemp= h;
+  //     if(h>12) {
+  //       h=h-12;
+  //     }
+  //
+  //     String hourAndMinute;
+  //     if(hTemp>12){
+  //       hourAndMinute = '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"PM"}';
+  //     }else{
+  //       hourAndMinute = '${h.toString()}:${dateForDif.minute.toString().padLeft(2, '0')} ${"AM"}';
+  //     }
+  //
+  //
+  //     List<String>l=difference.toString().split(" ");
+  //     List<String>l1=hourAndMinute.split(" ");
+  //
+  //     double m1 = double.parse(difference.toString().split(":")[1].split(" ")[0])/60;
+  //     double m2 = double.parse(hourAndMinute.split(":")[1].split(" ")[0])/60;
+  //
+  //     double h1 = double.parse(difference.toString().split(":")[0])+m1;
+  //     double h2 = double.parse(hourAndMinute.split(":")[0]);
+  //     if(h2.toInt()==0){
+  //       h2=12+m2;
+  //     }else{
+  //       h2 = double.parse(hourAndMinute.split(":")[0])+m2;
+  //     }
+  //     print(m2);
+  //     print(hourAndMinute);
+  //     print('$h1 $h2');
+  //     print('$l $l1');
+  //
+  //     if(l[1]==l1[1]){
+  //       difForNotify = ((h1-h2).abs()) * 3600;
+  //     }else{
+  //       difForNotify = (24-(h1+12-h2).abs()) * 3600;
+  //     }
+  //     print(difForNotify);
+  //
+  //
+  //
+  //   setState(() {
+  //
+  //   });
+  //
+  // }
 }

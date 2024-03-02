@@ -1,4 +1,5 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:finessapp/page/sleep/sleep_home.dart';
 import 'package:finessapp/services/db_service.dart';
 import 'package:finessapp/utility/color.dart';
 import 'package:flutter/material.dart';
@@ -9,28 +10,38 @@ import '../../utility/color_utility.dart';
 import '../../utility/utils.dart';
 import '../../widgets/barchart.dart';
 
-class WorkoutHistory extends StatefulWidget {
-  const WorkoutHistory({Key? key}) : super(key: key);
+class SleepHistory extends StatefulWidget {
+  const SleepHistory({Key? key}) : super(key: key);
 
   @override
-  State<WorkoutHistory> createState() => _WorkoutHistoryState();
+  State<SleepHistory> createState() => _SleepHistoryState();
 }
 
-class _WorkoutHistoryState extends State<WorkoutHistory> {
+class _SleepHistoryState extends State<SleepHistory> {
   DBService dbService = DBService();
-  List<Map<String, dynamic>> workoutHistory = [];
-  List<Map<String, dynamic>> weeklyWorkoutHistory = [];
+  List<Map<String, dynamic>> sleepHistory = [];
+  List<Map<String, dynamic>> weeklySleepHistory = [];
   DateTime myDate = DateTime.now();
   String id = DateFormat.yMMMd().format(DateTime.now());
+  late double difference = 0.0;
+  List<Map<String, dynamic>> sleepData = [];
 
   getData() async {
-    workoutHistory = await dbService.getWorkoutData();
-    workoutHistory.sort((a, b) => a['date'].compareTo(b['date']));
-    if (workoutHistory.length > 7) {
-      weeklyWorkoutHistory =
-          workoutHistory.sublist(workoutHistory.length - 7, workoutHistory.length);
+    sleepHistory = await dbService.getSleepDataForChart();
+    sleepHistory.sort((a, b) => a['date'].compareTo(b['date']));
+    if (sleepHistory.length > 7) {
+      weeklySleepHistory =
+          sleepHistory.sublist(sleepHistory.length - 7, sleepHistory.length);
     }
-
+    DateTime dateTime = DateTime.now();
+    String id = DateFormat.yMMMd().format(dateTime);
+    for(var diff in sleepData){
+      print(id);
+      if(diff['id'] == id){
+        difference = diff['difference'] * 1.0;
+      }
+      print(difference);
+    }
     setState(() {});
   }
 
@@ -40,7 +51,7 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
         backgroundColor: Colors.white,
         title: Center(
           child: Text(
-            "Workout History",
+            "Sleep History",
             style: SafeGoogleFont(
               'Poppins',
               fontSize: 20,
@@ -84,12 +95,13 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             thickness: 2,
             color: ColorCode.primaryColor2,
           ),
-          const Text(
+          Text(
             "Monthly History",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+            style: SafeGoogleFont(
+              'Poppins',
               fontSize: 20,
-              // color: ColorCode.primaryColor1,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
           Divider(
@@ -111,8 +123,8 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             },
           ),
           const SizedBox(height: 30),
-          for (var workout in workoutHistory)
-            if (workout['id'] == id)
+          for (var sleep in sleepHistory)
+            if (sleep['id'] == id)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -123,14 +135,14 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
                         height: Get.height * 0.1,
                         width: Get.height * 0.1,
                         child: CircularProgressIndicator(
-                          value: workout['percentage'] / 100,
+                          value: sleep['percentage'] / 100,
                           color: ColorCode.primaryColor1,
                           strokeWidth: 10,
                           backgroundColor: ColorCode.secondaryColor1,
                         ),
                       ),
                       Text(
-                        '${workout['percentage']}% ',
+                        '${sleep['percentage']}%',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -146,22 +158,24 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Burned ${workout['complete']} kCal",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                        "Complete ${sleep['complete']} hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
                           fontSize: 20,
-                          // color: ColorCode.primaryColor1,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        "Target ${workout['target']} kCal",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                        "Target ${sleep['target']} hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
                           fontSize: 20,
-                          // color: ColorCode.primaryColor1,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                       const SizedBox(
@@ -176,12 +190,13 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             thickness: 2,
             color: ColorCode.primaryColor2,
           ),
-          const Text(
+          Text(
             "Weekly History",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+            style: SafeGoogleFont(
+              'Poppins',
               fontSize: 20,
-              // color: ColorCode.primaryColor1,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
           Divider(
@@ -191,7 +206,7 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
           const SizedBox(height: 30),
           Expanded(
             child: MyBarChart(
-              weeklyData: workoutHistory.length > 7 ? weeklyWorkoutHistory : workoutHistory,
+              weeklyData: sleepHistory.length > 7 ? weeklySleepHistory : sleepHistory,
             ),
           ),
         ],

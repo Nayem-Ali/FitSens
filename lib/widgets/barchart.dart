@@ -18,6 +18,7 @@ class _MyBarChartState extends State<MyBarChart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SizedBox(
         height: 150,
         width: Get.width,

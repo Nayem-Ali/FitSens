@@ -38,7 +38,7 @@ class Fullbody extends StatelessWidget {
               SingleChildScrollView(
                 child: Container(
                   margin: const EdgeInsets.only(top: 300),
-                  height: fem * 1000,
+                  height: fem * 870,
                   width: fem * 400,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40 * fem),
@@ -79,7 +79,7 @@ class Fullbody extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 30),
                         child: Text(
-                          "11 Exercise | 32 mins | 320 calories burn",
+                          "09 Exercise | 32 mins | 800 calories burn",
                           style: SafeGoogleFont(
                             'Poppins',
                             fontSize: 14 * ffem,
