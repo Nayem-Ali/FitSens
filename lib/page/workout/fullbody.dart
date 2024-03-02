@@ -1,11 +1,8 @@
-import 'package:finessapp/page/workout/widgets/customContainer.dart';
+
 import 'package:finessapp/page/workout/widgets/full_exercises_list.dart';
-/// import 'package:finessapp/page/workout/widgets/full_exercise.dart';
-import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:finessapp/page/workout/workout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/get_core.dart';
 import '../../utility/color.dart';
 import '../../utility/utils.dart';
 

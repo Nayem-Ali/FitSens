@@ -118,221 +118,223 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return SafeArea(
       child: userDetails.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: SizedBox(
-                height: screenSize.height * 1.6,
-                width: screenSize.width,
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 8,),
-                              const Text("Welcome Back,",
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
-                              Text(
-                                userDetails["name"],
-                                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Get.to(const NotificationScreen());
-
-                            },
-                            icon: const Icon(
-                              Icons.notifications_none,
-                              size: 45,
+          : Scaffold(
+            body: SingleChildScrollView(
+                child: SizedBox(
+                  height: screenSize.height * 1.6,
+                  width: screenSize.width,
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 8,),
+                                const Text("Welcome Back,",
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+                                Text(
+                                  userDetails["name"],
+                                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                                )
+                              ],
                             ),
-                          )
-                        ],
+                            IconButton(
+                              onPressed: () {
+                                Get.to(const NotificationScreen());
+
+                              },
+                              icon: const Icon(
+                                Icons.notifications_none,
+                                size: 45,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    BMI(status: status, bmiValue: bmiValue),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        //border: Border.all(),
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: thirdGradient,
+                      BMI(status: status, bmiValue: bmiValue),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        height: 60,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          //border: Border.all(),
+                          borderRadius: BorderRadius.circular(15),
+                          gradient: thirdGradient,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Today Target",
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            Container(
+                              height: 40,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(45),
+                                gradient: primaryGradient,
+                              ),
+                              child: Center(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Get.to(const DailyActivity(),
+                                        arguments: stepCounterBackend.steps);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    //maximumSize: const Size(20,20),
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                  ),
+                                  child: const Text(
+                                    "Check",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                        child: const Text(
+                          "Activity Status",
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(
+                        height: Get.height * 0.3,
+                        child: LineChar(weeklyData: heartBPM),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Heart BPM",
+                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Today Target",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
                           Container(
-                            height: 40,
-                            width: 100,
+                            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                            height: screenSize.height * .15,
+                            width: screenSize.width * 0.45,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(45),
-                              gradient: primaryGradient,
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: thirdGradient,
                             ),
                             child: Center(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const DailyActivity(),
-                                      arguments: stepCounterBackend.steps);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  //maximumSize: const Size(20,20),
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                ),
-                                child: const Text(
-                                  "Check",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                                child: Text(
+                              "${(stepCounterBackend.steps * 0.04).toStringAsFixed(0)}/${(steps * 0.04).toStringAsFixed(0)} kCal"
+                              " \nBurned",
+                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                            height: screenSize.height * .15,
+                            width: screenSize.width * 0.45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: thirdGradient,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "${stepCounterBackend.steps}/$steps\nSteps",
+                                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      margin: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
-                      child: const Text(
-                        "Activity Status",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: Get.height * 0.3,
-                      child: LineChar(weeklyData: heartBPM),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        "Heart BPM",
-                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                          height: screenSize.height * .15,
-                          width: screenSize.width * 0.45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: thirdGradient,
-                          ),
-                          child: Center(
-                              child: Text(
-                            "${(stepCounterBackend.steps * 0.04).toStringAsFixed(0)}/${(steps * 0.04).toStringAsFixed(0)} kCal"
-                            " \nBurned",
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                          height: screenSize.height * .15,
-                          width: screenSize.width * 0.45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: thirdGradient,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "${stepCounterBackend.steps}/$steps\nSteps",
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                            height: screenSize.height * .15,
+                            width: screenSize.width * 0.45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: thirdGradient,
+                            ),
+                            child: Center(
+                                child: Text(
+                              "${((stepCounterBackend.steps * 0.762) / 1000).toStringAsFixed(2)} kM"
+                              " \n Walked",
                               style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                               textAlign: TextAlign.center,
+                            )),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                            height: screenSize.height * .15,
+                            width: screenSize.width * 0.45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: thirdGradient,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                          height: screenSize.height * .15,
-                          width: screenSize.width * 0.45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: thirdGradient,
-                          ),
-                          child: Center(
+                            child: Center(
                               child: Text(
-                            "${((stepCounterBackend.steps * 0.762) / 1000).toStringAsFixed(2)} kM"
-                            " \n Walked",
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                          height: screenSize.height * .15,
-                          width: screenSize.width * 0.45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: thirdGradient,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "${(averageSpeed * 3.6).toStringAsFixed(2)} km/h\n Average Speed",
-                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                              textAlign: TextAlign.center,
+                                "${(averageSpeed * 3.6).toStringAsFixed(2)} km/h\n Average Speed",
+                                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(height: Get.height * 0.02),
+                      Expanded(
+                        child: MyBarChart(
+                          weeklyData: stepActivityList.length > 7 ? weeklyStepActivity : stepActivityList,
                         ),
-                      ],
-                    ),
-                    SizedBox(height: Get.height * 0.02),
-                    Expanded(
-                      child: MyBarChart(
-                        weeklyData: stepActivityList.length > 7 ? weeklyStepActivity : stepActivityList,
                       ),
-                    ),
-                    const Text(
-                      "Step Activity",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        // color: ColorCode.primaryColor1,
+                      const Text(
+                        "Step Activity",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          // color: ColorCode.primaryColor1,
+                        ),
                       ),
-                    ),
 
-                    SizedBox(height: Get.height * 0.02),
-                    Expanded(
-                      child: MyBarChart(
-                        weeklyData: waterIntakeActivity.length > 7
-                            ? weeklyWaterIntakeActivity
-                            : waterIntakeActivity,
+                      SizedBox(height: Get.height * 0.02),
+                      Expanded(
+                        child: MyBarChart(
+                          weeklyData: waterIntakeActivity.length > 7
+                              ? weeklyWaterIntakeActivity
+                              : waterIntakeActivity,
+                        ),
                       ),
-                    ),
-                    const Text(
-                      "Water Intake Activity",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        // color: ColorCode.primaryColor1,
+                      const Text(
+                        "Water Intake Activity",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          // color: ColorCode.primaryColor1,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: Get.height * 0.02),
+                      SizedBox(height: Get.height * 0.02),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+          ),
     );
   }
 

@@ -1,5 +1,4 @@
 import 'package:alarm/alarm.dart';
-import 'package:finessapp/page/step/step_counter_backend.dart';
 import 'package:finessapp/screens/auth/login_screen.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/screens/onboarding/get_started_screen.dart';

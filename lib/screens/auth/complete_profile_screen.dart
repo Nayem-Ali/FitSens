@@ -32,7 +32,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     setState(() {
       userInfo["img"] = "";
       userInfo["dob"] = DateFormat("yyyy-MM-dd").format(pickedDate!);
-      String str = DateFormat("yyyy/MM/dd").format(pickedDate!);
+      String str = DateFormat("yyyy/MM/dd").format(pickedDate);
       selectedDate.text = str;
     });
   }

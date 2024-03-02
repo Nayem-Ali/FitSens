@@ -1,7 +1,6 @@
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../screens/homepage/profile_screen.dart';
@@ -9,9 +8,10 @@ import '../utility/utils.dart';
 
 
 class EditProfile extends StatefulWidget {
-  EditProfile({Key? key, required this.userDetails}) : super(key: key);
 
-  Map<String, dynamic> userDetails;
+  const EditProfile({Key? key, required this.userDetails}) : super(key: key);
+
+  final Map<String, dynamic> userDetails;
 
   @override
   State<EditProfile> createState() => _EditProfileState();

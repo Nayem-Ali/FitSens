@@ -3,8 +3,6 @@ import 'package:finessapp/services/db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/local_notifications.dart';
@@ -38,7 +36,6 @@ class _AddScheduleState extends State<AddSchedule> {
   late double durationForNotify;
 
 
-  int _selectedRemind = 5;
   List<int> remindList = [
     10,
     15,
@@ -46,7 +43,6 @@ class _AddScheduleState extends State<AddSchedule> {
     30,
   ];
 
-  String _selectedRepeat = "None";
   List<String> repeatList = [
     "None",
     "Daily",
@@ -180,6 +176,7 @@ class _AddScheduleState extends State<AddSchedule> {
 
                     addNotification();
 
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context);
 
 
@@ -238,20 +235,19 @@ class _AddScheduleState extends State<AddSchedule> {
         formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
       });
     } else {
-      print("Wrong");
+      //print("Wrong");
     }
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
     pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime.format(context);
-    if (pickedTime == null) {
-      print("Time cancel");
-    } else if (isStartTime == true) {
-      setState(() {
-        _time = _formatedTime;
-      });
-    }
+    // ignore: use_build_context_synchronously
+    String formatedTime = pickedTime.format(context);
+    if (isStartTime == true) {
+    setState(() {
+      _time = formatedTime;
+    });
+  }
   }
 
   _showTimePicker() async {
@@ -266,12 +262,6 @@ class _AddScheduleState extends State<AddSchedule> {
   }
 
   dif() {
-    DateTime dt = DateTime(
-        pickerDate!.year,
-        pickerDate!.month,
-        pickerDate!.day,
-        int.parse(_time.split(":")[0]),
-        int.parse(_time.split(":")[1].split(" ")[0]));
 
 
     DateTime dateForDif = DateTime.now();
@@ -290,13 +280,6 @@ class _AddScheduleState extends State<AddSchedule> {
     }
 
 
-    DateTime dtn = DateTime(
-      dateForDif.year,
-      dateForDif.month,
-      dateForDif.day,
-      dateForDif.hour,
-      dateForDif.minute,
-    );
     List<String>l=_time.split(" ");
     List<String>l1=hourAndMinute.split(" ");
 
@@ -310,20 +293,20 @@ class _AddScheduleState extends State<AddSchedule> {
     }else{
       h2 = double.parse(hourAndMinute.split(":")[0])+m2;
     }
-    print(m2);
-    print(hourAndMinute);
-    print('$h1 $h2');
-    print('$l $l1');
+    //print(m2);
+    //print(hourAndMinute);
+    //print('$h1 $h2');
+    //print('$l $l1');
 
     if(l[1]==l1[1]){
       durationForNotify = ((h1-h2).abs()) * 3600;
-      print(durationForNotify);
+      //print(durationForNotify);
     }else{
       durationForNotify = (24-(h1+12-h2).abs()) * 3600;
-      print(durationForNotify);
+      //print(durationForNotify);
     }
     //print(dtn);
-    print(hourAndMinute);
+    //print(hourAndMinute);
     //durationForNotify = dt.difference(dtn).inSeconds.abs();
     //print(durationForNotify);
 

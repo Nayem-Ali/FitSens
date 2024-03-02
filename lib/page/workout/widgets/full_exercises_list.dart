@@ -1,7 +1,6 @@
 import 'package:finessapp/page/workout/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../utility/utils.dart';
 import 'customContainer.dart';

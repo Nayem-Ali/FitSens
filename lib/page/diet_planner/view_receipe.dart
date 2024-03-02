@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'data_model.dart';
 
 class ViewReceipe extends StatefulWidget {
   const ViewReceipe({Key? key}) : super(key: key);

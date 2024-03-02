@@ -10,7 +10,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../screens/homepage/profile_screen.dart';
 import '../../services/db_service.dart';
 import '../../utility/color.dart';
 import '../../utility/utils.dart';
@@ -36,10 +35,12 @@ class _SleepScheduleState extends State<SleepSchedule> {
   DBService dbService = DBService();
   List<Map<String, dynamic>> sleepData = [];
   late double durationSleepNotify;
+  // ignore: prefer_typing_uninitialized_variables
   var hour, min;
 
   @override
   void initState() {
+    super.initState();
     // TODO: imple
     difSleep();
     getData();
@@ -205,6 +206,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                       ),
                                     );
                                   }
+                                  return null;
                                 });
                           } else {
                             return Container();
@@ -348,19 +350,11 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                           .doc(documentId)
                                           .delete();
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text("Successfully Deleted"),
-                                        backgroundColor: Colors.red,
-                                      ));
+                                      Get.snackbar("Sleep Reminder", "Successfully Removed");
                                     } else {
                                       setState(() {});
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            "For delete you have swipe Left to Right"),
-                                        backgroundColor: Colors.green,
-                                      ));
+
+                                      Get.snackbar("Sleep Reminder", "For delete you have swipe Left to Right");
                                     }
                                   },
                                   background: Container(
@@ -551,9 +545,9 @@ class _SleepScheduleState extends State<SleepSchedule> {
         alarm = sleepData[i]['alarm_time'];
       }
     }
-    print(bed);
-    print(sleepData.length);
-    print(tempDate);
+    //print(bed);
+    //print(sleepData.length);
+    //print(tempDate);
 
     List<String> l = bed.split(" ");
     List<String> l1 = alarm.split(" ");
@@ -568,8 +562,8 @@ class _SleepScheduleState extends State<SleepSchedule> {
       hour = ((h1 - h2).abs()).toInt();
       durationSleepNotify = ((h1 - h2).abs()) * 3600;
       min = durationSleepNotify % 3600 ~/ 60;
-      print(hour);
-      print(min);
+      //print(hour);
+      //print(min);
     } else {
       hour = (24 - (h1 + 12 - h2).abs()).toInt();
       durationSleepNotify = (24 - (h1 + 12 - h2).abs()) * 3600;

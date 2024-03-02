@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class AuthService {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -31,14 +30,13 @@ class AuthService {
       await firebaseAuth
           .signInWithEmailAndPassword(email: userEmail, password: password)
           .then((userInfo) async {
-       if(firebaseAuth.currentUser!.emailVerified){
-         flag = "true";
-       }
-       else{
-       await userInfo.user!.sendEmailVerification().whenComplete((){
-         flag = "Email verification message sent to $userEmail";
-       });
-       }
+        if (firebaseAuth.currentUser!.emailVerified) {
+          flag = "true";
+        } else {
+          await userInfo.user!.sendEmailVerification().whenComplete(() {
+            flag = "Email verification message sent to $userEmail";
+          });
+        }
       });
     } on FirebaseException catch (e) {
       flag = e.message!;
@@ -47,11 +45,7 @@ class AuthService {
   }
 
   storeUserInfo(dynamic data) async {
-    try {
-      await fireStore.collection('user').doc(data["uid"]).set(data);
-    } on FirebaseException catch (e) {
-      print(e.message);
-    }
+    await fireStore.collection('user').doc(data["uid"]).set(data);
   }
 
   resetPassword(String userEmail) async {
@@ -60,7 +54,7 @@ class AuthService {
       await firebaseAuth
           .sendPasswordResetEmail(email: userEmail)
           .whenComplete(() {
-            flag = "true";
+        flag = "true";
       });
     } on FirebaseException catch (e) {
       flag = e.message!;

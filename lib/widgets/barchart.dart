@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyBarChart extends StatefulWidget {
-  List<Map<String, dynamic>> weeklyData;
+  final List<Map<String, dynamic>> weeklyData;
 
-  MyBarChart({Key? key, required this.weeklyData}) : super(key: key);
+  const MyBarChart({Key? key, required this.weeklyData}) : super(key: key);
 
   @override
   State<MyBarChart> createState() => _MyBarChartState();

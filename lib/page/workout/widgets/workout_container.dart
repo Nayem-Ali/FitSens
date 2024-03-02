@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-
 import '../../../utility/color.dart';
 import '../../../utility/utils.dart';
 

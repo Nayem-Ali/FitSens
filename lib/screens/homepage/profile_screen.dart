@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/page/feed/my_post.dart';
 import 'package:finessapp/screens/homepage/activity_history.dart';
-import 'package:finessapp/screens/homepage/home_screen.dart';
+
 import 'package:finessapp/screens/homepage/sleep_history.dart';
 import 'package:finessapp/screens/homepage/workout_history.dart';
-import 'package:finessapp/screens/homepage/workout_progress.dart';
 import 'package:finessapp/utility/color_utility.dart';
 import 'package:finessapp/widgets/edit_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +14,6 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path/path.dart' as p;
 import '../../utility/color.dart';
 import '../auth/login_screen.dart';
 import '../../services/db_service.dart';
@@ -81,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       url = tempUrl;
       setState(() {});
     } catch (e) {
-      print('error occurred');
+      //print('error occurred');
     }
   }
 
@@ -202,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  SizedBox(height: Get.height * 0.016),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -272,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 8,),
+                        SizedBox(height: Get.height * 0.01),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(EditProfile(userDetails: userDetails));
@@ -284,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: const Text("Edit Personal Data"),
                           icon: const Icon(Icons.edit),
                         ),
-                        const SizedBox(height: 8,),
+                        SizedBox(height: Get.height * 0.01),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const ActivityHistory());
@@ -296,7 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: const Text("Activity History"),
                           icon: const Icon(Icons.stacked_line_chart),
                         ),
-                        const SizedBox(height: 8,),
+                        SizedBox(height: Get.height * 0.01),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const WorkoutHistory());
@@ -308,7 +306,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: const Text("Workout Progress"),
                           icon: const Icon(Icons.bar_chart),
                         ),
-                        const SizedBox(height: 8,),
+                        SizedBox(height: Get.height * 0.01),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const SleepHistory());
@@ -346,38 +344,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Enable Dark-Mode",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 17),
-                            ),
-                            Switch(
-                              value: darkMode,
-                              onChanged: (value) {
-                                setState(() {
-                                  darkMode = value;
-                                  if (darkMode) {
-                                    Get.changeTheme(ThemeData.dark().copyWith(
-                                        colorScheme: ColorScheme.fromSeed(
-                                            seedColor:
-                                                ColorCode.gray)));
-                                  } else {
-                                    Get.changeTheme(
-                                      ThemeData.from(
-                                        colorScheme: ColorScheme.fromSeed(
-                                          seedColor: ColorCode.primaryColor1,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     const Text(
+                        //       "Enable Dark-Mode",
+                        //       style: TextStyle(
+                        //           fontWeight: FontWeight.w600, fontSize: 17),
+                        //     ),
+                        //     Switch(
+                        //       value: darkMode,
+                        //       onChanged: (value) {
+                        //         setState(() {
+                        //           darkMode = value;
+                        //           if (darkMode) {
+                        //             Get.changeTheme(ThemeData.dark().copyWith(
+                        //                 colorScheme: ColorScheme.fromSeed(
+                        //                     seedColor:
+                        //                         ColorCode.gray)));
+                        //           } else {
+                        //             Get.changeTheme(
+                        //               ThemeData.from(
+                        //                 colorScheme: ColorScheme.fromSeed(
+                        //                   seedColor: ColorCode.primaryColor1,
+                        //                 ),
+                        //               ),
+                        //             );
+                        //           }
+                        //         });
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
+                        SizedBox(height: Get.height * 0.01),
                         OutlinedButton.icon(
                           onPressed: () {
                             showDialog(
@@ -442,7 +441,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       actions: const [
-        SizedBox(width: 36,)
+        SizedBox(width: 30,)
       ],
 
     );

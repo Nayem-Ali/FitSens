@@ -1,5 +1,4 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
-import 'package:finessapp/page/sleep/sleep_home.dart';
 import 'package:finessapp/services/db_service.dart';
 import 'package:finessapp/utility/color.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +35,11 @@ class _SleepHistoryState extends State<SleepHistory> {
     DateTime dateTime = DateTime.now();
     String id = DateFormat.yMMMd().format(dateTime);
     for(var diff in sleepData){
-      print(id);
+      //print(id);
       if(diff['id'] == id){
         difference = diff['difference'] * 1.0;
       }
-      print(difference);
+      //print(difference);
     }
     setState(() {});
   }

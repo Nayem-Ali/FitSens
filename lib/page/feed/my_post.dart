@@ -168,7 +168,7 @@ class _MyPostState extends State<MyPost> {
         ),
         actions: [
           IconButton(
-              onPressed: () {}, icon: Icon(Icons.confirmation_num_sharp)),
+              onPressed: () {}, icon: const Icon(Icons.confirmation_num_sharp)),
         ]);
   }
 }

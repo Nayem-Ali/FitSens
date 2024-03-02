@@ -232,7 +232,8 @@ class DBService {
           .doc(uid)
           .collection('DrinkSchedule')
       .doc(allData[index]).update({'isOn':status});
-      print(allData[index]);
+      //print(allData[index]);
+    // ignore: empty_catches
     } catch (e) {
 
     }
@@ -254,7 +255,31 @@ class DBService {
           .doc(uid)
           .collection('DrinkSchedule')
           .doc(allData[index]).delete();
-      print(allData[index]);
+      //print(allData[index]);
+    // ignore: empty_catches
+    } catch (e) {
+
+    }
+  }
+
+  deleteHistory(int index)async{
+    String uid = auth.currentUser!.uid;
+    List<String>? allData = [];
+
+    try {
+      final querySnapshot = await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('WaterIntake')
+          .get();
+      allData = querySnapshot.docs.map((doc) => doc.id).toList();
+      await fireStore
+          .collection('user')
+          .doc(uid)
+          .collection('WaterIntake')
+          .doc(allData[index]).delete();
+      //print(allData[index]);
+    // ignore: empty_catches
     } catch (e) {
 
     }
@@ -276,7 +301,8 @@ class DBService {
           .doc(uid)
           .collection('notifications')
           .doc(allData[index]).delete();
-      print(allData[index]);
+      //print(allData[index]);
+    // ignore: empty_catches
     } catch (e) {
 
     }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../utility/color.dart';
 import '../../utility/utils.dart';
-import '../workout/workout_schedule.dart';
 
 class DailyContainer extends StatelessWidget {
   final String title;
@@ -35,7 +34,7 @@ class DailyContainer extends StatelessWidget {
             title,
             style: SafeGoogleFont(
               'Poppins',
-              fontSize: 14 * ffem,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               height: 1.5 * ffem / fem,
               color: Colors.black,
@@ -45,7 +44,7 @@ class DailyContainer extends StatelessWidget {
           InkWell(
             onTap: onTap,
             child: Container(
-              width: 50 * fem,
+              width: 70 * fem,
 
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50 * fem),
@@ -56,8 +55,8 @@ class DailyContainer extends StatelessWidget {
                   'Check',
                   style: SafeGoogleFont(
                     'Poppins',
-                    fontSize: 9 * ffem,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                     height: 1.5 * ffem / fem,
                     color: Colors.white,
                   ),

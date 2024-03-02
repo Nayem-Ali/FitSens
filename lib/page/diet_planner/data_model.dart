@@ -31,7 +31,7 @@ class FoodModel {
     to: json["to"],
     more: json["more"],
     count: json["count"],
-    hits: List<Hit>.from(json["hits"].map((x) => Hit.fromJson(x) ?? [])),
+    hits: List<Hit>.from(json["hits"].map((x) => Hit.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -207,6 +207,7 @@ class Digest {
   };
 }
 
+// ignore: constant_identifier_names
 enum Unit { EMPTY, G, KCAL, MG, UNIT_G }
 
 final unitValues = EnumValues(

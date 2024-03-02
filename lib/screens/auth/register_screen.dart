@@ -3,7 +3,6 @@ import 'package:finessapp/screens/auth/complete_profile_screen.dart';
 import 'package:finessapp/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../utility/color_utility.dart';
 
@@ -22,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController confirmPassword = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final nameRegex = RegExp(r'^[a-zA-Z\.]+( [a-zA-Z]+)?( [a-zA-Z]+)?$');
+  final nameRegex = RegExp(r'^[a-zA-Z.]+( [a-zA-Z]+)?( [a-zA-Z]+)?$');
   final emailRegex =
       RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$');
   final passRegex =

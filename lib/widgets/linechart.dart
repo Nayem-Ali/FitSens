@@ -2,15 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../utility/color_utility.dart';
 
 List<String> weekDays = [];
 
 class LineChar extends StatefulWidget {
-  List<Map<String, dynamic>> weeklyData;
+  final List<Map<String, dynamic>> weeklyData;
 
-  LineChar({Key? key, required this.weeklyData}) : super(key: key);
+  const LineChar({Key? key, required this.weeklyData}) : super(key: key);
 
   @override
   State<LineChar> createState() => _LineCharState();

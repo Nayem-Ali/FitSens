@@ -1,9 +1,7 @@
 import 'package:finessapp/screens/auth/login_screen.dart';
-import 'package:finessapp/screens/onboarding/get_started_screen.dart';
 import 'package:finessapp/widgets/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../utility/color_utility.dart';
 

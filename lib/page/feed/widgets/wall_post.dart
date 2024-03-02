@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finessapp/utility/color.dart';
-import 'package:finessapp/utility/color_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -138,6 +136,7 @@ class _WallPostState extends State<WallPost> {
                     .doc(widget.postId)
                     .delete();
                 Get.snackbar("Delete Post", "Delete Successfully");
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
               child: const Text("Delete")),

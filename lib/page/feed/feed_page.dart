@@ -4,14 +4,11 @@ import 'package:finessapp/page/feed/widgets/text_field.dart';
 import 'package:finessapp/page/feed/widgets/wall_post.dart';
 import 'package:finessapp/utility/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 
 import '../../services/db_service.dart';
 import '../../utility/utils.dart';
-import '../widgets/input_field.dart';
 import 'helper/helper_methods.dart';
 
 class FeedPage extends StatefulWidget {
@@ -33,7 +30,6 @@ class _FeedPageState extends State<FeedPage> {
 
 
   void postMessage() async {
-    String uid = currentUser.uid;
     if (textController.text.isNotEmpty) {
       await fireStore.collection("feed").add({
         'UserEmail': currentUser.email,

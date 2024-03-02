@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 
 import '../../services/db_service.dart';
-import '../../utility/color.dart';
-import '../../utility/utils.dart';
 import '../../widgets/barchart.dart';
 
 class ProgressBar extends StatefulWidget {
@@ -11,9 +9,12 @@ class ProgressBar extends StatefulWidget {
   final Gradient? gradient;
   final Gradient? gradient1;
   final Color? color;
+  // ignore: non_constant_identifier_names
   final Color? t_color;
+  // ignore: non_constant_identifier_names
   final Color? t1_color;
   final double? height;
+  // ignore: non_constant_identifier_names
   const ProgressBar({Key? key,this.gradient, this.color, this.t_color, this.t1_color, this.gradient1,  this.height}) : super(key: key);
 
   @override
@@ -35,10 +36,10 @@ class _ProgressBarState extends State<ProgressBar> {
       }
 
     }catch(e){
-      print(e);
+      //print(e);
     }
     setState(() {});
-    print(sleepData);
+    //print(sleepData);
   }
 
   @override
@@ -52,7 +53,6 @@ class _ProgressBarState extends State<ProgressBar> {
 
     double baseWidth = 375;
     double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
 
     return Container(
       padding:

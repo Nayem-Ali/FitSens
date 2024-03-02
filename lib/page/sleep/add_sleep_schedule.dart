@@ -3,12 +3,10 @@ import 'package:finessapp/page/sleep/sleep_schedule.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/db_service.dart';
 import '../../services/local_notifications.dart';
-import '../../utility/color.dart';
 import '../../utility/utils.dart';
 import '../widgets/button.dart';
 import '../widgets/input_field.dart';
@@ -35,7 +33,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
 
   late TimeOfDay pickedTime;
 
-  String _selectedRepeat = "None";
+  final String _selectedRepeat = "None";
   List<String> repeatList = [
     "None",
     "Daily",
@@ -65,7 +63,6 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
     int completed = sp.getInt('completedHour') ?? 0;
     completed = (durationSleepNotify ~/ 3600);
     sp.setInt("completedHour", completed);
-    DateTime date = DateTime.now();
     String id = DateFormat.yMMMd().format(_selectedDate);
     Map<String, dynamic> sleepData = {
       'id': id,
@@ -116,7 +113,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                     color: Colors.grey,
                   ),
                   onPressed: () {
-                    print(_time);
+                    //print(_time);
                     _getTimeFromUser(isStartTime: true);
                   },
                 ),
@@ -130,7 +127,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                     color: Colors.grey,
                   ),
                   onPressed: () {
-                    print("Pressed");
+                    //print("Pressed");
                     _getAlarmTimeFromUser(isStartTime: true);
                   },
                 ),
@@ -163,6 +160,7 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
                               } else if (age >= 18) {
                                 idealHour = 8;
                               }
+                              return null;
                             });
                       } else {
                         return Container();
@@ -263,21 +261,20 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
         formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
       });
     } else {
-      print("Wrong");
+      //print("Wrong");
     }
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
     pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime.format(context);
-    if (pickedTime == null) {
-      print("Time cancel");
-    } else if (isStartTime == true) {
-      setState(() {
-        _time = _formatedTime;
-        //print(_time);
-      });
-    }
+    // ignore: use_build_context_synchronously
+    String formatedTime = pickedTime.format(context);
+    if (isStartTime == true) {
+    setState(() {
+      _time = formatedTime;
+      //print(_time);
+    });
+  }
   }
 
   _showTimePicker() async {
@@ -293,9 +290,10 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
 
   _getAlarmTimeFromUser({required bool isStartTime}) async {
     var pickedATime = await _showAlarmTimePicker();
+    // ignore: use_build_context_synchronously
     String formatedATime = pickedATime.format(context);
     if (pickedATime == null) {
-      print("Time cancel");
+      //print("Time cancel");
     } else if (isStartTime == true) {
       setState(() {
         _alarmTime = formatedATime;
@@ -328,10 +326,10 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
 
     if (l[1] == l1[1]) {
       durationSleepNotify = ((h1 - h2).abs()) * 3600;
-      print(durationSleepNotify);
+      //print(durationSleepNotify);
     } else {
       durationSleepNotify = (24 - (h1 + 12 - h2).abs()) * 3600;
-      print(durationSleepNotify);
+      //print(durationSleepNotify);
     }
   }
 

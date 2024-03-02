@@ -157,18 +157,18 @@ class _DailyActivityState extends State<DailyActivity> {
     // TODO: implement initState
     super.initState();
 
-    getData();
+    getSchedule();
     getHistory();
     getGoal();
   }
 
-  getData() async {
+  getSchedule() async {
     //allSchedule.clear();
     allSchedule = await dbService.getDrinkSchedule();
     for (var schedule in allSchedule) {
       alarmStatus.add(schedule['isOn']);
     }
-    print(allSchedule);
+    //print(allSchedule);
   }
 
   getHistory() async {
@@ -247,7 +247,7 @@ class _DailyActivityState extends State<DailyActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         appBar: _appBar(context),
         body: SingleChildScrollView(
           child: SizedBox(
@@ -272,7 +272,7 @@ class _DailyActivityState extends State<DailyActivity> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 9.0,right: 9.0),
+                        padding: const EdgeInsets.only(left: 9.0, right: 9.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -505,7 +505,7 @@ class _DailyActivityState extends State<DailyActivity> {
                       OutlinedButton.icon(
                         onPressed: () {
                           getHistory();
-                          print(getHistory());
+                          //print(getHistory());
                           setState(() {
                             isHistory = true;
                             isSchedule = false;
@@ -519,8 +519,8 @@ class _DailyActivityState extends State<DailyActivity> {
                       ),
                       OutlinedButton.icon(
                         onPressed: () async {
-                          getData();
-                          print(allSchedule);
+                          getSchedule();
+                          //print(allSchedule);
                           setState(() {
                             isHistory = false;
                             isSchedule = true;
@@ -551,7 +551,7 @@ class _DailyActivityState extends State<DailyActivity> {
                                       if (direction ==
                                           DismissDirection.startToEnd) {
                                         DBService().deleteDrinkSchedule(index);
-                                        getData();
+                                        getSchedule();
 
                                         Get.snackbar("Drinks Schedule",
                                             "Successfully Deleted",
@@ -568,14 +568,12 @@ class _DailyActivityState extends State<DailyActivity> {
                                         color: Colors.red,
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-
                                     ),
                                     secondaryBackground: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.green,
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-
                                     ),
                                     child: (formattedDate ==
                                             allSchedule[index]['date'])
@@ -615,7 +613,7 @@ class _DailyActivityState extends State<DailyActivity> {
                                                     setState(() {
                                                       alarmStatus[index] =
                                                           value;
-                                                      print(alarmStatus[index]);
+                                                      //print(alarmStatus[index]);
                                                     });
                                                     DBService()
                                                         .updateDrinkSchedule(
@@ -644,44 +642,88 @@ class _DailyActivityState extends State<DailyActivity> {
                     child: ListView.builder(
                       itemCount: allHistory.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          height: 100,
-                          margin: const EdgeInsets.only(left: 20, right: 20),
-                          child: Card(
-                            color: index % 2 == 1
-                                ? ColorCode.primaryColor1
-                                : ColorCode.secondaryColor1,
-                            child: ListTile(
-                                title: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 5,),
-                                Text('${allHistory[index]['id']}',style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight:
-                                    FontWeight.bold,
-                                    fontSize: 15),),
-                                Text(
-                                    'Percentage: ${allHistory[index]['percentage']}',style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight:
-                                    FontWeight.bold,
-                                    fontSize: 15),),
-                                Text('Target: ${allHistory[index]['target']}',style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight:
-                                    FontWeight.bold,
-                                    fontSize: 15),),
-                                Text(
-                                    'Today Intake: ${allHistory[index]['todayIntake']}',style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight:
-                                    FontWeight.bold,
-                                    fontSize: 15),),
-                              ],
-                            )),
-                          ),
+                        return Column(
+                          children: [
+                            Dismissible(
+                              key: Key(UniqueKey().toString()),
+                              onDismissed: (direction) async {
+                                if (direction == DismissDirection.startToEnd) {
+                                  DBService().deleteHistory(index);
+                                  getHistory();
+
+                                  Get.snackbar(
+                                      "Water Intake History", "Successfully Deleted",
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else {
+                                  setState(() {});
+                                  Get.snackbar("Water Intake History",
+                                      "For delete you have swipe Left to Right");
+                                }
+                              },
+                              background: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              secondaryBackground: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: Container(
+                                height: 100,
+                                margin:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: Card(
+                                  color: index % 2 == 1
+                                      ? ColorCode.primaryColor1
+                                      : ColorCode.secondaryColor1,
+                                  child: ListTile(
+                                      title: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        '${allHistory[index]['id']}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                      Text(
+                                        'Percentage: ${allHistory[index]['percentage']}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                      Text(
+                                        'Target: ${allHistory[index]['target']}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                      Text(
+                                        'Today Intake: ${allHistory[index]['todayIntake']}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                    ],
+                                  )),
+                                ),
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -771,9 +813,8 @@ class _DailyActivityState extends State<DailyActivity> {
                   onTap: () async {
                     addSchedule();
                     addNotification();
-                    getData();
+                    getSchedule();
                     Get.back();
-
                   },
                   fontSize: 16,
                 ),
@@ -787,10 +828,9 @@ class _DailyActivityState extends State<DailyActivity> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     pickedTime = await _showTimePicker();
+    // ignore: use_build_context_synchronously
     String formatedTime = pickedTime.format(context);
-    if (pickedTime == null) {
-      print("Time cancel");
-    } else if (isStartTime == true) {
+    if (isStartTime == true) {
       setState(() {
         _time = formatedTime;
       });
@@ -851,8 +891,8 @@ class _DailyActivityState extends State<DailyActivity> {
     } else {
       h2 = double.parse(hourAndMinute.split(":")[0]) + m2;
     }
-    print('$h1 $h2');
-    print('$l $l1');
+    //print('$h1 $h2');
+    //print('$l $l1');
 
     if (l[1] == l1[1]) {
       durationForNotify = ((h1 - h2)) * 3600;
@@ -861,12 +901,10 @@ class _DailyActivityState extends State<DailyActivity> {
       durationForNotify = (24 - (h1 + 12 - h2)) * 3600;
       //print(durationForNotify);
     }
-    if(durationForNotify.isNegative){
-      durationForNotify+=86400.0;
-      print(durationForNotify);
+    if (durationForNotify.isNegative) {
+      durationForNotify += 86400.0;
+      //print(durationForNotify);
     }
-
-
   }
 
   _appBar(BuildContext context) {

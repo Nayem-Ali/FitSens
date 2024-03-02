@@ -1,7 +1,6 @@
 import 'package:finessapp/services/auth_service.dart';
 import 'package:finessapp/screens/auth/register_screen.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

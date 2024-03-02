@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finessapp/page/option.dart';
 import 'package:finessapp/page/sleep/sleep_schedule.dart';
 import 'package:finessapp/page/sleep/widgets/sleep_container.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../services/db_service.dart';
@@ -14,7 +11,6 @@ import '../../utility/color.dart';
 import '../../utility/utils.dart';
 import '../../widgets/barchart.dart';
 import '../widgets/daily_container.dart';
-import '../widgets/progress.dart';
 
 class SleepHome extends StatefulWidget {
   const SleepHome({Key? key}) : super(key: key);
@@ -42,7 +38,7 @@ class _SleepHomeState extends State<SleepHome> {
     DateTime dateTime = DateTime.now();
     String id = DateFormat.yMMMd().format(dateTime);
     for (var diff in sleepData) {
-      print(id);
+      //print(id);
       if (diff['id'] == id) {
         difference = diff['difference'] * 1.0;
       }
@@ -161,8 +157,6 @@ class _SleepHomeState extends State<SleepHome> {
                                 ? 1
                                 : snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
-                              final document = snapshot.data!.docs[index];
-                              final documentId = document.id;
 
                               return Column(
                                 children: [

@@ -1,7 +1,6 @@
 import 'package:finessapp/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:heart_bpm/chart.dart';
 import 'package:heart_bpm/heart_bpm.dart';
 import 'package:intl/intl.dart';
