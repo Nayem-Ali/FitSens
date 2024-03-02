@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/utility/color.dart';
+import 'package:finessapp/utility/color_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../services/db_service.dart';
 import '../helper/helper_methods.dart';
 import 'comment.dart';
-import 'comment_button.dart';
-import 'like_button.dart';
-
 
 class WallPost extends StatefulWidget {
   final String message;
@@ -19,7 +19,8 @@ class WallPost extends StatefulWidget {
       required this.message,
       required this.user,
       required this.postId,
-      required this.likes, required this.time});
+      required this.likes,
+      required this.time});
 
   @override
   State<WallPost> createState() => _WallPostState();
@@ -34,9 +35,7 @@ class _WallPostState extends State<WallPost> {
   DBService dbService = DBService();
   getData() async {
     userDetails = await dbService.getUserInfo();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -106,6 +105,47 @@ class _WallPostState extends State<WallPost> {
     );
   }
 
+  void deletePost() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Post"),
+        content: const Text("Are you sure you wanna delete this post?"),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text("Cancel")),
+          TextButton(
+              onPressed: () async {
+                final commentDocs = await FirebaseFirestore.instance
+                    .collection('feed')
+                    .doc(widget.postId)
+                    .collection("comments")
+                    .get();
+
+                for (var doc in commentDocs.docs) {
+                  await FirebaseFirestore.instance
+                      .collection("feed")
+                      .doc(widget.postId)
+                      .collection("comments")
+                      .doc(doc.id)
+                      .delete();
+                }
+                FirebaseFirestore.instance
+                    .collection("feed")
+                    .doc(widget.postId)
+                    .delete();
+                Get.snackbar("Delete Post", "Delete Successfully");
+                Navigator.pop(context);
+              },
+              child: const Text("Delete")),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -118,58 +158,44 @@ class _WallPostState extends State<WallPost> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Container(
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     color: Colors.grey[400],
-          //   ),
-          //   padding: EdgeInsets.all(10),
-          //   child: Icon(
-          //     Icons.person,
-          //     color: Colors.white,
-          //   ),
-          // ),
-
           Text(
             widget.message,
           ),
-
           const SizedBox(
             height: 5,
           ),
-
           Row(
             children: [
-              Text(widget.user, style: TextStyle(color: Colors.grey[400]),),
-              Text(" . ", style: TextStyle(color: Colors.grey[400]),),
-              Text(widget.time, style: TextStyle(color: Colors.grey[400]),),
+              Text(
+                widget.user,
+                style: TextStyle(color: Colors.grey[400]),
+              ),
+              Text(
+                " . ",
+                style: TextStyle(color: Colors.grey[400]),
+              ),
+              Text(
+                widget.time,
+                style: TextStyle(color: Colors.grey[400]),
+              ),
             ],
           ),
-
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Text(
-          //       widget.user,
-          //       style: TextStyle(color: Colors.grey[500]),
-          //     ),
-          //   ],
-          // ),
           const SizedBox(
             height: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 children: [
-                  LikeButton(
-                    isLiked: isLiked,
-                    onTap: toggleLike,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  IconButton(
+                      onPressed: toggleLike,
+                      icon: Icon(
+                        size: 30,
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.grey,
+                      )),
                   Text(
                     widget.likes.length.toString(),
                     style: const TextStyle(color: Colors.grey),
@@ -181,23 +207,45 @@ class _WallPostState extends State<WallPost> {
               ),
               Column(
                 children: [
-                  CommentButton(
-                    onTap: showCommentDialog,
+                  IconButton(
+                      onPressed: () {
+                        showCommentDialog();
+                      },
+                      icon: const Icon(
+                        Icons.comment,
+                        size: 30,
+                        color: Colors.grey,
+                      )),
+
+                  const Text(
+                    ' ',
+                    style: TextStyle(color: Colors.grey),
                   ),
+                ],
+              ),
+              Column(
+                children: [
+                  if (userDetails["name"] == widget.user)
+                    IconButton(
+                        onPressed: () {
+                          deletePost();
+                        },
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          size: 30,
+                          color: Colors.redAccent,
+                        )),
                   const SizedBox(
                     height: 5,
                   ),
                   const Text(
-                    '0',
+                    ' ',
                     style: TextStyle(color: Colors.grey),
                   ),
-
                 ],
               ),
-
             ],
           ),
-
           const SizedBox(
             height: 5,
           ),
@@ -222,7 +270,8 @@ class _WallPostState extends State<WallPost> {
                   final commentData = doc.data() as Map<String, dynamic>?;
 
                   if (commentData == null) {
-                    return const SizedBox.shrink(); // or return an empty widget if needed
+                    return const SizedBox
+                        .shrink(); // or return an empty widget if needed
                   }
                   return Comment(
                     text: commentData["CommentText"] as String? ?? "",
@@ -233,7 +282,6 @@ class _WallPostState extends State<WallPost> {
               );
             },
           ),
-
         ],
       ),
     );

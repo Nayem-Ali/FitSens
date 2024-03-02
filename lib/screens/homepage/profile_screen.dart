@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/page/feed/my_post.dart';
 import 'package:finessapp/screens/homepage/activity_history.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/screens/homepage/sleep_history.dart';
@@ -16,7 +17,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as p;
 import '../../utility/color.dart';
-import '../../utility/utils.dart';
 import '../auth/login_screen.dart';
 import '../../services/db_service.dart';
 
@@ -202,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -272,53 +272,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 12,),
+                        const SizedBox(height: 8,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(EditProfile(userDetails: userDetails));
                           },
                           style: OutlinedButton.styleFrom(
-                              minimumSize: Size(Get.height * 0.18,45),
+                              minimumSize: Size(Get.height * 0.18,42),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Edit Personal Data"),
                           icon: const Icon(Icons.edit),
                         ),
-                        const SizedBox(height: 12,),
+                        const SizedBox(height: 8,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const ActivityHistory());
                           },
                           style: OutlinedButton.styleFrom(
-                              minimumSize: Size(Get.height * 0.18,45),
+                              minimumSize: Size(Get.height * 0.18,42),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Activity History"),
                           icon: const Icon(Icons.stacked_line_chart),
                         ),
-                        const SizedBox(height: 12,),
+                        const SizedBox(height: 8,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const WorkoutHistory());
                           },
                           style: OutlinedButton.styleFrom(
-                              minimumSize: Size(Get.height * 0.18,45),
+                              minimumSize: Size(Get.height * 0.18,42),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Workout Progress"),
                           icon: const Icon(Icons.bar_chart),
                         ),
-                        const SizedBox(height: 12,),
+                        const SizedBox(height: 8,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const SleepHistory());
                           },
                           style: OutlinedButton.styleFrom(
-                              minimumSize: Size(Get.height * 0.18,45),
+                              minimumSize: Size(Get.height * 0.18,42),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Sleep Progress"),
                           icon: const Icon(Icons.stacked_bar_chart),
+                        ),
+                        const SizedBox(height: 8,),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            Get.to(()=>const MyPost());
+                          },
+                          style: OutlinedButton.styleFrom(
+                              minimumSize: Size(Get.height * 0.18,42),
+                              alignment: Alignment.centerLeft,
+                              textStyle: const TextStyle(fontSize: 15)),
+                          label: const Text("My Post"),
+                          icon: const Icon(Icons.post_add),
                         ),
 
                       ],
@@ -394,7 +406,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             );
                           },
                           style: OutlinedButton.styleFrom(
-                              minimumSize: Size(Get.height * 0.18,45),
+                              minimumSize: Size(Get.height * 0.18,42),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Logout"),
@@ -430,7 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       actions: const [
-        SizedBox(width: 40,)
+        SizedBox(width: 36,)
       ],
 
     );

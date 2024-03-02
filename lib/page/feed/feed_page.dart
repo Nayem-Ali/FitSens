@@ -4,12 +4,14 @@ import 'package:finessapp/page/feed/widgets/text_field.dart';
 import 'package:finessapp/page/feed/widgets/wall_post.dart';
 import 'package:finessapp/utility/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 
 import '../../services/db_service.dart';
 import '../../utility/utils.dart';
+import '../widgets/input_field.dart';
 import 'helper/helper_methods.dart';
 
 class FeedPage extends StatefulWidget {
@@ -28,9 +30,7 @@ class _FeedPageState extends State<FeedPage> {
   late Map<String, dynamic> userDetails = {};
   DBService dbService = DBService();
 
-  // void signOut() {
-  //   FirebaseAuth.instance.signOut();
-  // }
+
 
   void postMessage() async {
     String uid = currentUser.uid;
@@ -101,14 +101,15 @@ class _FeedPageState extends State<FeedPage> {
                         }),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Row(children: [
                       Expanded(
                         child: MyTextField(
                           controller: textController,
-                          hintText: "Write something on the wall..",
+                          hintText: "Write something on the feed..",
                           obscureText: false,
                         ),
+
                       ),
                       IconButton(
                         onPressed: postMessage,
@@ -133,7 +134,7 @@ class _FeedPageState extends State<FeedPage> {
                 ],
               ),
             )
-          : Text(""),
+          : const Text(""),
     );
   }
 
