@@ -272,46 +272,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
+                        const SizedBox(height: 12,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(EditProfile(userDetails: userDetails));
                           },
                           style: OutlinedButton.styleFrom(
+                              minimumSize: Size(Get.height * 0.18,45),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Edit Personal Data"),
                           icon: const Icon(Icons.edit),
                         ),
+                        const SizedBox(height: 12,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const ActivityHistory());
                           },
                           style: OutlinedButton.styleFrom(
+                              minimumSize: Size(Get.height * 0.18,45),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Activity History"),
                           icon: const Icon(Icons.stacked_line_chart),
                         ),
+                        const SizedBox(height: 12,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const WorkoutHistory());
                           },
                           style: OutlinedButton.styleFrom(
+                              minimumSize: Size(Get.height * 0.18,45),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Workout Progress"),
                           icon: const Icon(Icons.bar_chart),
                         ),
+                        const SizedBox(height: 12,),
                         OutlinedButton.icon(
                           onPressed: () {
                             Get.to(()=>const SleepHistory());
                           },
                           style: OutlinedButton.styleFrom(
+                              minimumSize: Size(Get.height * 0.18,45),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Sleep Progress"),
                           icon: const Icon(Icons.stacked_bar_chart),
                         ),
+
                       ],
                     ),
                   ),
@@ -385,6 +394,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             );
                           },
                           style: OutlinedButton.styleFrom(
+                              minimumSize: Size(Get.height * 0.18,45),
                               alignment: Alignment.centerLeft,
                               textStyle: const TextStyle(fontSize: 15)),
                           label: const Text("Logout"),
@@ -403,17 +413,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Center(
+        title: const Center(
           child: Text(
             "My Profile",
-            style: SafeGoogleFont(
-              'Poppins',
-              fontSize: 21,
+            style: TextStyle(
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
+            // style: SafeGoogleFont(
+            //   'Poppins',
+            //   fontSize: 21,
+            //   fontWeight: FontWeight.bold,
+            //   color: Colors.black,
+            // ),
           ),
         ),
+      actions: const [
+        SizedBox(width: 40,)
+      ],
 
     );
   }

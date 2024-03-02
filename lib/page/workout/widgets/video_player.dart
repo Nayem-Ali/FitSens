@@ -193,8 +193,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
             //const FullExerciseList(),
             Container(
-              height: 422,
-              width: 420,
+              height: Get.height*0.6,
+              width: Get.width,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(topRight: Radius.circular(60)),
                 gradient: primaryGradient,

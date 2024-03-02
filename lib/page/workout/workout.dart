@@ -1,21 +1,13 @@
 import 'package:finessapp/page/workout/widgets/workout_container.dart';
 import 'package:finessapp/page/workout/workout_schedule.dart';
+import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:finessapp/services/db_service.dart';
 import 'package:finessapp/widgets/barchart.dart';
-import 'package:finessapp/widgets/linechart.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-
-import '../../utility/color.dart';
 import '../../utility/utils.dart';
-
 import '../widgets/daily_container.dart';
-import '../widgets/progress.dart';
 import 'ab.dart';
-
 import 'fullbody.dart';
 import 'lower_body.dart';
 
@@ -175,7 +167,7 @@ class _WorkoutState extends State<Workout> {
         ),
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Get.off(const HomeScreen());
           },
           child: const Icon(
             Icons.arrow_back_ios_new_outlined,

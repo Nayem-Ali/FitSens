@@ -84,12 +84,13 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             thickness: 2,
             color: ColorCode.primaryColor2,
           ),
-          const Text(
+          Text(
             "Monthly History",
-            style: TextStyle(
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 19,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
-              // color: ColorCode.primaryColor1,
+              color: Colors.black,
             ),
           ),
           Divider(
@@ -147,10 +148,11 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
                     children: [
                       Text(
                         "Burned ${workout['complete']} kCal",
-                        style: const TextStyle(
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          // color: ColorCode.primaryColor1,
+                          color: Colors.black,
                         ),
                       ),
                       const SizedBox(
@@ -158,10 +160,11 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
                       ),
                       Text(
                         "Target ${workout['target']} kCal",
-                        style: const TextStyle(
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          // color: ColorCode.primaryColor1,
+                          color: Colors.black,
                         ),
                       ),
                       const SizedBox(
@@ -176,12 +179,13 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             thickness: 2,
             color: ColorCode.primaryColor2,
           ),
-          const Text(
+          Text(
             "Weekly History",
-            style: TextStyle(
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 19,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
-              // color: ColorCode.primaryColor1,
+              color: Colors.black,
             ),
           ),
           Divider(

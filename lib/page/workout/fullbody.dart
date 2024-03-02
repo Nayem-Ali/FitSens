@@ -2,7 +2,10 @@ import 'package:finessapp/page/workout/widgets/customContainer.dart';
 import 'package:finessapp/page/workout/widgets/full_exercises_list.dart';
 /// import 'package:finessapp/page/workout/widgets/full_exercise.dart';
 import 'package:finessapp/page/workout/widgets/video_player.dart';
+import 'package:finessapp/page/workout/workout.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/get_core.dart';
 import '../../utility/color.dart';
 import '../../utility/utils.dart';
 
@@ -135,7 +138,7 @@ class Fullbody extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.only(top: 10,left: 10),
                 child: IconButton(onPressed: (){
-                  Navigator.pop(context);
+                  Get.off(const Workout());
                 }, icon: const Icon(Icons.arrow_back_ios,color: Colors.white,)),
               ),
             ],

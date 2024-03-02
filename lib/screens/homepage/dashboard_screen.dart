@@ -22,7 +22,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   StepCounterBackend stepCounterBackend = StepCounterBackend();
   late Map<String, dynamic> userDetails = {};
   List<Map<String, dynamic>> heartBPM = [];
-  List<Map<String, dynamic>> sleepData = [];
+  List<Map<String, dynamic>> stepActivityList = [];
+  List<Map<String, dynamic>> waterIntakeActivity = [];
+  List<Map<String, dynamic>> weeklyStepActivity = [];
+  List<Map<String, dynamic>> weeklyHeartBPM = [];
+  List<Map<String, dynamic>> weeklyWaterIntakeActivity = [];
 
   late double bmiValue;
   late String status;
@@ -90,11 +94,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     calculateBMI();
     await stepActivity();
 
-    sleepData = await dbService.getSleepDataForChart();
-    sleepData.sort((a, b) => a['date'].compareTo(b['date']));
-    if (sleepData.length > 7) {
-      sleepData = sleepData.sublist(sleepData.length - 7, sleepData.length);
+    stepActivityList = await dbService.getSteps();
+    waterIntakeActivity = await dbService.getWaterIntakeData();
+    stepActivityList.sort((a, b) => a['date'].compareTo(b['date']));
+    heartBPM.sort((a, b) => a['date'].compareTo(b['date']));
+    waterIntakeActivity.sort((a, b) => a['date'].compareTo(b['date']));
+    if (stepActivityList.length > 7) {
+      weeklyStepActivity = stepActivityList.sublist(stepActivityList.length - 7, stepActivityList.length);
     }
+    if (waterIntakeActivity.length > 7) {
+      weeklyWaterIntakeActivity =
+          waterIntakeActivity.sublist(waterIntakeActivity.length - 7, waterIntakeActivity.length);
+    }
+
     setState(() {});
   }
 
@@ -108,7 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: SizedBox(
-                height: screenSize.height * 1.15,
+                height: screenSize.height * 1.6,
                 width: screenSize.width,
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +144,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           IconButton(
                             onPressed: () {
-                              //dif();
                               Get.to(const NotificationScreen());
 
                             },
@@ -285,7 +296,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(height: Get.height * 0.02),
+                    Expanded(
+                      child: MyBarChart(
+                        weeklyData: stepActivityList.length > 7 ? weeklyStepActivity : stepActivityList,
+                      ),
+                    ),
+                    const Text(
+                      "Step Activity",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        // color: ColorCode.primaryColor1,
+                      ),
+                    ),
 
+                    SizedBox(height: Get.height * 0.02),
+                    Expanded(
+                      child: MyBarChart(
+                        weeklyData: waterIntakeActivity.length > 7
+                            ? weeklyWaterIntakeActivity
+                            : waterIntakeActivity,
+                      ),
+                    ),
+                    const Text(
+                      "Water Intake Activity",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        // color: ColorCode.primaryColor1,
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.02),
 
                   ],
                 ),

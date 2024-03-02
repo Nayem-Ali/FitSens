@@ -54,7 +54,7 @@ class _SleepHistoryState extends State<SleepHistory> {
             "Sleep History",
             style: SafeGoogleFont(
               'Poppins',
-              fontSize: 20,
+              fontSize: 21,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -99,7 +99,7 @@ class _SleepHistoryState extends State<SleepHistory> {
             "Monthly History",
             style: SafeGoogleFont(
               'Poppins',
-              fontSize: 20,
+              fontSize: 19,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -161,7 +161,7 @@ class _SleepHistoryState extends State<SleepHistory> {
                         "Complete ${sleep['complete']} hours",
                         style: SafeGoogleFont(
                           'Poppins',
-                          fontSize: 20,
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -173,7 +173,7 @@ class _SleepHistoryState extends State<SleepHistory> {
                         "Target ${sleep['target']} hours",
                         style: SafeGoogleFont(
                           'Poppins',
-                          fontSize: 20,
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -194,7 +194,7 @@ class _SleepHistoryState extends State<SleepHistory> {
             "Weekly History",
             style: SafeGoogleFont(
               'Poppins',
-              fontSize: 20,
+              fontSize: 19,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),

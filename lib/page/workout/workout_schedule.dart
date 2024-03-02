@@ -224,6 +224,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:finessapp/page/workout/workout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -517,7 +518,7 @@ class _WorkoutScheduleState extends State<WorkoutSchedule> {
         ),
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Get.off(const Workout());
           },
           child: const Icon(
             Icons.arrow_back_ios_new_outlined,

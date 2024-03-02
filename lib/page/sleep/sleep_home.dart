@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/page/option.dart';
 import 'package:finessapp/page/sleep/sleep_schedule.dart';
 import 'package:finessapp/page/sleep/widgets/sleep_container.dart';
+import 'package:finessapp/screens/homepage/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../services/db_service.dart';
 import '../../utility/color.dart';
@@ -38,16 +41,14 @@ class _SleepHomeState extends State<SleepHome> {
     }
     DateTime dateTime = DateTime.now();
     String id = DateFormat.yMMMd().format(dateTime);
-    for(var diff in sleepData){
-
+    for (var diff in sleepData) {
       print(id);
-      if(diff['id'] == id){
+      if (diff['id'] == id) {
         difference = diff['difference'] * 1.0;
       }
     }
     setState(() {});
   }
-
 
   @override
   void initState() {
@@ -71,7 +72,6 @@ class _SleepHomeState extends State<SleepHome> {
           const SizedBox(
             height: 10,
           ),
-
           Flexible(child: MyBarChart(weeklyData: sleepData)),
           const SizedBox(
             height: 10,
@@ -106,7 +106,7 @@ class _SleepHomeState extends State<SleepHome> {
                             ),
                           ),
                           Text(
-                            "${difference~/3600} hour ${(difference%3600 ~/ 60).toInt()} min",
+                            "${difference ~/ 3600} hour ${(difference % 3600 ~/ 60).toInt()} min",
                             //sleepData[''],
                             style: SafeGoogleFont(
                               'Poppins',
@@ -131,8 +131,8 @@ class _SleepHomeState extends State<SleepHome> {
                     },
                   ),
                   Container(
-                    margin:
-                    EdgeInsets.fromLTRB(25 * fem, 0 * fem, 30 * fem, 10 * fem),
+                    margin: EdgeInsets.fromLTRB(
+                        25 * fem, 0 * fem, 30 * fem, 10 * fem),
                     child: Text(
                       "Today Schedule",
                       style: SafeGoogleFont(
@@ -153,7 +153,8 @@ class _SleepHomeState extends State<SleepHome> {
                           .collection('schedule')
                           .where('date', isEqualTo: formattedDate)
                           .snapshots(),
-                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasData) {
                           return ListView.builder(
                             itemCount: snapshot.data!.docs.length > 1
@@ -167,21 +168,24 @@ class _SleepHomeState extends State<SleepHome> {
                                 children: [
                                   ListTile(
                                     title: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           height: 80,
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(16 * fem),
+                                                BorderRadius.circular(16 * fem),
                                             gradient: thirdGradient,
                                           ),
                                           margin: const EdgeInsets.only(
                                               left: 5, right: 5),
                                           child: SleepContainer(
                                               title: 'Bed Time',
-                                              subTitle:'Your bed time at  ${snapshot.data!.docs[index]['bed_time']}',
-                                              image: Image.asset("assets/bed.png")),
+                                              subTitle:
+                                                  'Your bed time at  ${snapshot.data!.docs[index]['bed_time']}',
+                                              image: Image.asset(
+                                                  "assets/bed.png")),
                                         ),
                                       ],
                                     ),
@@ -191,23 +195,25 @@ class _SleepHomeState extends State<SleepHome> {
 
                                   ListTile(
                                     title: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         //const SizedBox(height: 10),
                                         Container(
                                           height: 80,
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(16 * fem),
+                                                BorderRadius.circular(16 * fem),
                                             gradient: thirdGradient,
                                           ),
                                           margin: const EdgeInsets.only(
                                               left: 5, right: 5),
                                           child: SleepContainer(
                                               title: 'Alarm',
-                                              subTitle: 'Your alarm time at  ${snapshot.data!.docs[index]['alarm_time']}',
-                                              image:
-                                              Image.asset("assets/alarm.png")),
+                                              subTitle:
+                                                  'Your alarm time at  ${snapshot.data!.docs[index]['alarm_time']}',
+                                              image: Image.asset(
+                                                  "assets/alarm.png")),
                                         ),
                                       ],
                                     ),
@@ -249,7 +255,7 @@ class _SleepHomeState extends State<SleepHome> {
         ),
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Get.off(const HomeScreen());
           },
           child: const Icon(
             Icons.arrow_back_ios_new_outlined,

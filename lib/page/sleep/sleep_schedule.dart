@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:finessapp/page/sleep/ideal_sleep.dart';
+import 'package:finessapp/page/sleep/sleep_home.dart';
 import 'package:finessapp/page/widgets/button.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,7 @@ class SleepSchedule extends StatefulWidget {
 
 class _SleepScheduleState extends State<SleepSchedule> {
   CollectionReference user1 = FirebaseFirestore.instance.collection('user');
+
 
   CollectionReference sleep = FirebaseFirestore.instance.collection('sleep');
   User? user = FirebaseAuth.instance.currentUser;
@@ -480,7 +482,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
         ),
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Get.off(const SleepHome());
           },
           child: const Icon(
             Icons.arrow_back_ios_new_outlined,
