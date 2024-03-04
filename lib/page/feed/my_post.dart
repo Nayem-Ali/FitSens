@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/page/feed/widgets/formate_date.dart';
 import 'package:finessapp/page/feed/widgets/text_field.dart';
 import 'package:finessapp/page/feed/widgets/wall_post.dart';
 import 'package:finessapp/utility/color.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 
 import '../../services/db_service.dart';
 import '../../utility/utils.dart';
-import 'helper/helper_methods.dart';
 
 class MyPost extends StatefulWidget {
   const MyPost({
@@ -46,6 +46,7 @@ class _MyPostState extends State<MyPost> {
     userDetails = await dbService.getUserInfo();
     setState(() {});
   }
+
 
   @override
   void initState() {

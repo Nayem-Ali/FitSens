@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finessapp/page/feed/my_post.dart';
+import 'package:finessapp/page/feed/widgets/formate_date.dart';
 import 'package:finessapp/page/feed/widgets/text_field.dart';
 import 'package:finessapp/page/feed/widgets/wall_post.dart';
 import 'package:finessapp/utility/color.dart';
@@ -9,7 +10,6 @@ import 'package:get/get.dart';
 
 import '../../services/db_service.dart';
 import '../../utility/utils.dart';
-import 'helper/helper_methods.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({
@@ -26,6 +26,7 @@ class _FeedPageState extends State<FeedPage> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   late Map<String, dynamic> userDetails = {};
   DBService dbService = DBService();
+
 
 
 
@@ -49,6 +50,8 @@ class _FeedPageState extends State<FeedPage> {
     userDetails = await dbService.getUserInfo();
     setState(() {});
   }
+
+
 
   @override
   void initState() {

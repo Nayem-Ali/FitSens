@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../services/db_service.dart';
-import '../helper/helper_methods.dart';
 import 'comment.dart';
+import 'formate_date.dart';
 
 class WallPost extends StatefulWidget {
   final String message;
@@ -144,6 +144,8 @@ class _WallPostState extends State<WallPost> {
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
