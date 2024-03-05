@@ -33,7 +33,9 @@ class _WallPostState extends State<WallPost> {
   DBService dbService = DBService();
   getData() async {
     userDetails = await dbService.getUserInfo();
-    setState(() {});
+    if(mounted){
+      setState(() {});
+    }
   }
 
   @override

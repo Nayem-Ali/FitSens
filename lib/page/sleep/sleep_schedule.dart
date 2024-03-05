@@ -3,7 +3,6 @@ import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:finessapp/page/sleep/ideal_sleep.dart';
 import 'package:finessapp/page/sleep/sleep_home.dart';
 import 'package:finessapp/page/widgets/button.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,9 +33,11 @@ class _SleepScheduleState extends State<SleepSchedule> {
   DateTime _selectedDate = DateTime.now();
   DBService dbService = DBService();
   List<Map<String, dynamic>> sleepData = [];
+  late Map<String, dynamic> userDetails = {};
   late double durationSleepNotify;
   // ignore: prefer_typing_uninitialized_variables
   var hour, min;
+  int age=0;
 
   @override
   void initState() {
@@ -64,8 +65,10 @@ class _SleepScheduleState extends State<SleepSchedule> {
         return aBedTime.compareTo(bBedTime);
       }
     });
-
+    userDetails = await dbService.getUserInfo();
     difSleep();
+    age = (DateTime.now().year - DateTime.parse(userDetails['dob']).year);
+    print(age);
     setState(() {});
   }
 
@@ -82,7 +85,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           margin: const EdgeInsets.only(left: 20, right: 25, top: 10),
-          height: 110 * fem,
+          height: 120 * fem,
           width: 375 * fem,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
@@ -93,10 +96,11 @@ class _SleepScheduleState extends State<SleepSchedule> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 16, top: 20),
+                    margin: const EdgeInsets.only(left: 16, top: 18),
                     child: Text(
                       "Ideal Hours for Sleep",
                       style: SafeGoogleFont(
@@ -107,112 +111,71 @@ class _SleepScheduleState extends State<SleepSchedule> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 30,
-                    width: 200,
-                    child: StreamBuilder(
-                        stream: user1.snapshots(),
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                                itemCount: snapshot.data!.docs.length > 1
-                                    ? 1
-                                    : snapshot.data!.docs.length,
-                                itemBuilder: (context, index) {
-                                  DateTime date1 = DateTime.parse(
-                                      snapshot.data!.docs[index]["dob"]);
-                                  late int age =
-                                      DateTime.now().year - date1.year;
-
-                                  if (age >= 1 && age <= 2) {
-                                    return ListTile(
-                                      title: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 28),
-                                        child: Text(
-                                          "11–14 hours per 24 hours",
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else if (age >= 3 && age <= 5) {
-                                    return ListTile(
-                                      title: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 28),
-                                        child: Text(
-                                          "10–13 hours per 24 hours",
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else if (age >= 6 && age <= 12) {
-                                    return ListTile(
-                                      title: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 28),
-                                        child: Text(
-                                          "9–12 hours per 24 hours",
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else if (age >= 13 && age <= 18) {
-                                    return ListTile(
-                                      title: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 28),
-                                        child: Text(
-                                          "8–10 hours per 24 hours",
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else if (age >= 18) {
-                                    return ListTile(
-                                      title: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 28),
-                                        child: Text(
-                                          "7 or more hours per night",
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  return null;
-                                });
-                          } else {
-                            return Container();
-                          }
-                        }),
-                  ),
+                  if(age>=1 && age<=2)
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,top: 5, bottom: 6),
+                      child: Text(
+                        "11–14 hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  if(age>=3 && age<=5)
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,top: 5, bottom: 6),
+                      child: Text(
+                        "10–13 hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  if(age>=6 && age<=12)
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,top: 5, bottom: 6),
+                      child: Text(
+                        "9–12 hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  if(age>=13 && age<=18)
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,top: 5, bottom: 6),
+                      child: Text(
+                        "8-10 hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  if(age>=18)
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,top: 5, bottom: 6),
+                      child: Text(
+                        "7 or more hours",
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
                     child: MyButton(

@@ -29,8 +29,8 @@ class _LineCharState extends State<LineChar> {
       margin: const EdgeInsets.only(right: 20),
       child: LineChart(
         LineChartData(
-          minY: 60,
-          maxY: 140,
+          minY: 70,
+          maxY: 120,
           borderData: FlBorderData(show: false),
           titlesData: const FlTitlesData(
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),

@@ -19,6 +19,7 @@ class AddSleepSchedule extends StatefulWidget {
 }
 
 class _AddSleepScheduleState extends State<AddSleepSchedule> {
+
   CollectionReference sleep = FirebaseFirestore.instance.collection('sleep');
   User? user = FirebaseAuth.instance.currentUser;
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -27,11 +28,13 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
   String _alarmTime = '06:00 AM';
   late double durationSleepNotify;
   CollectionReference user1 = FirebaseFirestore.instance.collection('user');
-  late double idealHour;
+  double idealHour=0;
+  late Map<String, dynamic> userDetails = {};
+  int age = 0;
 
   DateTime? _pickerDate;
 
-  late TimeOfDay pickedTime;
+  TimeOfDay pickedTime = TimeOfDay.now();
 
   final String _selectedRepeat = "None";
   List<String> repeatList = [
@@ -51,6 +54,25 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
     };
     await DBService().addNotifications(notificationsData);
     setState(() {});
+  }
+
+  calculateIdealHour(){
+    if(age>=1 && age<=2){
+      idealHour = 14;
+    }
+    else if(age>=3 && age<=5){
+      idealHour = 12;
+    }
+    if(age>=6 && age<=12){
+      idealHour = 10;
+    }
+    if(age>=13 && age<=18){
+      idealHour = 9;
+    }
+    if(age>=18){
+      idealHour = 7;
+    }
+
   }
 
   setData() async {
@@ -75,6 +97,23 @@ class _AddSleepScheduleState extends State<AddSleepSchedule> {
     };
     await dbService.addSleepData(sleepData);
     // print(controller.value.duration.inSeconds - controller.value.position.inSeconds < 15);
+  }
+
+  getData()async{
+    userDetails = await dbService.getUserInfo();
+    age = (DateTime.now().year - DateTime.parse(userDetails['dob']).year);
+    setState(() {
+
+    });
+  }
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
   }
 
   @override

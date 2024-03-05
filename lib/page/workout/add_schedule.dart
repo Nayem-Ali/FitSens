@@ -36,19 +36,6 @@ class _AddScheduleState extends State<AddSchedule> {
   late double durationForNotify;
 
 
-  List<int> remindList = [
-    10,
-    15,
-    20,
-    30,
-  ];
-
-  List<String> repeatList = [
-    "None",
-    "Daily",
-    "Weekly",
-    "Monthly",
-  ];
 
   String _chooseWorkout = "Fullbody workout";
   List<String> chooseWorkoutList = [

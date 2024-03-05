@@ -107,7 +107,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           waterIntakeActivity.sublist(waterIntakeActivity.length - 7, waterIntakeActivity.length);
     }
 
-    setState(() {});
+    if(mounted){
+      setState(() {});
+    }
   }
 
 

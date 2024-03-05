@@ -32,15 +32,7 @@ class _SleepHistoryState extends State<SleepHistory> {
       weeklySleepHistory =
           sleepHistory.sublist(sleepHistory.length - 7, sleepHistory.length);
     }
-    DateTime dateTime = DateTime.now();
-    String id = DateFormat.yMMMd().format(dateTime);
-    for(var diff in sleepData){
-      //print(id);
-      if(diff['id'] == id){
-        difference = diff['difference'] * 1.0;
-      }
-      //print(difference);
-    }
+
     setState(() {});
   }
 

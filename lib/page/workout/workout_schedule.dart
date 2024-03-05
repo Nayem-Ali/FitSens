@@ -334,37 +334,6 @@ class _WorkoutScheduleState extends State<WorkoutSchedule> {
                                         children: [
                                           const SizedBox(height: 10),
 
-                                          // Text(
-                                          //   snapshot.data!.docs[index]['date'],
-                                          //   style: SafeGoogleFont(
-                                          //     'Poppins',
-                                          //     fontSize: 15,
-                                          //     fontWeight: FontWeight.w400,
-                                          //     color: Colors.black,
-                                          //   ),
-                                          // ),
-                                          //
-                                          // Text(
-                                          //   snapshot.data!.docs[index]['time'],
-                                          //   style: SafeGoogleFont(
-                                          //     'Poppins',
-                                          //     fontSize: 15,
-                                          //     fontWeight: FontWeight.w400,
-                                          //     color: Colors.black,
-                                          //   ),
-                                          // ),
-                                          //
-                                          // Text(
-                                          //   snapshot.data!.docs[index]['choose'],
-                                          //   style: SafeGoogleFont(
-                                          //     'Poppins',
-                                          //     fontSize: 15,
-                                          //     fontWeight: FontWeight.w500,
-                                          //     color: Colors.black,
-                                          //   ),
-                                          // ),
-
-
                                           Text(
                                             snapshot.data!.docs[index]['date'],
                                             style: SafeGoogleFont(

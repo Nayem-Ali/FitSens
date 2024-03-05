@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finessapp/page/option.dart';
 import 'package:finessapp/page/sleep/sleep_schedule.dart';
 import 'package:finessapp/page/sleep/widgets/sleep_container.dart';
 import 'package:finessapp/screens/homepage/home_screen.dart';
@@ -37,12 +38,13 @@ class _SleepHomeState extends State<SleepHome> {
     }
     DateTime dateTime = DateTime.now();
     String id = DateFormat.yMMMd().format(dateTime);
-    for (var diff in sleepData) {
-      //print(id);
-      if (diff['id'] == id) {
-        difference = diff['difference'] * 1.0;
-      }
-    }
+    difference = sleepData[sleepData.length-2]['difference'] * 1.0;
+    // for (var diff in sleepData) {
+    //   //print(id);
+    //   if (diff['id'] == id) {
+    //     difference = diff['difference'] * 1.0;
+    //   }
+    // }
     setState(() {});
   }
 
@@ -119,11 +121,7 @@ class _SleepHomeState extends State<SleepHome> {
                   DailyContainer(
                     title: "Daily Sleep Schedule",
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SleepSchedule()),
-                      );
+                      Get.to(const SleepSchedule());
                     },
                   ),
                   Container(
@@ -249,6 +247,7 @@ class _SleepHomeState extends State<SleepHome> {
         ),
         leading: InkWell(
           onTap: () {
+            //Get.back();
             Get.off(const HomeScreen());
           },
           child: const Icon(

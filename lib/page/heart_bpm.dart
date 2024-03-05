@@ -18,6 +18,7 @@ class HeartBPM extends StatefulWidget {
 class _HeartBPMState extends State<HeartBPM> {
   DBService dbService = DBService();
   List<SensorValue> data = [];
+  List<SensorValue> bpmData = [];
   int bpmValue = 0;
   bool switchKey = false;
   late DateTime start;
@@ -27,11 +28,7 @@ class _HeartBPMState extends State<HeartBPM> {
 
   void saveData() async {
     String date = DateFormat.yMMMd().format(start);
-    Map<String,dynamic> data = {
-      "BPM": bpmValue,
-      "date": start,
-      "id": date
-    };
+    Map<String, dynamic> data = {"BPM": bpmValue, "date": start, "id": date};
     await dbService.addBPMData(data);
   }
 
@@ -66,6 +63,7 @@ class _HeartBPMState extends State<HeartBPM> {
           ),
         ]);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,22 +96,12 @@ class _HeartBPMState extends State<HeartBPM> {
                           context: context,
                           onRawData: (value) {
                             // print(data.length);
-                            if(isInitialized == false){
+                            if (isInitialized == false) {
                               isInitialized = true;
                               start = value.time;
                             }
                             data.add(value);
                             sec = value.time.difference(start).inSeconds.abs();
-                            // print("Sec: $sec");
-                            // average();
-                            // if (sec % 5 == 0) {
-                            //   try {
-                            //     int k = sec;
-                            //     double v = bpmValue.toPrecision(2); //value.value.toDouble();
-                            //   } catch (e) {
-                            //     print(e);
-                            //   }
-                            // }
                             setState(() {
                               if ((value.time.difference(start).inMinutes).abs() == 1) {
                                 saveData();
@@ -125,15 +113,19 @@ class _HeartBPMState extends State<HeartBPM> {
                             });
                           },
                           onBPM: (value) => setState(() {
-                            bpmValue = value;
+                            if (bpmData.length >= 100) bpmData.removeAt(0);
+                            bpmData.add(SensorValue(
+                                value: value.toDouble(), time: DateTime.now()));
+                            if (bpmData.last.value > 120 ||
+                                bpmData.last.value < 70) {
+                              // double avg = 0;
+                              // bpmData.map((e) => avg += e.value);
+                              // print(avg/bpmData.length);
+                              // bpmValue = avg.toInt();
+                            } else {
+                              bpmValue = bpmData.last.value.toInt();
+                            }
                           }),
-                          // child: Text(
-                          //   bpmValue.toStringAsFixed(0).toString() ?? "-",
-                          //   style: Theme.of(context)558
-                          //       .displayLarge
-                          //       ?.copyWith(fontWeight: FontWeight.bold),
-                          //   textAlign: TextAlign.center,
-                          // ),
                         )
                       : ElevatedButton(
                           onPressed: () {
@@ -143,17 +135,20 @@ class _HeartBPMState extends State<HeartBPM> {
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                              textStyle:
-                                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                              textStyle: const TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
                               backgroundColor: ColorCode.primaryColor1,
                               shadowColor: Colors.transparent,
                               minimumSize: const Size(120, 40)),
-                          child: Text("Measure",style: SafeGoogleFont(
-                            'Poppins',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),),
+                          child: Text(
+                            "Measure",
+                            style: SafeGoogleFont(
+                              'Poppins',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                   // BPMChart(data)
                 ],
@@ -171,7 +166,7 @@ class _HeartBPMState extends State<HeartBPM> {
                       value: sec / 60,
                     ),
                     Text(
-                      "${(sec/60 * 100).toStringAsFixed(1)}%",
+                      "${(sec / 60 * 100).toStringAsFixed(1)}%",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 25,
@@ -201,7 +196,8 @@ class _HeartBPMState extends State<HeartBPM> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    textStyle: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
                     backgroundColor: ColorCode.primaryColor1,
                     shadowColor: Colors.transparent,
                     minimumSize: const Size(120, 40),

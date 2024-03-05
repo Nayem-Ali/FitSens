@@ -48,7 +48,6 @@ class VideoPlayer extends StatefulWidget {
 class _VideoPlayerState extends State<VideoPlayer> {
   DBService dbService = DBService();
   late VideoPlayerController controller;
-  late Future<void> _initializeVideoPlayerFuture;
 
   Map<String, double> fExercise = {
     'Warm Up': 50,
@@ -99,7 +98,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
               (value) => controller.play(),
         );
     }catch(e){
-      print(e);
+      //print(e);
     }
   }
 
