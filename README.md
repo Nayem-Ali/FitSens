@@ -17,5 +17,3 @@ A Fitness App developed for Android.
 
 APK: Google Drive Link
 
-# Screenshots
-![alt text](https://www.google.com/imgres?q=flutter&imgurl=https%3A%2F%2Fcdn-images-1.medium.com%2Fmax%2F1200%2F1*5-aoK8IBmXve5whBQM90GA.png&imgrefurl=https%3A%2F%2Fmedium.com%2Fflutter&docid=_XxRqWR9WEOR6M&tbnid=2BooXSdz1JICpM&vet=12ahUKEwiAlsyjocqHAxWz8DgGHV6rLgEQM3oECGUQAA..i&w=1000&h=1000&hcb=2&ved=2ahUKEwiAlsyjocqHAxWz8DgGHV6rLgEQM3oECGUQAA)
